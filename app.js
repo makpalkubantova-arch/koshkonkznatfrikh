@@ -198,7 +198,7 @@ function timeUp() {
   const nx = ST.slice(cur + 1).find(s => s.phase > 0 && s.phase < 4);
   if (!nx) { toast("⏰ Уақыт бітті! Сабақтың соңы 🎉"); confetti(); return; }
   let n = 5;
-  const ov = h("div", { class: "autonext" }, h("div", { class: "an-in glass" }, h("div", { class: "an-t" }, "⏰ Уақыт бітті!"), h("div", { class: "an-n" }, String(n)), h("div", { class: "an-s" }, `Келесі: ${nx.ico} ${nx.label}`),
+  const ov = h("div", { class: "autonext" }, h("div", { class: "an-in glass" }, h("div", { class: "an-t" }, "⏰ Уақыт бітті!"), h("div", { class: "an-n" }, String(n)), h("div", { class: "an-res", html: (() => { const box = $("#lr-" + ST[cur].id); if (!box || !LIVE.on()) return ""; return [...box.querySelectorAll("div:not(.lr-t)")].slice(0, 3).map(d => d.outerHTML).join(""); })() }), h("div", { class: "an-s" }, `Келесі: ${nx.ico} ${nx.label}`),
     h("div", { class: "row gap center" }, h("button", { class: "btn gold", onclick: () => { clearInterval(autoT); ov.remove(); go(nx.id); startStageTimer(); } }, "Қазір өту →"), h("button", { class: "btn glass", onclick: () => { clearInterval(autoT); ov.remove(); toast("Осы тапсырмада қаламыз"); } }, "Қалу"))));
   document.body.append(ov);
   autoT = setInterval(() => { n--; ov.querySelector(".an-n").textContent = n; if (n <= 0) { clearInterval(autoT); ov.remove(); go(nx.id); startStageTimer(); } }, 1000);
@@ -857,19 +857,28 @@ async function lrLoad() {
 const FIT_W = 1600;
 let fitOn = store.get("kkFit", true);
 function fit() {
-  const S = $("#stages"), act = $(".stage.active");
-  if (STUDENT || !fitOn || innerWidth < 1000 || !act) { S.style.zoom = ""; S.style.width = ""; S.style.maxWidth = ""; $$(".topbar,.side,.pager,#timer").forEach(e => e.style.zoom = ""); document.body.classList.remove("fitted"); return; }
-  document.body.classList.add("fitted");
-  const base = Math.max(.8, innerWidth / FIT_W);
-  const ui = Math.min(base, Math.max(1, base * .9));
+  const S = $("#stages"), act = $(".stage.active"), B = document.body;
+  const vw = document.documentElement.clientWidth, vh = innerHeight;
+  if (STUDENT || !fitOn || vw < 900 || !act) { S.style.zoom = ""; S.style.width = ""; S.style.maxWidth = ""; $$(".topbar,.side,.pager,#timer").forEach(e => e.style.zoom = ""); B.classList.remove("fitted", "nofit-scroll"); return; }
+  B.classList.add("fitted");
+  const docPage = act.id === "st-kmj" || act.id === "st-assess";
+  B.classList.toggle("nofit-scroll", !docPage);
+  const base = Math.max(.7, vw / FIT_W), ui = Math.min(1.6, Math.max(.8, base * .9));
   $$(".topbar,.side,.pager,#timer").forEach(e => e.style.zoom = ui);
-  S.style.zoom = base; S.style.maxWidth = "none"; S.style.width = (innerWidth / base) + "px";
-  const topH = $(".topbar").getBoundingClientRect().height;
-  const avail = innerHeight - topH - 16;
-  const need = act.offsetHeight + 40;
+  const topH = $(".topbar").getBoundingClientRect().height, avail = vh - topH - 6;
+  // measure natural height at base zoom without min-heights
+  B.classList.add("measuring");
+  S.style.zoom = base; S.style.maxWidth = "none"; S.style.width = (vw / base) + "px";
+  B.classList.remove("wide");
+  let need = S.offsetHeight;
   let z = base;
-  if (need * base > avail && act.id !== "st-kmj" && act.id !== "st-assess") z = Math.max(base * .66, avail / need);
-  S.style.zoom = z; S.style.maxWidth = "none"; S.style.width = (innerWidth / z) + "px";
+  if (!docPage && need * base > avail) {
+    // shrinking widens layout -> content gets shorter; iterate a few times
+    for (let k = 0; k < 5; k++) { z = Math.min(base, avail / need) * .985; B.classList.toggle("wide", z < base * .9); S.style.zoom = z; S.style.width = (vw / z) + "px"; need = S.offsetHeight; if (need * z <= avail) break; }
+    if (need * z > avail) { z = avail / need * .98; S.style.zoom = z; S.style.width = (vw / z) + "px"; }
+  }
+  B.classList.remove("measuring");
+  S.style.setProperty("--fitH", (avail / z - 4) + "px");
 }
 addEventListener("resize", () => { clearTimeout(fit._t); fit._t = setTimeout(fit, 120); });
 new ResizeObserver(() => { clearTimeout(fit._r); fit._r = setTimeout(fit, 150); }).observe($("#stages"));
