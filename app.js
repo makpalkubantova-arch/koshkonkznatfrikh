@@ -113,6 +113,8 @@ $("#gTeach").onclick = () => { const on = !document.body.classList.contains("tea
 $$("#gear [data-g]").forEach(b => b.onclick = () => { $("#gear").hidden = true; go(b.dataset.g); });
 $("#gLive").onclick = () => { $("#gear").hidden = true; $("#rtSettings").click(); };
 $("#gClear").onclick = () => { $("#gear").hidden = true; $("#resetAll").click(); };
+$("#gFit").onclick = () => { fitOn = !fitOn; store.set("kkFit", fitOn); $("#gFitSt").textContent = fitOn ? "Қосулы · басып өшіру" : "Өшірулі · басып қосу"; $("#gFit").classList.toggle("on", fitOn); fit(); };
+setTimeout(() => { $("#gFitSt").textContent = fitOn ? "Қосулы · басып өшіру" : "Өшірулі · басып қосу"; $("#gFit").classList.toggle("on", fitOn); }, 0);
 setTimeout(() => teachSet(store.get("kkTeach", false)), 0);
 $("#sideToggle").onclick = () => document.body.classList.toggle("side-open");
 $("#sideScrim").onclick = () => document.body.classList.remove("side-open");
@@ -139,6 +141,7 @@ function go(id, push = true) {
   if (s.id === "hub") hubRender();
   if (!STUDENT && LIVE.on() && s.phase > 0 && s.phase < 4) { clearTimeout(go._t); go._t = setTimeout(() => LIVE.setStage(s.id).catch(() => {}), 300); }
   lrLoad();
+  setTimeout(fit, 30); setTimeout(fit, 600);
 }
 $$("[data-go]").forEach(b => b.addEventListener("click", e => { e.preventDefault(); go(b.dataset.go); }));
 $("#prevBtn").onclick = () => go(ST[Math.max(0, cur - 1)].id);
@@ -848,6 +851,28 @@ async function lrLoad() {
   }
   lrT = setTimeout(lrLoad, 4000);
 }
+
+
+/* ---------- интерактивті тақтаға сыйдыру ---------- */
+const FIT_W = 1600;
+let fitOn = store.get("kkFit", true);
+function fit() {
+  const S = $("#stages"), act = $(".stage.active");
+  if (STUDENT || !fitOn || innerWidth < 1000 || !act) { S.style.zoom = ""; S.style.width = ""; S.style.maxWidth = ""; $$(".topbar,.side,.pager,#timer").forEach(e => e.style.zoom = ""); document.body.classList.remove("fitted"); return; }
+  document.body.classList.add("fitted");
+  const base = Math.max(.8, innerWidth / FIT_W);
+  const ui = Math.min(base, Math.max(1, base * .9));
+  $$(".topbar,.side,.pager,#timer").forEach(e => e.style.zoom = ui);
+  S.style.zoom = base; S.style.maxWidth = "none"; S.style.width = (innerWidth / base) + "px";
+  const topH = $(".topbar").getBoundingClientRect().height;
+  const avail = innerHeight - topH - 16;
+  const need = act.offsetHeight + 40;
+  let z = base;
+  if (need * base > avail && act.id !== "st-kmj" && act.id !== "st-assess") z = Math.max(base * .66, avail / need);
+  S.style.zoom = z; S.style.maxWidth = "none"; S.style.width = (innerWidth / z) + "px";
+}
+addEventListener("resize", () => { clearTimeout(fit._t); fit._t = setTimeout(fit, 120); });
+new ResizeObserver(() => { clearTimeout(fit._r); fit._r = setTimeout(fit, 150); }).observe($("#stages"));
 
 /* ---------- start ---------- */
 renderMyScore();

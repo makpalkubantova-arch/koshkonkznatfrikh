@@ -330,8 +330,7 @@ textarea.answer{min-height:170px;font-size:16px;line-height:1.5}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:95;width:100%;height:100%}
 
-@media (min-width:1600px){#stages{zoom:1.22}}
-@media (min-width:2200px){#stages{zoom:1.5}}
+
 /* ---------- responsive (phones) ---------- */
 @media (max-width:980px){
   .grid.two,.card-grid,.quiz-grid{grid-template-columns:1fr}
@@ -638,7 +637,7 @@ body.inviting.has-side #stages{margin-left:44px;max-width:none;padding:18px 26px
 .tm-scene{position:relative;overflow:hidden;padding:0;margin-bottom:16px;border:3px solid rgba(254,197,12,.6)}
 .sc-holder{position:relative;aspect-ratio:1200/420;width:100%}
 .sc-holder svg{position:absolute;inset:0;width:100%;height:100%;animation:scin .7s cubic-bezier(.2,.8,.2,1)}
-@keyframes scin{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+@keyframes scin{from{opacity:.35;transform:scale(1.04)}to{opacity:1;transform:none}}
 .sc-cap{position:absolute;left:18px;right:18px;bottom:14px;padding:12px 16px;border-radius:16px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);font-size:16px;line-height:1.45;border-left:6px solid var(--gold);box-shadow:var(--shadow)}
 .sc-cap small{color:var(--muted);font-size:12px;margin-left:6px}
 .sc-rays{animation:spin 30s linear infinite}
@@ -937,3 +936,10 @@ body.student .mode-pill{display:inline-block}
 .an-n{font:900 140px/1 var(--display);background:linear-gradient(180deg,#FEC50C,#E0A400);-webkit-background-clip:text;background-clip:text;color:transparent;margin:10px 0;animation:pulseok 1s infinite}
 .an-s{font:800 20px var(--display);color:#0089B5;margin-bottom:18px}
 body.student .phase-chip{display:none}
+
+/* fitted board mode */
+body.fitted.has-side #stages{margin:0;padding:14px 26px 20px 70px;box-sizing:border-box}
+body.fitted .stage{max-width:1520px;margin:0 auto}
+body.fitted.inviting .stage{max-width:none}
+body.fitted .stage-head{margin-bottom:18px}
+body.fitted #st-home.active,body.fitted .invite{min-height:calc(100vh / var(--zf, 1) - 150px)}
