@@ -22,6 +22,8 @@ window.LIVE = (() => {
     pushStudent(id, rec) { pending = { id, rec }; clearTimeout(pushT); pushT = setTimeout(() => { const p = pending; pending = null; req(`students/${p.id}`, "PUT", p.rec).catch(() => {}); }, 400); },
     pushGroup(g, pts) { return req(`groups/${g}`, "PUT", pts); },
     pushNote(rec) { return req("notes", "POST", rec); },
+    setStage(id) { return req("state", "PUT", { stage: id, ts: Date.now() }); },
+    getStage() { return req("state"); },
     async read() { return (await req("")) || {}; },
     async clear() { return req("", "DELETE"); },
     test: async () => { await req("ping", "PUT", Date.now()); return true; }

@@ -20,6 +20,13 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
 
+/* ---------- режим: тақта / оқушы / қонақ ---------- */
+const MQ = new URLSearchParams(location.search).get("m");
+if (MQ === "s" || MQ === "g" || MQ === "b") store.set("kkMode", MQ);
+const MODE = store.get("kkMode", "b"), STUDENT = MODE === "s" || MODE === "g";
+const SALLOW = MODE === "g" ? ["wall"] : ["hub", "card", "terms", "duel", "witness", "prompt", "levels", "quiz", "reflect", "wall"];
+if (STUDENT) document.body.classList.add("student");
+
 /* ---------- toast + confetti ---------- */
 let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2400); }
@@ -60,7 +67,7 @@ function renderMyScore() {
 }
 
 /* ---------- router (ҚМЖ кезеңдері) ---------- */
-const ST = DATA.stages; let cur = 0;
+const ST = DATA.stages.concat([{ id: "hub", ico: "📱", label: "Менің тапсырмаларым", phase: 5, t: [0, 0] }]); let cur = 0;
 document.body.classList.add("has-side");
 const PC = DATA.phaseColors, PN = DATA.phases;
 const dur = s => s.t[1] - s.t[0];
@@ -70,12 +77,13 @@ const dur = s => s.t[1] - s.t[0];
   ST.forEach((s, i) => {
     if (s.phase !== ph) {
       ph = s.phase;
-      if (ph > 0) {
+      if (ph > 0 && ph < 5) {
         const items = ST.filter(x => x.phase === ph && dur(x));
         const rng = items.length ? `${items[0].t[0]}–${items[items.length - 1].t[1]} мин` : "";
         list.append(h("h4", { class: ph === 4 ? "doc" : "", style: `--c:${PC[ph]}` }, PN[ph], h("span", {}, rng)));
       }
     }
+    if (s.phase === 5) return;
     list.append(h("button", { class: "si" + (s.phase === 4 ? " doc" : ""), "data-i": i, style: `--c:${PC[s.phase]}`, onclick: () => { go(s.id); document.body.classList.remove("side-open"); } },
       h("span", { class: "i" }, s.ico), h("span", {}, s.label), h("small", {}, dur(s) ? `${s.t[0]}–${s.t[1]}′` : "")));
   });
@@ -110,6 +118,8 @@ $("#sideToggle").onclick = () => document.body.classList.toggle("side-open");
 $("#sideScrim").onclick = () => document.body.classList.remove("side-open");
 addEventListener("keydown", e => { if (e.key === "Escape") document.body.classList.remove("side-open"); });
 function go(id, push = true) {
+  if (STUDENT && !SALLOW.includes(id)) id = MODE === "g" ? "wall" : "hub";
+  if (!STUDENT && id === "hub") id = "home";
   const i = Math.max(0, ST.findIndex(s => s.id === id));
   cur = i; const s = ST[i];
   $$(".stage").forEach(x => x.classList.toggle("active", x.id === "st-" + s.id));
@@ -126,6 +136,9 @@ function go(id, push = true) {
   document.body.classList.toggle("inviting", s.id === "invite");
   if (s.id === "rating") rtLoad();
   if (s.id === "wall") wallLoad();
+  if (s.id === "hub") hubRender();
+  if (!STUDENT && LIVE.on() && s.phase > 0 && s.phase < 4) { clearTimeout(go._t); go._t = setTimeout(() => LIVE.setStage(s.id).catch(() => {}), 300); }
+  lrLoad();
 }
 $$("[data-go]").forEach(b => b.addEventListener("click", e => { e.preventDefault(); go(b.dataset.go); }));
 $("#prevBtn").onclick = () => go(ST[Math.max(0, cur - 1)].id);
@@ -172,9 +185,22 @@ function drawTimer() {
 }
 $("#tPlay").onclick = () => {
   tRun = !tRun; $("#tPlay").textContent = tRun ? "❚❚" : "▶";
-  clearInterval(tInt); if (tRun) tInt = setInterval(() => { tLeft--; drawTimer(); if (tLeft === 0) toast("⏰ Уақыт бітті!"); }, 1000);
+  clearInterval(tInt); if (tRun) tInt = setInterval(() => { tLeft--; drawTimer(); if (tLeft === 0) timeUp(); }, 1000);
 };
 $("#tReset").onclick = () => timerFor(ST[cur]);
+/* уақыт бітсе — келесі тапсырмаға автоматты өту */
+let autoT = null;
+function timeUp() {
+  if (STUDENT) return;
+  const nx = ST.slice(cur + 1).find(s => s.phase > 0 && s.phase < 4);
+  if (!nx) { toast("⏰ Уақыт бітті! Сабақтың соңы 🎉"); confetti(); return; }
+  let n = 5;
+  const ov = h("div", { class: "autonext" }, h("div", { class: "an-in glass" }, h("div", { class: "an-t" }, "⏰ Уақыт бітті!"), h("div", { class: "an-n" }, String(n)), h("div", { class: "an-s" }, `Келесі: ${nx.ico} ${nx.label}`),
+    h("div", { class: "row gap center" }, h("button", { class: "btn gold", onclick: () => { clearInterval(autoT); ov.remove(); go(nx.id); startStageTimer(); } }, "Қазір өту →"), h("button", { class: "btn glass", onclick: () => { clearInterval(autoT); ov.remove(); toast("Осы тапсырмада қаламыз"); } }, "Қалу"))));
+  document.body.append(ov);
+  autoT = setInterval(() => { n--; ov.querySelector(".an-n").textContent = n; if (n <= 0) { clearInterval(autoT); ov.remove(); go(nx.id); startStageTimer(); } }, 1000);
+}
+function startStageTimer() { if (!$("#timer").hidden && !tRun) $("#tPlay").click(); }
 
 /* ---------- QR ---------- */
 let qrN = 0;
@@ -190,12 +216,12 @@ function fancyQr(text) {
   const rays = Array.from({ length: 16 }, (_, i) => `<rect x="${cx - .12}" y="${cx - R * .95}" width=".24" height="${R * .28}" rx=".1" fill="#E0A400" transform="rotate(${i * 22.5} ${cx} ${cx})"/>`).join("");
   return `<div class="qr-frame"><svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0089B5"/><stop offset="1" stop-color="#0B2545"/></linearGradient></defs><rect width="${S}" height="${S}" rx="2" fill="#fff"/><g fill="url(#${gid})">${dots}</g>${eye(0, 0)}${eye(n - 7, 0)}${eye(0, n - 7)}<circle cx="${cx}" cy="${cx}" r="${R}" fill="#00AFCA"/>${rays}<circle cx="${cx}" cy="${cx}" r="${R * .42}" fill="#FEC50C"/></svg><span class="qr-cap">📱 СКАНЕРЛЕ</span></div>`;
 }
-const baseUrl = () => { const u = new URL(location.href); u.hash = ""; if (LIVE.on()) u.searchParams.set("db", LIVE.url); else u.searchParams.delete("db"); return u.toString().replace(/#$/, ""); };
-function fillQr(el, id) { el.innerHTML = fancyQr(baseUrl() + "#" + id); }
-function refreshQrs() { fillQr($("#qrCard"), "card"); fillQr($("#qrQuiz"), "quiz"); fillQr($("#qrInvite"), "home"); fillQr($("#qrInviteFb"), "wall"); fillQr($("#qrWall"), "wall"); }
+const baseUrl = (m = "s") => { const u = new URL(location.href); u.hash = ""; if (LIVE.on()) u.searchParams.set("db", LIVE.url); else u.searchParams.delete("db"); u.searchParams.set("m", m); return u.toString().replace(/#$/, ""); };
+function fillQr(el, id, m = "s") { if (el) el.innerHTML = fancyQr(baseUrl(m) + "#" + id); }
+function refreshQrs() { fillQr($("#qrCard"), "card"); fillQr($("#qrQuiz"), "quiz"); fillQr($("#qrInvite"), "hub"); fillQr($("#qrInviteFb"), "wall", "g"); fillQr($("#qrWall"), "wall", "g"); }
 refreshQrs();
 refreshQrs();
-$("#qrBtn").onclick = () => { const s = ST[cur]; $("#qrTitle").textContent = `📱 ${s.ico} ${s.label} — телефонмен кір`; fillQr($("#qrBig"), s.id); $("#qrUrl").textContent = baseUrl() + "#" + s.id; $("#qrModal").hidden = false; };
+$("#qrBtn").onclick = () => { const s = ST[cur]; $("#qrTitle").textContent = `📱 ${s.ico} ${s.label} — телефонмен кір`; const qm = s.id === "wall" ? "g" : "s"; const qid = SALLOW.includes(s.id) ? s.id : "hub"; fillQr($("#qrBig"), qid, qm); $("#qrUrl").textContent = baseUrl(qm) + "#" + qid; $("#qrModal").hidden = false; };
 $("#qrClose").onclick = () => $("#qrModal").hidden = true;
 
 /* ---------- drawers ---------- */
@@ -649,7 +675,7 @@ $("#eaglePath")?.setAttribute("d", "M200 70 C185 60 170 52 150 50 C120 46 90 40 
 
 /* ---------- оқушы кім? ---------- */
 let whoG = null;
-function whoLbl() { const m = me(); $("#whoLbl").textContent = m ? (DATA.statusInfo[m.group]?.ico || "👤") + " " + m.name.split(" ")[0] : "Кіру"; }
+function whoLbl() { const m = me(); $("#whoLbl").textContent = m ? m.name.split(" ")[0] + (m.group ? " " + DATA.statusInfo[m.group].ico : "") : "Кіру"; }
 function whoOpen(g) {
   const m = me(); whoG = g || m?.group || null; $("#whoName").value = m?.name || "";
   $("#whoGroups").innerHTML = "";
@@ -660,7 +686,7 @@ $("#whoBtn").onclick = () => whoOpen();
 $("#whoOk").onclick = () => {
   const name = $("#whoName").value.trim(); if (name.length < 2) { toast("Атыңды жаз ✍️"); return; }
   const old = me(); store.set("kkMe", { id: old?.id || ("s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)), name, group: whoG });
-  $("#who").hidden = true; whoLbl(); livePush(); toast(`Сәлем, ${name}! 🌞`);
+  $("#who").hidden = true; whoLbl(); livePush(); if (ST[cur].id === "hub") hubRender(); toast(`Сәлем, ${name.split(" ")[0]}! 🌞`);
 };
 whoLbl();
 
@@ -773,9 +799,59 @@ async function wallLoad() {
   if (LIVE.on()) wallTimer = setTimeout(wallLoad, 4000);
 }
 
+
+/* ---------- оқушы хабы және тақтаны ілесу ---------- */
+function hubRender() {
+  const m = me(); $("#hubHi").textContent = m ? `Сәлем, ${m.name.split(" ")[0]}! 🌞` : "Сәлем! 🌞";
+  $("#hubGrid").innerHTML = "";
+  ST.filter(s => SALLOW.includes(s.id) && s.id !== "hub").forEach(s => $("#hubGrid").append(h("button", { "data-id": s.id, class: s.id === followed ? "now" : "", onclick: () => go(s.id) }, h("i", {}, s.ico), s.label)));
+  $("#hubWait").innerHTML = LIVE.on() ? `<span class="lr-dot"></span> Тақтамен байланыс бар — тапсырма өздігінен ашылады` : `<span class="lr-dot off"></span> Тапсырманы өзің таңда`;
+}
+let followed = null, followTs = 0;
+async function follow() {
+  if (!STUDENT || MODE === "g" || !LIVE.on()) return;
+  try { const st = await LIVE.getStage(); if (st && st.ts > followTs) { followTs = st.ts; if (st.stage !== followed && SALLOW.includes(st.stage)) { followed = st.stage; if (ST[cur].id !== st.stage) { go(st.stage); toast("📺 Тақтада жаңа тапсырма!"); } } } } catch {}
+  setTimeout(follow, 3000);
+}
+if (STUDENT) {
+  // back-to-hub button in each allowed stage
+  SALLOW.filter(id => id !== "hub").forEach(id => { const sec = document.getElementById("st-" + id); if (sec && MODE === "s") sec.prepend(h("button", { class: "s-back", onclick: () => go("hub") }, "← Менің тапсырмаларым")); });
+  document.querySelector(".brand-text b").textContent = MODE === "g" ? "Кері байланыс" : "Оқушы";
+  $("#whoBtn").insertAdjacentElement("beforebegin", h("span", { class: "mode-pill" }, MODE === "g" ? "🎩 Қонақ" : "📱 Оқушы"));
+  if (MODE === "g") { fbRole = "guest"; $("#whoBtn").style.display = "none"; $("#myScoreBtn").style.display = "none"; }
+  if (MODE === "s") { fbRole = "student"; $("#fbRoles").style.display = "none"; setTimeout(() => { if (!me()) whoOpen(); }, 900); }
+  setTimeout(follow, 1500);
+}
+
+/* ---------- тақтадағы тірі нәтиже ---------- */
+const LR = { card: null, terms: "terms", duel: "duel", witness: "witness", prompt: "group", levels: "levels", quiz: "quiz" };
+const LRMAX = { terms: 5, duel: 6, witness: 6, group: 5, levels: 4, quiz: 10 };
+Object.keys(LR).forEach(id => { const sec = document.getElementById("st-" + id); if (!sec) return; const after = sec.querySelector(".tpanel") || sec.querySelector(".stage-head"); after.insertAdjacentElement("afterend", h("div", { class: "live-res", id: "lr-" + id })); });
+let lrT = null;
+async function lrLoad() {
+  clearTimeout(lrT);
+  if (STUDENT) return;
+  const id = ST[cur].id; if (!(id in LR)) return;
+  const box = $("#lr-" + id); if (!box) return;
+  if (!LIVE.on()) { box.innerHTML = `<div class="lr-t"><span class="lr-dot off"></span> Сынып нәтижесі Firebase қосылғанда осында тірі шығады (⚙️ → 🛰️ Тірі рейтинг)</div>`; return; }
+  let st = [];
+  try { const d = await LIVE.read(); st = Object.values(d.students || {}); } catch { box.innerHTML = `<div class="lr-t"><span class="lr-dot off"></span> Байланыс жоқ</div>`; lrT = setTimeout(lrLoad, 4000); return; }
+  const k = LR[id];
+  if (!k) {
+    const c = g => st.filter(s => s.group === g).length;
+    box.innerHTML = `<div class="lr-t"><span class="lr-dot"></span> Тірі: сыныпқа қосылғандар</div><div><b>${st.length}</b><small>👥 барлығы</small></div><div><b>${c("em")}</b><small>✈️ эмигранттар</small></div><div><b>${c("re")}</b><small>🏡 репатрианттар</small></div><div><b>${c("in")}</b><small>🔁 ішкі мигранттар</small></div>`;
+  } else {
+    const done = st.filter(s => (s.scores || {})[k] != null), mx = LRMAX[k];
+    const avg = done.length ? done.reduce((t, s) => t + s.scores[k], 0) / done.length : 0;
+    const full = done.filter(s => s.scores[k] >= mx).length;
+    box.innerHTML = `<div class="lr-t"><span class="lr-dot"></span> Тірі: сынып нәтижесі</div><div><b>${done.length}<span style="font-size:18px;color:#5d7591"> / ${st.length}</span></b><small>📨 жауап берді</small></div><div><b>${String(Math.round(avg * 10) / 10).replace(".", ",")}<span style="font-size:18px;color:#5d7591"> / ${mx}</span></b><small>📊 орташа ұпай</small></div><div><b>${full}</b><small>✅ толық дұрыс</small></div><div><b>${done.length ? Math.round(avg / mx * 100) : 0}%</b><small>🎯 орындалу</small></div>`;
+  }
+  lrT = setTimeout(lrLoad, 4000);
+}
+
 /* ---------- start ---------- */
 renderMyScore();
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-go(location.hash.slice(1) || "invite", false);
+go(location.hash.slice(1) || (STUDENT ? (MODE === "g" ? "wall" : "hub") : "invite"), false);
 addEventListener("load", () => { scrollTo(0, 0); setTimeout(() => scrollTo(0, 0), 120); });
 })();

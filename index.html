@@ -158,7 +158,7 @@
         <p class="feedback" id="stFeedback"></p>
       </div>
     </div>
-    <aside class="glass card qr-card">
+    <aside class="glass card qr-card board-only">
       <h3>📱 Телефонмен кір</h3>
       <div class="qr" id="qrCard"></div>
       <p class="muted small">QR-ды сканерле — құжатың телефоныңда ашылады.</p>
@@ -260,7 +260,7 @@
   <p class="lead">Деңгейіңді жүйе өзі есептейді және кері байланыс береді.</p></div>
   <div class="grid quiz-grid">
     <article class="glass card quiz-card" id="quizBox"></article>
-    <aside class="glass card qr-card">
+    <aside class="glass card qr-card board-only">
       <h3>📱 Квизге кір</h3>
       <div class="qr" id="qrQuiz"></div>
       <h3 class="mt">📊 Сынып нәтижесі</h3>
@@ -369,13 +369,24 @@
       <textarea id="fbIdea" class="answer fb-ta" placeholder="💡 Ұсыныс / тілек" maxlength="300"></textarea>
       <button class="btn gold big" id="fbSend">Жіберу 🚀</button>
     </div>
-    <div class="wall-side">
+    <div class="wall-side board-only">
       <div class="glass card fb-stats" id="fbStats"></div>
       <div class="glass card qr-card"><h3>📱 Қонақтарға</h3><div class="qr" id="qrWall"></div></div>
     </div>
   </div>
-  <div class="tabs" id="wallTabs"></div>
-  <div class="wall" id="wall"></div>
+  <div class="board-only"><div class="tabs" id="wallTabs"></div>
+  <div class="wall" id="wall"></div></div>
+</section>
+
+<!-- STUDENT HUB (phone) -->
+<section class="stage" id="st-hub">
+  <div class="hub">
+    <div class="hub-sun">☀</div>
+    <h2 class="hub-hi" id="hubHi">Сәлем!</h2>
+    <p class="hub-sub">Тақтадағы тапсырманы күт немесе өзің таңда 👇</p>
+    <div class="hub-wait" id="hubWait"><span class="typing"><i></i><i></i><i></i></span> Тақтамен байланыс…</div>
+    <div class="hub-grid" id="hubGrid"></div>
+  </div>
 </section>
 </main>
 

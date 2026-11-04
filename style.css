@@ -891,3 +891,49 @@ body.inviting.has-side #stages{margin-left:44px;max-width:none;padding:18px 26px
 body.side-open .side-scrim{display:block}
 @media (max-width:1100px){body.has-side #stages{padding-left:26px}body.has-side .pager{left:22px}}
 @media (max-width:640px){body.has-side .pager{left:50%}}
+
+/* ================= v6: тақта / оқушы режимдері ================= */
+body.student .phasebar,body.student .clock,body.student #gearBtn,body.student #qrBtn,body.student #boardBtn,body.student #fsBtn,body.student .side-toggle,
+body.student .side,body.student .side-scrim,body.student .pager,body.student #timer,body.student .tpanel,body.student .board-only,body.student details.desc,body.student .big-badge,body.student .flag-band,body.student .bg-eagle,body.student .live-res{display:none!important}
+body.student .topbar{margin-left:0;justify-content:space-between}
+body.student.has-side #stages{padding:14px 12px 40px;max-width:720px}
+body.student .stage-head{padding:18px 20px;border-radius:24px;margin-bottom:16px}
+body.student .stage-head h2{font-size:26px}
+body.student .stage-head .lead{font-size:14px}
+body.student .stage-head .kicker{font-size:10px}
+body.student .grid.card-grid,body.student .quiz-grid,body.student .wall-top{grid-template-columns:1fr}
+body.student .s-back{display:inline-flex}
+.s-back{display:none;margin:0 0 12px;border:0;border-radius:14px;padding:10px 14px;font:800 14px var(--display);background:#fff;box-shadow:0 4px 0 #d6eef6}
+.mode-pill{display:none;font:800 11px var(--display);padding:6px 10px;border-radius:999px;background:#FEC50C;color:#0B2545}
+body.student .mode-pill{display:inline-block}
+.hub{text-align:center;padding:20px 6px}
+.hub-sun{font-size:64px;color:#E0A400;display:inline-block;animation:spin 20s linear infinite;text-shadow:0 0 24px rgba(254,197,12,.7)}
+.hub-hi{font:900 32px var(--display);margin:6px 0}
+.hub-sub{color:var(--muted);margin:0 0 14px}
+.hub-wait{display:inline-flex;gap:10px;align-items:center;padding:10px 16px;border-radius:999px;background:#fff;font-weight:700;margin-bottom:18px;box-shadow:0 4px 0 #d6eef6}
+.hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hub-grid button{border:0;border-radius:22px;padding:18px 10px;color:#fff;font:800 15px var(--display);display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 6px 0 rgba(0,0,0,.2)}
+.hub-grid button i{font-style:normal;font-size:34px}
+.hub-grid button:nth-child(4n+1){background:linear-gradient(160deg,#1fb6d6,#0089B5)}
+.hub-grid button:nth-child(4n+2){background:linear-gradient(160deg,#21c08b,#0f8e64)}
+.hub-grid button:nth-child(4n+3){background:linear-gradient(160deg,#ffd447,#E0A400);color:#0B2545}
+.hub-grid button:nth-child(4n+4){background:linear-gradient(160deg,#3a5e98,#0B2545)}
+.hub-grid button.now{outline:5px solid #FEC50C;outline-offset:3px}
+/* live results on board */
+.live-res{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-6px 0 22px}
+.live-res div{padding:14px 16px;border-radius:22px;background:#fff;border:2px solid #d6eef6;box-shadow:0 6px 0 #d6eef6;position:relative;overflow:hidden}
+.live-res div::after{content:"";position:absolute;right:-20px;top:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(254,197,12,.35),transparent 70%)}
+.live-res b{display:block;font:900 34px var(--display);color:#0B2545}
+.live-res small{font:700 12px var(--body);color:var(--muted)}
+.live-res .lr-t{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:0;border:0;box-shadow:none;background:none;font:800 13px var(--display);color:#0089B5}
+.live-res .lr-t::after{display:none}
+.lr-dot{width:10px;height:10px;border-radius:50%;background:#12a86f;animation:pulse 1.4s infinite}
+.lr-dot.off{background:#c0c8d2;animation:none}
+@media (max-width:980px){.live-res{grid-template-columns:1fr 1fr}}
+
+.autonext{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(11,37,69,.35);backdrop-filter:blur(6px)}
+.an-in{padding:34px 44px;text-align:center;border:3px solid #FEC50C;background:rgba(255,255,255,.95)}
+.an-t{font:900 30px var(--display);color:#0B2545}
+.an-n{font:900 140px/1 var(--display);background:linear-gradient(180deg,#FEC50C,#E0A400);-webkit-background-clip:text;background-clip:text;color:transparent;margin:10px 0;animation:pulseok 1s infinite}
+.an-s{font:800 20px var(--display);color:#0089B5;margin-bottom:18px}
+body.student .phase-chip{display:none}
