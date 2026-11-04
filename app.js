@@ -50,7 +50,7 @@ function tick() {
 /* ---------- my score ---------- */
 const SCORE_KEYS = { terms: ["Ұғымды тап", 5], duel: ["Дерек дуэлі", 6], witness: ["ЖИ қатесін тап", 6], group: ["Промпт шеберханасы (топ)", 5], levels: ["Сараланған тапсырма", 4], quiz: ["Квиз", 10] };
 const MAXP = 36;
-const gradeOf = t => { const p = Math.round(t / MAXP * 100); return { p, ...DATA.grades.find(g => p >= g.min) }; };
+const gradeOf = t => { const p = Math.round(t / MAXP * 100); return { p, mark: Math.max(1, Math.round(p / 10)), ...DATA.grades.find(g => p >= g.min) }; };
 function setScore(k, v) { const s = store.get("kkScore", {}); if (s[k] === v) return; s[k] = v; store.set("kkScore", s); renderMyScore(); livePush(); }
 function myTotal() { const s = store.get("kkScore", {}); return Object.keys(SCORE_KEYS).reduce((t, k) => t + (s[k] || 0), 0); }
 function me() { return store.get("kkMe", null); }
@@ -61,7 +61,7 @@ function renderMyScore() {
   $("#myScore").textContent = tot;
   const q = store.get("kkQuiz", null);
   const G = gradeOf(tot);
-  $("#mineBody").innerHTML = `<div class="grade-hero" style="--g:${G.color}"><div class="gh-mark">${G.mark}</div><div><b>${G.ico} ${G.name}</b><small>${tot} / ${MAXP} ұпай · ${G.p}%</small></div></div><table class="dtable"><tr><th>Тапсырма</th><th>Ұпай</th></tr>${rows}<tr><td><b>Барлығы</b></td><td class="pt">${tot} / ${MAXP} (${G.p}%)</td></tr></table>` +
+  $("#mineBody").innerHTML = `<div class="grade-hero" style="--g:${G.color}"><div class="gh-mark">${G.mark}<small style="font-size:16px">/10</small></div><div><b>${G.ico} ${G.name} деңгей</b><small>${tot} / ${MAXP} ұпай · ${G.p}% · формативтік балл ${G.mark}/10</small></div></div><table class="dtable"><tr><th>Тапсырма</th><th>Ұпай</th></tr>${rows}<tr><td><b>Барлығы</b></td><td class="pt">${tot} / ${MAXP} (${G.p}%)</td></tr></table>` +
     (q ? `<p class="hint">⚡ Квиз: ${q.ok}/10 — деңгейің: <b>${q.lvl}</b></p>` : `<p class="muted small">Квиз нәтижесі осында шығады.</p>`) +
     (LIVE.on() ? `<p class="muted small">🛰️ Ұпайлар рейтингке автоматты жіберіледі.</p>` : `<p class="muted small">Ұпайлар осы құрылғыда сақталады.</p>`);
 }
@@ -579,8 +579,8 @@ reflRender();
     ["Квиз (2 раунд)", "Жеке", "К1–К4", ["10 сұраққа жауап береді (әр дұрыс жауап — 1 ұпай)", "Жүйе деңгейді (жоғары/орта/бастапқы) өзі анықтайды"], 10]
   ];
   $("#assessTable").innerHTML = `<table class="dtable"><tr><th>Тапсырма</th><th>Түрі</th><th>Критерий</th><th>Дескрипторлар</th><th>Балл</th></tr>${rows.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><ul style="margin:0;padding-left:18px">${r[3].map(x => `<li>${x}</li>`).join("")}</ul></td><td class="pt">${r[4]}</td></tr>`).join("")}<tr><td colspan="4"><b>Барлығы</b> · «2 жұлдыз, 1 тілек», өзара бағалау, өзін-өзі бағалау</td><td class="pt">36</td></tr></table>
-  <h3 class="mt">Ұпайды бағаға аудару</h3><table class="dtable"><tr><th>Пайыз</th><th>Ұпай (36-дан)</th><th>Баға</th></tr>${DATA.grades.map((g, i) => { const hi = i ? DATA.grades[i - 1].min - 1 : 100; return `<tr><td>${g.min}–${hi}%</td><td>${Math.ceil(g.min / 100 * MAXP)}–${Math.floor(hi / 100 * MAXP)}</td><td class="pt">«${g.mark}» ${g.name}</td></tr>`; }).join("")}</table>
-  <p class="muted small">Барлық автоматты ұпай тірі рейтингке түседі, баға мен пайыз өздігінен есептеледі.</p>`;
+  <h3 class="mt">Формативтік бағалау: ұпай → 1–10 балл</h3><table class="dtable"><tr><th>Ұпай (36-дан)</th><th>Пайыз</th><th>Балл</th><th>Деңгей</th></tr>${[10,9,8,7,6,5,4,3,2,1].map(b => { const lo = b === 1 ? 0 : b * 10 - 5, hi = b === 10 ? 100 : b * 10 + 4; const lv = DATA.grades.find(g => lo >= g.min) || DATA.grades[DATA.grades.length - 1]; return `<tr><td>${Math.ceil(lo / 100 * MAXP)}–${Math.floor(hi / 100 * MAXP)}</td><td>${lo}–${hi}%</td><td class="pt">${b}</td><td>${lv.ico} ${lv.name}</td></tr>`; }).join("")}</table>
+  <p class="muted small">Деңгейлер: Жоғары — 85% және одан жоғары, Орта — 50%-дан бастап, Қолдау қажет — 50%-дан төмен. Мұғалім сабақтағы белсенділікті ескеріп, балды түзете алады.</p>`;
 })();
 $("#resetAll").onclick = () => { if (!confirm("Барлық балл мен нәтиже осы құрылғыдан өшіріледі. Жалғастырамыз ба?")) return; Object.keys(localStorage).filter(k => k.startsWith("kk")).forEach(k => localStorage.removeItem(k)); location.reload(); };
 
@@ -725,14 +725,14 @@ async function rtLoad() {
   });
   // table
   const mid = me()?.id;
-  $("#rtTable").innerHTML = students.length ? `<table class="dtable"><tr><th>#</th><th>Оқушы</th><th>Топ</th>${Object.values(SCORE_KEYS).map(v => `<th>${v[0].split(" ")[0]}</th>`).join("")}<th>Барлығы</th><th>%</th><th>Баға</th></tr>${students.map((s, i) => { const t = s.total || 0; const G = gradeOf(t); const lv = `<span class="mark" style="--g:${G.color}">${G.mark}</span>`; return `<tr class="rt-row ${s.id === mid ? "rt-me" : ""}"><td><b>${i + 1}</b></td><td><b>${(s.name || "").replace(/</g, "")}</b></td><td>${DATA.statusInfo[s.group]?.ico || "—"}</td>${Object.keys(SCORE_KEYS).map(k => `<td>${(s.scores || {})[k] ?? "·"}</td>`).join("")}<td class="pt">${t}/${MAXP}</td><td>${G.p}%</td><td>${lv}</td></tr>`; }).join("")}</table>${gradeSummary(students)}` : `<p class="muted">Әзірге нәтиже жоқ. Оқушылар 👤 батырмасы арқылы атын жазып, тапсырмаларды орындағанда осында шығады.</p>`;
+  $("#rtTable").innerHTML = students.length ? `<table class="dtable"><tr><th>#</th><th>Оқушы</th><th>Топ</th>${Object.values(SCORE_KEYS).map(v => `<th>${v[0].split(" ")[0]}</th>`).join("")}<th>Барлығы</th><th>%</th><th>Балл (1–10)</th></tr>${students.map((s, i) => { const t = s.total || 0; const G = gradeOf(t); const lv = `<span class="mark" style="--g:${G.color}">${G.mark}</span> <small>${G.name}</small>`; return `<tr class="rt-row ${s.id === mid ? "rt-me" : ""}"><td><b>${i + 1}</b></td><td><b>${(s.name || "").replace(/</g, "")}</b></td><td>${DATA.statusInfo[s.group]?.ico || "—"}</td>${Object.keys(SCORE_KEYS).map(k => `<td>${(s.scores || {})[k] ?? "·"}</td>`).join("")}<td class="pt">${t}/${MAXP}</td><td>${G.p}%</td><td>${lv}</td></tr>`; }).join("")}</table>${gradeSummary(students)}` : `<p class="muted">Әзірге нәтиже жоқ. Оқушылар 👤 батырмасы арқылы атын жазып, тапсырмаларды орындағанда осында шығады.</p>`;
   if (LIVE.on()) rtTimer = setTimeout(rtLoad, 3000);
 }
 function gradeSummary(st) {
   if (!st.length) return "";
-  const c = {}; st.forEach(s => { const m = gradeOf(s.total || 0).mark; c[m] = (c[m] || 0) + 1; });
-  const q = Math.round(((c[5] || 0) + (c[4] || 0)) / st.length * 100), u = Math.round((st.length - (c[2] || 0)) / st.length * 100);
-  return `<div class="g-sum">${DATA.grades.map(g => `<div style="--g:${g.color}"><b>${c[g.mark] || 0}</b><small>«${g.mark}» ${g.name}</small></div>`).join("")}<div><b>${q}%</b><small>білім сапасы</small></div><div><b>${u}%</b><small>үлгерім</small></div></div>`;
+  const gs = st.map(s => gradeOf(s.total || 0)), c = {}; gs.forEach(g => c[g.name] = (c[g.name] || 0) + 1);
+  const avg = gs.reduce((t, g) => t + g.mark, 0) / gs.length, ok = Math.round(gs.filter(g => g.mark >= 5).length / gs.length * 100);
+  return `<div class="g-sum">${DATA.grades.map(g => `<div style="--g:${g.color}"><b>${c[g.name] || 0}</b><small>${g.ico} ${g.name}</small></div>`).join("")}<div><b>${avg.toFixed(1).replace(".", ",")}</b><small>орташа балл (1–10)</small></div><div><b>${ok}%</b><small>5 балдан жоғары</small></div><div><b>${st.length}</b><small>оқушы</small></div></div>`;
 }
 async function rtAddBonus(g, d) {
   rtBonus[g] = (+rtBonus[g] || 0) + d;
