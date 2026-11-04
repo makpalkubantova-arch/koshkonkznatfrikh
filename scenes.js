@@ -3,18 +3,20 @@ window.SCENES = (() => {
   const C = { sky1: "#e8f9fd", sky2: "#9fe0f0", flag: "#00AFCA", flag2: "#0089B5", gold: "#FEC50C", gold2: "#E0A400", ink: "#0B2545", st1: "#f3d27a", st2: "#d9b25a", st3: "#9ccf8f", white: "#ffffff", red: "#e2552f" };
   const base = (night) => `
   <defs>
-    <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night ? "#b8e6f3" : C.sky1}"/><stop offset="1" stop-color="${C.sky2}"/></linearGradient>
+    <linearGradient id="sk" gradientUnits="userSpaceOnUse" x1="0" y1="-300" x2="0" y2="420"><stop offset="0" stop-color="${night ? "#b8e6f3" : C.sky1}"/><stop offset="1" stop-color="${C.sky2}"/></linearGradient>
     <radialGradient id="sn"><stop offset="0" stop-color="#fff6c8"/><stop offset=".45" stop-color="${C.gold}"/><stop offset="1" stop-color="${C.gold}" stop-opacity="0"/></radialGradient>
-    <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dd8f"/><stop offset="1" stop-color="#e6bf5e"/></linearGradient>
-    <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3a8"/><stop offset="1" stop-color="#8fc77c"/></linearGradient>
+    <linearGradient id="h1" gradientUnits="userSpaceOnUse" x1="0" y1="310" x2="0" y2="420"><stop offset="0" stop-color="#f6dd8f"/><stop offset="1" stop-color="#e6bf5e"/></linearGradient>
+    <linearGradient id="h2" gradientUnits="userSpaceOnUse" x1="0" y1="250" x2="0" y2="420"><stop offset="0" stop-color="#bfe3a8"/><stop offset="1" stop-color="#8fc77c"/></linearGradient>
   </defs>
-  <rect width="1200" height="420" fill="url(#sk)"/>
+  <rect x="-1500" y="-1200" width="4200" height="1700" fill="url(#sk)"/>
   <g class="sc-sun"><circle cx="1010" cy="95" r="120" fill="url(#sn)" opacity=".85"/><circle cx="1010" cy="95" r="46" fill="${C.gold}"/>
     <g class="sc-rays" style="transform-origin:1010px 95px">${Array.from({ length: 16 }, (_, i) => `<rect x="1008" y="20" width="4" height="22" rx="2" fill="${C.gold2}" transform="rotate(${i * 22.5} 1010 95)"/>`).join("")}</g></g>
   <g class="sc-cloud"><ellipse cx="220" cy="80" rx="70" ry="20" fill="#fff" opacity=".85"/><ellipse cx="260" cy="70" rx="45" ry="22" fill="#fff" opacity=".85"/></g>
   <g class="sc-cloud2"><ellipse cx="640" cy="60" rx="60" ry="16" fill="#fff" opacity=".7"/></g>
+  <path d="M-1500 300 H2 V420 H-1500Z M1198 250 H2700 V420 H1198Z" fill="url(#h2)"/>
   <path d="M0 300 C200 250 380 290 560 265 C760 238 950 280 1200 250 V420 H0Z" fill="url(#h2)"/>
   <path d="M0 340 C240 310 460 345 700 322 C900 304 1050 330 1200 318 V420 H0Z" fill="url(#h1)"/>
+  <path d="M-1500 340 H2 V1500 H-1500Z M1198 318 H2700 V1500 H1198Z M0 410 H1200 V1500 H0Z" fill="url(#h1)"/>
   <path d="M0 340 C240 310 460 345 700 322 C900 304 1050 330 1200 318" stroke="${C.gold2}" stroke-width="3" fill="none" opacity=".5"/>`;
   const yurt = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})">
     <path d="M-70 0 V-40 Q0 -105 70 -40 V0Z" fill="#fff" stroke="#c9b48a" stroke-width="3"/>
@@ -64,5 +66,5 @@ window.SCENES = (() => {
     2026: () => base() + city(560, 345, 1.05) + flag(250, 345, 200, "sc-wave") + `<g class="sc-caravan2">${[0, 1, 2].map(i => camel(120 - i * 95, 360, .8)).join("")}</g>` + big(60, 90, "20,59 млн", C.ink, 60) + big(62, 140, "қазақтар 71,5% · қандастар 1 168,2 мың", C.flag2, 26)
   };
   let n = 0;
-  return { draw: y => { n++; const body = (S[y] || S[2026])().replace(/id="(sk|sn|h1|h2)"/g, (m, k) => `id="${k}${n}"`).replace(/url\(#(sk|sn|h1|h2)\)/g, (m, k) => `url(#${k}${n})`); return `<svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${body}</svg>`; } };
+  return { draw: y => { n++; const body = (S[y] || S[2026])().replace(/id="(sk|sn|h1|h2)"/g, (m, k) => `id="${k}${n}"`).replace(/url\(#(sk|sn|h1|h2)\)/g, (m, k) => `url(#${k}${n})`); return `<svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid meet" style="overflow:visible" xmlns="http://www.w3.org/2000/svg">${body}</svg>`; } };
 })();
