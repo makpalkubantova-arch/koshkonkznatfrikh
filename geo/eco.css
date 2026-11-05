@@ -1,0 +1,82 @@
+/* ================= ЭКО ТАҚЫРЫБЫ: аспан · жапырақ · су · топырақ ================= */
+:root{
+  --ink:#0E3B2E; --ink2:#2a5a4a; --muted:#4f7468;
+  --blue:#3B82F6; --teal:#0FA3B1; --orange:#E08A00; --sun:#FFC83D; --indigo:#0E5E4E; --green:#22B573;
+  --flag:#22B573; --flag2:#0FA3B1; --gold:#FFC83D; --gold2:#E0A400;
+  --orn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M30 56C30 40 30 26 30 8M30 34C22 30 14 22 14 12C24 12 30 20 30 34ZM30 26C38 22 46 14 46 4C36 4 30 12 30 26Z' fill='%23ffffff' fill-opacity='.85' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E");
+  --ornC:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M10 50C10 26 26 10 52 8C52 34 36 50 10 50ZM10 50L40 20' fill='%2322B573' fill-opacity='.35' stroke='%2322B573' stroke-width='3'/%3E%3C/svg%3E");
+}
+body{background:#ecfbf3}
+.bg{background:linear-gradient(170deg,#f2fbff 0%,#dff4ff 30%,#e3f9ec 65%,#d4f3dd 100%)}
+.b1{background:radial-gradient(circle,#9fd8ff,#9fd8ff00 70%)}
+.b2{background:radial-gradient(circle,#b9f2cf,#b9f2cf00 70%)}
+.b3{background:radial-gradient(circle,#fff0a6,#fff0a600 70%);opacity:.7}
+.b4{background:radial-gradient(circle,#8fe8c4,#8fe8c400 70%)}
+.b5{background:radial-gradient(circle,#a7e6f2,#a7e6f200 70%)}
+.flag-band{background:var(--orn) center top/38px 38px repeat-y,linear-gradient(180deg,#3BA7F5 0%,#22B573 55%,#8BD346 80%,#C98A3E 100%);box-shadow:4px 0 18px rgba(20,120,80,.25)}
+.brand-mark{background:radial-gradient(circle at 35% 35%,#8BD346 0 20%,#22B573 21% 46%,#3BA7F5 47%)!important;color:#fff}
+.brand-mark::after{content:"🌿"!important;text-shadow:none!important;font-size:20px}
+
+/* баннер */
+.stage-head{background:radial-gradient(circle at 88% 28%,rgba(255,200,61,.55),transparent 30%),linear-gradient(120deg,#0E5E4E 0%,#0FA3B1 50%,#3BA7F5 100%);box-shadow:0 28px 60px -28px rgba(10,90,70,.75),inset 0 1px 0 rgba(255,255,255,.25)}
+.stage-head::before{background:var(--orn) 0 0/52px 52px repeat;opacity:.12}
+.stage-head h2::after{background:linear-gradient(90deg,#FFC83D,#b8f28a)}
+.stage-head .lead{color:#eafff5}
+.stage-head .lead b{color:#FFE27A}
+.stage-head .kicker{background:rgba(255,200,61,.2);color:#FFE27A;border-color:rgba(255,226,122,.6)}
+.big-badge{box-shadow:0 26px 40px -16px rgba(0,0,0,.4),inset 0 -8px 0 rgba(34,181,115,.3),inset 0 2px 0 #fff}
+.big-badge::after{border-color:rgba(139,211,70,.8)}
+.kicker{color:#0E7A4E;background:linear-gradient(90deg,#e9fff1,#fff);border-color:rgba(34,181,115,.5)}
+
+/* батырмалар */
+.btn.primary{background:linear-gradient(180deg,#34cf86,#16935a);box-shadow:0 7px 0 #0e7046,0 16px 26px -10px rgba(14,112,70,.7)}
+.btn.primary:active{box-shadow:0 1px 0 #0e7046}
+
+/* басты бет */
+.mega .l1{color:#0E5E4E}
+.mega .l2{background:linear-gradient(100deg,#0E5E4E 5%,#0FA3B1 38%,#3BA7F5 55%,#22B573 75%,#0E5E4E 95%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text}
+.mega .l3{color:#22B573;text-shadow:0 10px 30px rgba(34,181,115,.35)}
+.hero-globe{cursor:default;border-radius:36px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(10,90,70,.55);background:#dff4ff}
+.hero-globe::after{display:none}
+.hero-globe svg{width:100%;height:100%;display:block}
+
+/* шақырту */
+.invite{background:radial-gradient(circle at 80% 16%,#fff3b0 0,#9fe3ff 26%,#3BA7F5 52%,#22B573 82%,#0E7A4E 100%)}
+.inv-topic{background:linear-gradient(90deg,#16935a,#0FA3B1)}
+.inv-title{color:#0E3B2E}
+
+/* экомонитор */
+.tm-year{background:linear-gradient(120deg,#0E5E4E,#22B573,#3BA7F5);-webkit-background-clip:text;background-clip:text}
+.tm-globe{cursor:default;display:grid;place-items:center;padding:20px 20px 60px}
+.tm-globe svg{max-width:440px}
+.g-needle{transition:all .8s cubic-bezier(.3,1.4,.5,1)}
+.kz-bar i{background:linear-gradient(90deg,#22B573,#F2C200,#F28C28,#E5533D)!important}
+
+/* анимациялар */
+.sc-smoke{animation:smoke 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
+@keyframes smoke{0%{transform:translateY(8px) scale(.9);opacity:.6}50%{opacity:1}100%{transform:translateY(-14px) scale(1.12);opacity:.5}}
+.sc-car{animation:drive 9s linear infinite}.sc-car2{animation:drive 12s linear infinite -4s}.sc-car3{animation:drive 15s linear infinite -9s}
+@keyframes drive{from{transform:translateX(-80px)}to{transform:translateX(1280px)}}
+.sc-puff{animation:puff 1.2s ease-out infinite}
+@keyframes puff{from{transform:translateX(0);opacity:.6}to{transform:translateX(-24px) scale(1.8);opacity:0}}
+.sc-flow{stroke-dasharray:40 30;animation:flow 3s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-140}}
+.sc-haze{animation:haze 12s ease-in-out infinite alternate}
+@keyframes haze{from{transform:translateX(-30px)}to{transform:translateX(40px)}}
+
+/* ұшып жүрген жапырақтар */
+.leaves{position:absolute;inset:0;pointer-events:none}
+.leaves i{position:absolute;top:-40px;width:22px;height:22px;background:var(--ornC) center/contain no-repeat;opacity:.55;animation:leaf 18s linear infinite}
+@keyframes leaf{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(60px,55vh) rotate(180deg)}100%{transform:translate(-30px,110vh) rotate(360deg)}}
+
+/* рефлексия: аспан шкаласы */
+#refl .st-card:nth-child(1){background:linear-gradient(160deg,#e9e6e1,#c9c2b4)}
+#refl .st-card:nth-child(2){background:linear-gradient(160deg,#eef4f7,#cfe3ee)}
+#refl .st-card:nth-child(3){background:linear-gradient(160deg,#eaf8ff,#bfe8ff)}
+#refl .st-card:nth-child(4){background:linear-gradient(160deg,#e8fff1,#b8f0cf)}
+
+/* топ түстері */
+.st-em,.gl.em{--c:#3B82F6}.st-re,.gl.re{--c:#0FA3B1}.st-in,.gl.in{--c:#22B573}
+
+#refl .st-card b{color:#0E3B2E!important}#refl .st-card small{color:#3d5f52!important}#refl .st-card .cnt{color:#0E3B2E!important}
+.mega .l2{font-size:clamp(34px,4.3vw,92px)!important}.mega .l3{font-size:clamp(30px,3.8vw,76px)!important}

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Қоршаған ортаның сапасы · География 11 · Интерактивті сабақ</title>
+<meta name="description" content="География, 11-сынып: Қоршаған ортаның сапасы. Астана экомониторингі. Оқушы + ЖИ интерактивті сабағы.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="eco.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span><span class="blob b5"></span>
+  <span class="sheen"></span>
+  <div class="bubbles"></div>
+  <div class="flag-band"></div>
+  <svg class="bg-sun" viewBox="-110 -110 220 220" id="bgSun"></svg>
+  <div class="leaves" aria-hidden="true"></div>
+</div>
+
+<header class="topbar">
+  <button class="icon-btn side-toggle" id="sideToggle" title="Сабақ барысы">☰</button>
+  <a class="brand" href="#home" data-go="home">
+    <span class="brand-mark">ЭК</span>
+    <span class="brand-text"><b>Экомонитор</b><small>География · 11-сынып · §22</small></span>
+  </a>
+  <div class="phasebar" id="phasebar"></div>
+  <div class="clock" id="clock" title="Сабақтың 45 минуттық сағаты">
+    <button id="clkPlay" title="Сабақты бастау">▶</button>
+    <div class="clk-in"><b id="clkTime">00:00</b><small id="clkPlan">45 мин · сабақ сағаты</small></div>
+    <div class="clk-bar"><i id="clkBar"></i></div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" id="gearBtn" title="Мұғалімнің баптаулары мен құжаттары">⚙️</button>
+    <button class="pill-btn qr-btn" id="qrBtn" title="Осы кезеңнің QR-коды">📱 QR</button>
+    <button class="pill-btn" id="whoBtn" title="Мен кіммін">👤 <span id="whoLbl">Кіру</span></button>
+    <button class="pill-btn" id="myScoreBtn" title="Менің ұпайым">⭐ <span id="myScore">0</span>/36</button>
+    <button class="icon-btn" id="boardBtn" title="Топтардың балл тақтасы">🏆</button>
+    <button class="icon-btn" id="fsBtn" title="Толық экран">⛶</button>
+  </div>
+</header>
+<div class="side-scrim" id="sideScrim"></div>
+<aside class="side glass" id="side"><div class="side-in" id="sideList"></div></aside>
+
+<div class="timer" id="timer" hidden>
+  <svg viewBox="0 0 120 120"><circle class="t-bg" cx="60" cy="60" r="52"/><circle class="t-fg" id="tRing" cx="60" cy="60" r="52"/></svg>
+  <div class="t-time" id="tTime">00:00</div>
+  <div class="t-ctl"><button id="tPlay" title="Бастау">▶</button><button id="tReset" title="Қайта">↺</button></div>
+</div>
+
+<main id="stages">
+
+<!-- INVITATION -->
+<section class="stage" id="st-invite">
+  <div class="invite">
+    <div class="inv-band" aria-hidden="true"></div>
+    <div class="inv-sun" aria-hidden="true"><svg id="invSun" viewBox="-110 -110 220 220"></svg></div>
+    <div class="inv-body">
+      <div class="inv-orn top" aria-hidden="true"></div>
+      <p class="inv-kicker">Құрметті әріптестер, қонақтар!</p>
+      <h1 class="inv-title">Сіздерді <span>ашық сабаққа</span> шақырамыз</h1>
+      <div class="inv-topic">«Қоршаған ортаның сапасы»</div>
+      <p class="inv-sub">Астана тыныс алып тұр ма? <b>Эко-детективтер + ЖИ</b></p>
+      <div class="inv-grid">
+        <div><i>📅</i><b>13 қараша 2026</b><small>бейсенбі</small></div>
+        <div><i>🕑</i><b>__.__–__.__</b><small>45 минут</small></div>
+        <div><i>🚪</i><b>№___ кабинет</b><small>11-сынып</small></div>
+        <div><i>📖</i><b>География</b><small>§22 · 89–94-б.</small></div>
+      </div>
+      <p class="inv-teacher">Пән мұғалімі: <b>Бигожаева Акмарал Тургунбаевна</b></p>
+      <p class="inv-sem">«ЖИ мектепте: Оқытудың жаңа мүмкіндіктері» семинары<br>«№45 жалпы білім беретін мектеп» ШЖҚ МКК · Астана қаласы</p>
+      <div class="inv-actions">
+        <button class="btn gold big" data-go="home">Сабаққа кіру →</button>
+        <div class="inv-qr" id="qrInvite"></div>
+        <div class="inv-qr"><div id="qrInviteFb"></div><small class="inv-qr-l">Қонақтарға: кері байланыс</small></div>
+      </div>
+      <div class="inv-orn bottom" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 0 HOME -->
+<section class="stage" id="st-home" data-title="Басы">
+  <div class="hero-globe" id="heroGlobe" aria-hidden="true"></div>
+  <div class="hero">
+    <div class="eyebrow">«ЖИ мектепте: Оқытудың жаңа мүмкіндіктері» республикалық семинары</div>
+    <h1 class="mega"><span class="l1">Астана тыныс алып тұр ма?</span><span class="l2">ҚОРШАҒАН ОРТАНЫҢ</span><span class="l3">САПАСЫ</span></h1>
+    <p class="hero-sub">Эко-детективтер: <b>Оқушы + ЖИ</b> · ауа · су · топырақ</p>
+    <div class="meta-chips">
+      <span>📅 13.11.2026</span><span>🎓 11-сынып</span><span>📖 §22 · 89–94-б.</span><span>🎯 11.3.22</span>
+    </div>
+    <div class="hero-cta">
+      <button class="btn primary big" data-go="goals">Сабақты бастау →</button>
+      <button class="btn glass big" data-go="card">🧪 Экосынама</button>
+    </div>
+    <p class="teacher">Мұғалім: Бигожаева Акмарал Тургунбаевна · «№45 ЖОББМ» ШЖҚ МКК, Астана</p>
+  </div>
+</section>
+
+<!-- 1 GOALS -->
+<section class="stage" id="st-goals" data-title="Мақсат" data-min="1">
+  <div class="stage-head"><span class="kicker">Сабақтың бағыты</span><h2>Бүгін біз не үйренеміз?</h2></div>
+  <div class="grid two">
+    <article class="glass card">
+      <h3>🎯 Оқу мақсаты</h3>
+      <ol class="nice">
+        <li><b>11.3.22</b> — қоршаған орта сапасының көрсеткіштерін жіктеу.</li>
+      </ol>
+      <h3>🧭 Сабақ мақсаты</h3>
+      <ul class="tiers">
+        <li><b>Барлығы:</b> ауа, су, топырақ және табиғи жүйелер сапасының көрсеткіштерін жіктейді.</li>
+        <li><b>Көпшілігі:</b> сапа нормативтері (ШЖШ) мен мониторинг түрлерін сипаттайды.</li>
+        <li><b>Кейбірі:</b> Астананың 2026 жылғы ресми деректерін талдап, ЖИ мәтіні мен оқулық есебін сын тұрғысынан бағалайды.</li>
+      </ul>
+    </article>
+    <article class="glass card">
+      <h3>✅ Бағалау критерийлері</h3>
+      <div class="crit" id="critList"></div>
+      <h3>🗺️ Сабақтың жолы</h3>
+      <div class="mini-road" id="miniRoad"></div>
+    </article>
+  </div>
+</section>
+
+<!-- 2 CARD -->
+<section class="stage" id="st-card" data-title="Экосынама" data-min="2">
+  <div class="stage-head"><span class="kicker">Жеке жұмыс · Оқушы + ЖИ (цифрлық платформа) · К1</span><h2>Экосынама: көрсеткішті жікте</h2>
+  <p class="lead">Сынама картасын ал → Астанада өлшенген көрсеткіш қай ортаға жатады? → өз тобыңды тап.</p></div>
+  <div class="grid card-grid">
+    <div class="passport-wrap">
+      <div class="passport" id="passport">
+        <div class="pp-top"><span>АСТАНА · ЭКОСЫНАМА</span><span id="ppNo">№ 0000</span></div>
+        <div class="pp-body">
+          <div class="pp-avatar" id="ppAvatar">?</div>
+          <div class="pp-info">
+            <div class="pp-name" id="ppName">Сынамаңды ал</div>
+            <div class="pp-row"><i>Бірлігі</i><b id="ppAge">—</b></div>
+            <div class="pp-row"><i>Кезең</i><b id="ppYear">—</b></div>
+            <div class="pp-route" id="ppRoute">— → —</div>
+          </div>
+        </div>
+        <p class="pp-story" id="ppStory">Төмендегі батырманы бас — саған Қазгидромет өлшеген нақты бір көрсеткіш беріледі.</p>
+        <div class="stamp" id="ppStamp"></div>
+      </div>
+      <div class="row gap">
+        <button class="btn primary" id="ppNew">🧪 Сынама алу</button>
+      </div>
+      <div class="status-pick" id="statusPick">
+        <p>Бұл көрсеткіш қай ортаның сапасын сипаттайды?</p>
+        <div class="row gap wrap">
+          <button class="btn st st-em" data-st="em">🌬️ Ауа</button>
+          <button class="btn st st-re" data-st="re">💧 Су</button>
+          <button class="btn st st-in" data-st="in">🌱 Топырақ</button>
+        </div>
+        <p class="feedback" id="stFeedback"></p>
+      </div>
+    </div>
+    <aside class="glass card qr-card board-only">
+      <h3>📱 Телефонмен кір</h3>
+      <div class="qr" id="qrCard"></div>
+      <p class="muted small">QR-ды сканерле — сынамаң телефоныңда ашылады.</p>
+      <div class="groups-legend">
+        <div class="gl em"><b>🌬️ Ауа сапасы</b><span>1-топ</span></div>
+        <div class="gl re"><b>💧 Су сапасы</b><span>2-топ</span></div>
+        <div class="gl in"><b>🌱 Топырақ сапасы</b><span>3-топ</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- 3 VIDEO -->
+<section class="stage" id="st-video" data-title="Видео" data-min="2">
+  <div class="stage-head"><span class="kicker">Бүкіл сынып · Қызығушылықты ояту</span><h2>Астана тыныс алып тұр ма? (2 минут)</h2></div>
+  <div class="video-wrap glass">
+    <video id="vid" controls preload="metadata" poster="media/poster.jpg" playsinline>
+      <source src="media/eco-astana.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="watch-q">
+    <span>Көре отырып ойлан:</span>
+    <b>1. Ортаның сапасын қандай көрсеткіштер сипаттайды?</b><b>2. Астанада не нормадан асады?</b><b>3. Сапаны кім, қалай бақылайды?</b>
+  </div>
+</section>
+
+<!-- 4 TERMS -->
+<section class="stage" id="st-terms" data-title="Ұғымдар" data-min="3">
+  <div class="stage-head"><span class="kicker">Жеке жұмыс · Тақтаға шығып орында · 5 балл · К1</span><h2>Ұғымды тап</h2>
+  <p class="lead">Ұғымды сүйреп апар (немесе басып таңда да, анықтаманы бас).</p></div>
+  <div class="match" id="termsMatch"></div>
+  <div class="row gap center">
+    <button class="btn primary" id="termsCheck">Тексеру</button>
+    <button class="btn glass" id="termsReset">Қайта бастау</button>
+    <span class="score-badge" id="termsScore"></span>
+  </div>
+  <details class="desc glass"><summary>📋 Дескрипторлар</summary><div id="termsDesc"></div></details>
+</section>
+
+<!-- 5 WITNESSES -->
+<section class="stage" id="st-witness" data-title="ЖИ-эколог" data-min="8">
+  <div class="stage-head"><span class="kicker">Жұптық жұмыс · Академиялық адалдық · ЖИ — мұғалімнің цифрлық ассистенті · 6 балл · К4</span><h2>ЖИ-эколог: қатені тап</h2>
+  <p class="lead">Сұхбаттарды ЖИ (Gemini) жасаған. Кейіпкерлер <b>ойдан шығарылған</b>. Әр сұхбатта <b>2 қате</b> бар. Күдікті сөйлемді бас → оқулықпен (89–94-б.) және Қазгидромет дерегімен тексер. Есептің өзін де тексер!</p></div>
+  <div class="tabs" id="witTabs"></div>
+  <div class="chat glass" id="witChat"></div>
+  <div class="row gap center">
+    <span class="score-badge" id="witScore">Табылған қате: 0 / 6</span>
+    <button class="btn glass" id="witReset">Қайта бастау</button>
+  </div>
+  <details class="desc glass"><summary>📋 Дескрипторлар</summary><div id="witDesc"></div></details>
+</section>
+
+<!-- 6 TIMELINE + PROMPT -->
+<section class="stage" id="st-prompt" data-title="Промпт" data-min="12">
+  <div class="stage-head"><span class="kicker">Топтық жұмыс · Промпт-инжиниринг · 5 балл · К3, К4</span><h2>Промпт шеберханасы</h2>
+  <p class="lead">Тобыңның ортасын таңда (ауа / су / топырақ) → промпт құрастыр → Gemini-ден жауап ал → Қазгидромет дерегімен тексер → 1 минут қорға.</p></div>
+  <div class="tabs" id="grpTabs"></div>
+  <div class="grid two" id="pgA">
+    <article class="glass card" id="grpTask"></article>
+    <article class="glass card">
+      <h3>✍️ Промпт құрастырғыш <small class="muted">Р-Т-К-Ф-Ш формуласы</small></h3>
+      <div class="pb" id="pb"></div>
+      <div class="prompt-out" id="pOut"></div>
+      <div class="row gap wrap">
+        <button class="btn primary" id="pCopy">📋 Көшіру</button>
+        <a class="btn glass" href="https://gemini.google.com/" target="_blank" rel="noopener">✨ Gemini-ді ашу</a>
+      </div>
+    </article>
+  </div>
+  <div class="grid two" id="pgB">
+    <article class="glass card">
+      <h3>🔍 ЖИ жауабын тексер</h3>
+      <div class="checks" id="aiChecks"></div>
+    </article>
+    <article class="glass card">
+      <h3>🏅 Топты бағалау (өзара бағалау)</h3>
+      <div class="rubric" id="grpRubric"></div>
+      <div class="row gap"><span class="score-badge" id="grpScore">0 / 5</span><button class="btn primary" id="grpAdd">🏆 Балл тақтасына қосу</button></div>
+    </article>
+  </div>
+  <article class="glass card">
+    <h3>🔁 Мониторинг үдерісін құр <small class="muted">— қадамдарды дұрыс ретпен орналастыр (оқулық, 27–28-сызбанұсқа)</small></h3>
+    <div class="tl-wrap" id="tl"></div>
+    <div class="row gap center"><button class="btn primary" id="tlCheck">Тексеру</button><button class="btn glass" id="tlShuffle">Араластыру</button><span class="score-badge" id="tlScore"></span></div>
+  </article>
+</section>
+
+<!-- 7 DIFFERENTIATED -->
+<section class="stage" id="st-levels" data-title="Деңгей" data-min="7">
+  <div class="stage-head"><span class="kicker">Жеке жұмыс · ЖИ-мен сараланған тапсырмалар · 4 балл</span><h2>Деңгейіңді таңда</h2>
+  <p class="lead">Өзіңе лайық деңгейді таңда. Кез келген деңгей 4 балл береді.</p></div>
+  <div class="level-pick" id="lvlPick"></div>
+  <article class="glass card" id="lvlBody"></article>
+</section>
+
+<!-- 8 QUIZ -->
+<section class="stage" id="st-quiz" data-title="Квиз" data-min="6">
+  <div class="stage-head"><span class="kicker">Бағалаудағы ЖИ · Телефонмен · 2 раунд</span><h2>Өзіңді тексер</h2>
+  <p class="lead">Деңгейіңді жүйе өзі есептейді және кері байланыс береді.</p></div>
+  <div class="grid quiz-grid">
+    <article class="glass card quiz-card" id="quizBox"></article>
+    <aside class="glass card qr-card board-only">
+      <h3>📱 Квизге кір</h3>
+      <div class="qr" id="qrQuiz"></div>
+      <h3 class="mt">📊 Сынып нәтижесі</h3>
+      <p class="muted small">Оқушылар деңгейін айтады — мұғалім басады.</p>
+      <div class="tally" id="tally"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- 9 REFLECTION -->
+<section class="stage" id="st-reflect" data-title="Рефлексия" data-min="4">
+  <div class="stage-head"><span class="kicker">Рефлексия</span><h2>Менің аспаным қандай?</h2>
+  <p class="lead">Өз «аспаныңды» бас — стикерің шкалаға қонады.</p></div>
+  <div class="refl" id="refl"></div>
+  <div class="glass card final">
+    <h3>💬 Ойлан, жалғастыр:</h3>
+    <p>«Бүгін мен ... білдім» · «ЖИ-ге сенбес бұрын ... тексеру керек» · «Астананың ауасын таза ету үшін мен ...»</p>
+    <div class="row gap wrap"><input id="rfText" class="cfg-in" style="flex:1;min-width:240px" placeholder="Сөйлеміңді жалғастыр…" maxlength="200"><button class="btn gold" id="rfSend">Қабырғаға жіберу 💬</button></div>
+  </div>
+</section>
+
+<!-- 10 ASSESS -->
+<section class="stage" id="st-assess" data-title="Бағалау" data-min="0">
+  <div class="stage-head"><span class="kicker">Бағалау парағы</span><h2>Критерийлер, дескрипторлар, балл</h2></div>
+  <div class="glass card"><div id="assessTable"></div></div>
+  <div class="row gap center"><button class="btn glass" onclick="window.print()">🖨️ Басып шығару</button><button class="btn glass" id="resetAll">🧹 Барлық нәтижені тазалау</button></div>
+  <div class="glass card sources">
+    <h3>📚 Дереккөздер</h3>
+    <ul>
+      <li>География. 11-сынып, қоғамдық-гуманитарлық бағыт. Оқулық. §22. Қоршаған ортаның сапасын бағалау, 89–94-беттер.</li>
+      <li>«Қазгидромет» РМК. Астана қаласы және Ақмола облысы бойынша қоршаған орта жай-күйі жөніндегі ақпараттық бюллетень, 2026 ж. 1-жартыжылдық.</li>
+      <li>«Қазгидромет» РМК. Астана қаласы, 2026 ж. мамыр бюллетені; ҚР қоршаған орта жай-күйі бюллетені, 2026 ж. қаңтар (ластану градациясы).</li>
+      <li>Дүниежүзілік денсаулық сақтау ұйымы (ДДҰ). Ауа сапасы жөніндегі жаһандық нұсқаулық, 2021 (PM2.5 — 5 мкг/м³ жылдық).</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- TIME MACHINE -->
+<section class="stage" id="st-time">
+  <div class="stage-head"><span class="kicker">Бүкіл сынып · Деректерді талдау · К2, К3</span><h2>Экомонитор: Астана 2022 → 2026</h2>
+  <p class="lead">Жүгірткіні жылжыт немесе ▶ бас. Аспан, өзен, сандар өзгереді. Әр бекетте ойлан: <b>деңгей қандай және неге?</b> (Қазгидромет, әр жылдың 1-жартыжылдығы)</p></div>
+  <div class="tm glass">
+    <div class="tm-stage">
+      <div class="tm-globe" id="tmGlobe"></div>
+      <div class="tm-year" id="tmYear">2022</div>
+      <div class="tm-mode" id="tmMode"></div>
+    </div>
+    <div class="tm-side">
+      <div class="kpi"><small>🌫️ Стандартты индекс (СИ)</small><b id="tmPop">—</b><i id="tmPopY"></i></div>
+      <div class="kpi"><small>🔁 Ең жоғары қайталанғыштық (ЕЖҚ)</small><b id="tmKz">—</b><div class="kz-bar"><i id="tmKzBar"></i></div><i id="tmKzY"></i></div>
+      <div class="kpi"><small>🚦 Ластану деңгейі / класы</small><b id="tmKd">—</b><i id="tmKdY"></i></div>
+      <div class="tm-ev" id="tmEv"></div>
+    </div>
+  </div>
+  <div class="tm-scene glass" id="tmScene"><div class="sc-holder" id="scHolder"></div><div class="sc-cap" id="scCap"></div></div>
+  <div class="tm-ctl glass">
+    <button class="btn primary" id="tmPlay">▶ Бақылау</button>
+    <div class="tm-track"><input type="range" id="tmRange" min="0" max="8" step="1" value="0"><div class="tm-ticks" id="tmTicks"></div></div>
+  </div>
+  <div class="chrono" id="tmChrono"></div>
+  <details class="desc glass"><summary>📋 Критерий мен дескрипторлар (қалыптастырушы бағалау)</summary><div id="tmDesc"></div></details>
+</section>
+
+<!-- DATA DUEL -->
+<section class="stage" id="st-duel">
+  <div class="stage-head"><span class="kicker">Жұптық жұмыс · Сыни ойлау · 6 балл · К2, К3</span><h2>Норма vs Астана</h2>
+  <p class="lead">Сол жақта — норматив. Алдымен болжа: <b>Астанада нормадан асты ма?</b> Сосын карточканы аудар — Қазгидромет өлшемі ашылады.</p></div>
+  <div class="duel-grid" id="duelGrid"></div>
+  <div class="row gap center"><span class="score-badge" id="duelScore">Дұрыс болжам: 0 / 6</span><button class="btn glass" id="duelReset">Қайта бастау</button></div>
+  <details class="desc glass"><summary>📋 Критерий мен дескрипторлар (қалыптастырушы бағалау)</summary><div id="duelDesc"></div></details>
+</section>
+
+<!-- KMJ -->
+<section class="stage" id="st-kmj">
+  <div class="stage-head"><span class="kicker">Қысқа мерзімді жоспар</span><h2>ҚМЖ: Қоршаған ортаның сапасы</h2></div>
+  <div class="glass card kmj" id="kmjDoc"></div>
+  <div class="row gap center"><button class="btn glass" onclick="window.print()">🖨️ Басып шығару / PDF</button></div>
+</section>
+
+<!-- RATING -->
+<section class="stage" id="st-rating">
+  <div class="stage-head"><span class="kicker">Бағалаудағы ЖИ · Автоматты рейтинг</span><h2>Тірі рейтинг</h2>
+  <p class="lead" id="rtStatus">Оқушылардың ұпайлары автоматты түрде жиналады.</p></div>
+  <div class="rt-wrap">
+    <div class="glass card rt-podium"><h3>🥇 Эко-көшбасшылар</h3><div class="podium" id="podium"></div></div>
+    <div class="glass card"><h3>👥 Топтар жарысы</h3><div id="rtGroups"></div></div>
+  </div>
+  <div class="glass card"><h3>📊 Барлық оқушылар</h3><div id="rtTable"></div></div>
+  <div class="row gap center wrap"><button class="btn glass" id="rtRefresh">🔄 Жаңарту</button><button class="btn glass t-only" id="rtSettings">⚙️ Firebase баптауы</button><button class="btn glass t-only" id="rtClear">🧹 Рейтингті тазалау</button></div>
+</section>
+
+<!-- name modal -->
+
+<!-- FEEDBACK WALL -->
+<section class="stage" id="st-wall">
+  <div class="stage-head"><span class="kicker">Қонақтар · мұғалімдер · оқушылар</span><h2>Кері байланыс қабырғасы</h2>
+  <p class="lead">QR-ды сканерлеп, пікіріңізді қалдырыңыз — ол бірден тақтада пайда болады.</p></div>
+  <div class="wall-top">
+    <div class="glass card fb-form" id="fbForm">
+      <h3>✍️ Пікір қалдыру</h3>
+      <div class="fb-roles" id="fbRoles"></div>
+      <input id="fbName" class="cfg-in" placeholder="Аты-жөніңіз (міндетті емес)" maxlength="40">
+      <div class="fb-stars" id="fbStars"></div>
+      <textarea id="fbLike" class="answer fb-ta" placeholder="⭐ Маған ұнағаны / Мен бүгін ... білдім" maxlength="300"></textarea>
+      <textarea id="fbIdea" class="answer fb-ta" placeholder="💡 Ұсыныс / тілек" maxlength="300"></textarea>
+      <button class="btn gold big" id="fbSend">Жіберу 🚀</button>
+    </div>
+    <div class="wall-side board-only">
+      <div class="glass card fb-stats" id="fbStats"></div>
+      <div class="glass card qr-card"><h3>📱 Қонақтарға</h3><div class="qr" id="qrWall"></div></div>
+    </div>
+  </div>
+  <div class="board-only"><div class="tabs" id="wallTabs"></div>
+  <div class="wall" id="wall"></div></div>
+</section>
+
+<!-- STUDENT HUB (phone) -->
+<section class="stage" id="st-hub">
+  <div class="hub">
+    <div class="hub-sun">☀</div>
+    <h2 class="hub-hi" id="hubHi">Сәлем!</h2>
+    <p class="hub-sub">Тақтадағы тапсырманы күт немесе өзің таңда 👇</p>
+    <div class="hub-wait" id="hubWait"><span class="typing"><i></i><i></i><i></i></span> Тақтамен байланыс…</div>
+    <div class="hub-grid" id="hubGrid"></div>
+  </div>
+</section>
+</main>
+
+<nav class="pager">
+  <button class="pg-btn" id="prevBtn" aria-label="Алдыңғы">←</button>
+  <span id="pgLabel"></span>
+  <button class="pg-btn" id="nextBtn" aria-label="Келесі">→</button>
+</nav>
+
+<!-- scoreboard drawer -->
+<div class="drawer" id="board" hidden>
+  <div class="drawer-in glass">
+    <div class="row between"><h3>🏆 Топтардың балл тақтасы</h3><button class="icon-btn" id="boardClose">✕</button></div>
+    <div id="boardBody"></div>
+  </div>
+</div>
+
+<!-- my score drawer -->
+<div class="drawer" id="mine" hidden>
+  <div class="drawer-in glass">
+    <div class="row between"><h3>⭐ Менің бағалау парағым</h3><button class="icon-btn" id="mineClose">✕</button></div>
+    <div id="mineBody"></div>
+  </div>
+</div>
+
+<div class="drawer" id="qrModal" hidden>
+  <div class="drawer-in glass qr-modal">
+    <div class="row between"><h3 id="qrTitle">📱 Телефонмен кір</h3><button class="icon-btn" id="qrClose">✕</button></div>
+    <div class="qr big" id="qrBig"></div>
+    <p class="qr-url" id="qrUrl"></p>
+  </div>
+</div>
+
+<div class="drawer" id="who" hidden>
+  <div class="drawer-in glass who">
+    <div class="who-sun">☀</div>
+    <h3>Экомониторға қош келдің!</h3>
+    <p class="muted">Атың мен тобыңды жаз — ұпайларың рейтингке автоматты түседі.</p>
+    <input id="whoName" placeholder="Аты-жөні (мысалы: Айбек С.)" maxlength="40">
+    <div class="who-groups" id="whoGroups"></div>
+    <button class="btn gold big" id="whoOk">Сақтау ✓</button>
+  </div>
+</div>
+<div class="drawer" id="cfg" hidden>
+  <div class="drawer-in glass">
+    <div class="row between"><h3>⚙️ Тірі рейтинг (Firebase)</h3><button class="icon-btn" id="cfgClose">✕</button></div>
+    <p>Firebase Realtime Database мекенжайын қойыңыз. QR-кодтар оны оқушылардың телефонына өздері жеткізеді.</p>
+    <input id="cfgUrl" class="cfg-in" placeholder="https://ЖОБА-default-rtdb.firebaseio.com">
+    <div class="row gap mt"><button class="btn primary" id="cfgSave">Сақтау және тексеру</button><span id="cfgMsg"></span></div>
+    <p class="muted small mt">Нұсқаулық: README.md → «Тірі рейтингті қосу».</p>
+  </div>
+</div>
+<div class="drawer" id="gear" hidden>
+  <div class="drawer-in glass gear">
+    <div class="row between"><h3>⚙️ Мұғалімнің панелі</h3><button class="icon-btn" id="gearClose">✕</button></div>
+    <p class="muted small">Бұл бөлім экранда оқушылар мен қонақтарға көрінбейді.</p>
+    <div class="gear-grid">
+      <button id="gTeach"><i>👩‍🏫</i><b>ҚМЖ панельдері</b><small id="gTeachSt">Әр кезеңде мұғалімге нұсқау</small></button>
+      <button data-g="kmj"><i>📄</i><b>ҚМЖ құжаты</b><small>Толық жоспар · басып шығару</small></button>
+      <button data-g="assess"><i>📋</i><b>Бағалау парағы</b><small>Критерий, дескриптор, ұпай</small></button>
+      <button id="gLive"><i>🛰️</i><b>Тірі рейтинг</b><small id="gLiveSt">Firebase баптауы</small></button>
+      <button data-g="rating"><i>🏆</i><b>Рейтинг</b><small>Оқушылар мен топтар</small></button>
+      <button id="gClear"><i>🧹</i><b>Нәтижелерді тазалау</b><small>Осы құрылғыдағы ұпайлар</small></button>
+      <button id="gFit"><i>🖥️</i><b>Тақтаға сыйдыру</b><small id="gFitSt">Қосулы</small></button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script src="vendor/qrcode.js"></script>
+<script src="data.js"></script>
+<script src="live.js"></script>
+<script src="scenes.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
