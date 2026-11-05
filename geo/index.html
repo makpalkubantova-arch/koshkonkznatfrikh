@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="eco.css">
+<link rel="stylesheet" href="conf.css">
 </head>
 <body>
 <div class="bg" aria-hidden="true">
@@ -321,6 +322,7 @@
     <button class="btn primary" id="tmPlay">▶ Бақылау</button>
     <div class="tm-track"><input type="range" id="tmRange" min="0" max="8" step="1" value="0"><div class="tm-ticks" id="tmTicks"></div></div>
   </div>
+  <div class="grid two charts"><article class="glass card"><h3>Стандартты индекс (СИ), 1-жартыжылдық</h3><div id="chSI" class="chart"></div></article><article class="glass card"><h3>Ең жоғары қайталанғыштық (ЕЖҚ), %</h3><div id="chEZK" class="chart"></div></article></div>
   <div class="chrono" id="tmChrono"></div>
   <details class="desc glass"><summary>📋 Критерий мен дескрипторлар (қалыптастырушы бағалау)</summary><div id="tmDesc"></div></details>
 </section>
@@ -332,6 +334,46 @@
   <div class="duel-grid" id="duelGrid"></div>
   <div class="row gap center"><span class="score-badge" id="duelScore">Дұрыс болжам: 0 / 6</span><button class="btn glass" id="duelReset">Қайта бастау</button></div>
   <details class="desc glass"><summary>📋 Критерий мен дескрипторлар (қалыптастырушы бағалау)</summary><div id="duelDesc"></div></details>
+</section>
+
+<!-- LAB -->
+<section class="stage" id="st-lab">
+  <div class="stage-head"><span class="kicker">Жұптық жұмыс · 10-сарамандық жұмыс · К2, К4</span><h2>ШЖШ-зертхана</h2>
+  <p class="lead">Бірге жинақталатын заттар үшін ауа нормаға сай болуы шарт: <b>C₁/ШЖШ₁ + C₂/ШЖШ₂ &lt; 1</b> (оқулық, 93-б.). Шоғырды өзгертіп көр.</p></div>
+  <div class="grid two lab">
+    <article class="glass card">
+      <h3>Елді мекен ауасындағы сынама</h3>
+      <div class="lab-row" id="labA"></div>
+      <div class="lab-row" id="labB"></div>
+      <div class="row gap wrap mt"><button class="btn primary" id="labBook">Оқулықтағы мысалды тексер</button><button class="btn glass" id="labReset">Қайта бастау</button></div>
+      <p class="muted small mt">Оқулықта: ацетон 0,345 мг/м³ (ШЖШ 0,35), фенол 0,009 мг/м³ (ШЖШ 0,01). Есептің шешімі 94-бетте.</p>
+    </article>
+    <article class="glass card lab-out">
+      <h3>Есептеу</h3>
+      <div class="lab-formula" id="labF"></div>
+      <div class="lab-meter"><div class="lab-fill" id="labFill"></div><div class="lab-one">1,0 — шек</div></div>
+      <div class="lab-verdict" id="labV"></div>
+      <div class="lab-book" id="labBookBox" hidden>
+        <b>Оқулықтағы шешім (94-б.):</b> 0,345/0,35 + 0,009/<u>0,9</u> = 0,986 + 0,01 = 0,996 &lt; 1 → «нормадан аспайды».<br>
+        <b>Тексер:</b> фенолдың ШЖШ-сы 0,01, ал 0,9 емес! Демек, 0,009/0,01 = 0,9 → қосынды <b>1,886 &gt; 1</b>. Ауа нормаға сай <b>емес</b>.
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- SIMULATOR -->
+<section class="stage" id="st-sim">
+  <div class="stage-head"><span class="kicker">Топтық жұмыс · Шешім қабылдау · К3</span><h2>Экосимулятор: Астананың әкімі бол</h2>
+  <p class="lead">Бюджет — <b>10 ұпай</b>. Астананың ауасын жақсартатын шаралар жиынтығын таңда және оны дерекпен қорға. <b>Ескерту:</b> бұл оқу мақсатындағы болжамды модель, нақты өлшем емес.</p></div>
+  <div class="grid sim">
+    <div class="sim-city glass" id="simCity"></div>
+    <aside class="glass card sim-panel">
+      <div class="sim-kpi"><div><small>СИ (болжам)</small><b id="simSI">8,7</b></div><div><small>Бюджет</small><b id="simBud">0 / 10</b></div></div>
+      <div class="sim-bar"><i id="simBar"></i></div>
+      <div class="sim-list" id="simList"></div>
+      <p class="sim-msg" id="simMsg"></p>
+    </aside>
+  </div>
 </section>
 
 <!-- KMJ -->

@@ -24,7 +24,7 @@ const store = {
 const MQ = new URLSearchParams(location.search).get("m");
 if (MQ === "s" || MQ === "g" || MQ === "b") store.set("eoMode", MQ);
 const MODE = store.get("eoMode", "b"), STUDENT = MODE === "s" || MODE === "g";
-const SALLOW = MODE === "g" ? ["wall"] : ["hub", "card", "terms", "duel", "witness", "prompt", "levels", "quiz", "reflect", "wall"];
+const SALLOW = MODE === "g" ? ["wall"] : ["hub", "card", "terms", "lab", "duel", "witness", "prompt", "sim", "levels", "quiz", "reflect", "wall"];
 if (STUDENT) document.body.classList.add("student");
 
 /* ---------- toast + confetti ---------- */
@@ -224,7 +224,7 @@ function fillQr(el, id, m = "s") { if (el) el.innerHTML = fancyQr(baseUrl(m) + "
 function refreshQrs() { fillQr($("#qrCard"), "card"); fillQr($("#qrQuiz"), "quiz"); fillQr($("#qrInvite"), "hub"); fillQr($("#qrInviteFb"), "wall", "g"); fillQr($("#qrWall"), "wall", "g"); }
 refreshQrs();
 refreshQrs();
-$("#qrBtn").onclick = () => { const s = ST[cur]; $("#qrTitle").textContent = `📱 ${s.ico} ${s.label} — телефонмен кір`; const qm = s.id === "wall" ? "g" : "s"; const qid = SALLOW.includes(s.id) ? s.id : "hub"; fillQr($("#qrBig"), qid, qm); $("#qrUrl").textContent = baseUrl(qm) + "#" + qid; $("#qrModal").hidden = false; };
+$("#qrBtn").onclick = () => { const s = ST[cur]; $("#qrTitle").textContent = `${s.label} — телефонмен кір`; const qm = s.id === "wall" ? "g" : "s"; const qid = SALLOW.includes(s.id) ? s.id : "hub"; fillQr($("#qrBig"), qid, qm); $("#qrUrl").textContent = baseUrl(qm) + "#" + qid; $("#qrModal").hidden = false; };
 $("#qrClose").onclick = () => $("#qrModal").hidden = true;
 
 /* ---------- drawers ---------- */
@@ -887,7 +887,75 @@ renderMyScore();
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 go(location.hash.slice(1) || (STUDENT ? (MODE === "g" ? "wall" : "hub") : "invite"), false);
 addEventListener("load", () => { scrollTo(0, 0); setTimeout(() => scrollTo(0, 0), 120); });
-})();
-
 /* ---------- жапырақтар ---------- */
 (() => { const L = document.querySelector(".leaves"); if (!L) return; for (let i = 0; i < 12; i++) { const e = document.createElement("i"); e.style.left = (Math.random() * 96) + "vw"; e.style.animationDelay = (-Math.random() * 18) + "s"; e.style.animationDuration = (14 + Math.random() * 10) + "s"; e.style.transform = `scale(${.6 + Math.random()})`; L.append(e); } })();
+
+
+/* ---------- Экомонитор графиктері ---------- */
+function drawCharts() {
+  const D = DATA.timeMachine.filter(d => d.mode === "air"), W = 560, H = 240, P = { l: 46, r: 16, t: 18, b: 34 };
+  const x = i => P.l + i * (W - P.l - P.r) / (D.length - 1), ys = v => H - P.b - v / 18 * (H - P.t - P.b);
+  const bands = [[0, 1, "#e6f7ee"], [1, 4, "#fff6d6"], [4, 10, "#ffe8d2"], [10, 18, "#fde1dc"]].map(([a, b, c]) => `<rect x="${P.l}" y="${ys(b)}" width="${W - P.l - P.r}" height="${ys(a) - ys(b)}" fill="${c}"/>`).join("");
+  const pts = D.map((d, i) => `${x(i)},${ys(d.si)}`).join(" ");
+  $("#chSI").innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart-svg">${bands}
+    ${[0, 4, 10, 16].map(v => `<text x="${P.l - 8}" y="${ys(v) + 4}" text-anchor="end" class="ax">${v}</text>`).join("")}
+    <polyline points="${pts}" fill="none" stroke="#0F766E" stroke-width="4" stroke-linejoin="round" class="ch-line" pathLength="1"/>
+    ${D.map((d, i) => `<g class="ch-pt" data-i="${i}"><circle cx="${x(i)}" cy="${ys(d.si)}" r="7" fill="#fff" stroke="#0F766E" stroke-width="4"/><text x="${x(i)}" y="${ys(d.si) - 14}" text-anchor="middle" class="val">${String(d.si).replace(".", ",")}</text><text x="${x(i)}" y="${H - 10}" text-anchor="middle" class="ax">${d.y}</text></g>`).join("")}
+    <text x="${W - P.r}" y="${ys(10) - 6}" text-anchor="end" class="band">өте жоғары &gt;10</text><text x="${W - P.r}" y="${ys(4) - 6}" text-anchor="end" class="band">жоғары 5–10</text></svg>`;
+  const yb = v => H - P.b - v / 100 * (H - P.t - P.b), bw = 54;
+  $("#chEZK").innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart-svg">
+    ${[0, 20, 50, 100].map(v => `<line x1="${P.l}" x2="${W - P.r}" y1="${yb(v)}" y2="${yb(v)}" stroke="#e3ece8"/><text x="${P.l - 8}" y="${yb(v) + 4}" text-anchor="end" class="ax">${v}</text>`).join("")}
+    ${D.map((d, i) => `<g class="ch-pt" data-i="${i}"><rect x="${x(i) - bw / 2}" y="${yb(d.ezk)}" width="${bw}" height="${yb(0) - yb(d.ezk)}" rx="8" fill="${d.ezk >= 50 ? "#E5533D" : d.ezk >= 20 ? "#F28C28" : "#F2C200"}" class="ch-bar" style="transform-origin:${x(i)}px ${yb(0)}px"/><text x="${x(i)}" y="${yb(d.ezk) - 8}" text-anchor="middle" class="val">${d.ezk}%</text><text x="${x(i)}" y="${H - 10}" text-anchor="middle" class="ax">${d.y}</text></g>`).join("")}
+    <text x="${W - P.r}" y="${yb(50) - 6}" text-anchor="end" class="band">өте жоғары ≥50%</text></svg>`;
+}
+drawCharts();
+const _tmSet = tmSet;
+tmSet = function (i, q) { _tmSet(i, q); const y = TMD[i].y; $$(".ch-pt").forEach(g => g.classList.toggle("on", DATA.timeMachine.filter(d => d.mode === "air")[+g.dataset.i]?.y === y)); };
+
+/* ---------- ШЖШ-зертхана ---------- */
+(() => {
+  const L = DATA.lab, st = { a: L.a.c, b: L.b.c };
+  const fmt = (v, d = 3) => v.toFixed(d).replace(".", ",");
+  function row(k) {
+    const m = L[k], box = $("#lab" + k.toUpperCase());
+    box.innerHTML = `<div class="lab-h"><b>${m.n}</b><span>ШЖШ = ${fmt(m.pdk, m.pdk < .1 ? 2 : 2)} мг/м³</span></div><input type="range" min="0" max="${m.max}" step="${m.step}" value="${st[k]}"><div class="lab-v"><span id="lv${k}"></span> мг/м³</div>`;
+    box.querySelector("input").oninput = e => { st[k] = +e.target.value; calc(); };
+  }
+  function calc() {
+    const ra = st.a / L.a.pdk, rb = st.b / L.b.pdk, sum = ra + rb, ok = sum < 1;
+    $("#lva").textContent = fmt(st.a); $("#lvb").textContent = fmt(st.b, 4);
+    $("#labF").innerHTML = `<span>${fmt(st.a)} / ${fmt(L.a.pdk, 2)}</span> + <span>${fmt(st.b, 4)} / ${fmt(L.b.pdk, 2)}</span><br>= ${fmt(ra)} + ${fmt(rb)} = <b class="${ok ? "ok" : "bad"}">${fmt(sum)}</b>`;
+    $("#labFill").style.width = Math.min(100, sum / 2 * 100) + "%"; $("#labFill").className = "lab-fill " + (ok ? "ok" : "bad");
+    $("#labV").innerHTML = ok ? "Қосынды &lt; 1 — ауа сапасы нормаға сай" : "Қосынды ≥ 1 — нормадан асады, ауа қауіпті";
+    $("#labV").className = "lab-verdict " + (ok ? "ok" : "bad");
+  }
+  function reset() { st.a = L.a.c; st.b = L.b.c; row("a"); row("b"); calc(); $("#labBookBox").hidden = true; }
+  $("#labBook").onclick = () => { st.a = L.a.c; st.b = L.b.c; row("a"); row("b"); calc(); $("#labBookBox").hidden = false; toast("Оқулықтағы есепте қате бар — 1,886 > 1"); };
+  $("#labReset").onclick = reset; reset();
+})();
+
+/* ---------- Экосимулятор ---------- */
+(() => {
+  const S = DATA.sim, on = new Set(store.get("eoSim", []));
+  function draw() {
+    const cost = [...on].reduce((t, id) => t + S.measures.find(m => m.id === id).cost, 0);
+    const k = [...on].reduce((t, id) => t + S.measures.find(m => m.id === id).k, 0);
+    const si = Math.max(1, S.base * (1 + k));
+    $("#simSI").textContent = si.toFixed(1).replace(".", ","); $("#simBud").textContent = `${cost} / ${S.budget}`;
+    $("#simBar").style.width = Math.min(100, si / 16 * 100) + "%";
+    $("#simBar").style.background = si <= 4 ? "#F2C200" : si <= 10 ? "#F28C28" : "#E5533D";
+    $("#simCity").innerHTML = SCENES.draw(String(Math.round(si * 10) / 10 > 0 ? "sim" : "sim"), si);
+    $("#simList").innerHTML = "";
+    S.measures.forEach(m => {
+      const b = h("button", { class: "sim-m" + (on.has(m.id) ? " on" : ""), onclick: () => {
+        if (on.has(m.id)) on.delete(m.id); else { if (cost + m.cost > S.budget) { toast("Бюджет жетпейді — басқа шараны алып таста"); return; } on.add(m.id); if (m.trap) toast("Ойлан: мониторинг ауаны өздігінен тазарта ма?"); }
+        store.set("eoSim", [...on]); draw(); } },
+        h("span", { class: "sim-ico" }, m.ico), h("span", {}, h("b", {}, m.t), h("small", {}, m.d)), h("span", { class: "sim-c" }, m.cost));
+      $("#simList").append(b);
+    });
+    const trap = on.has("mon");
+    $("#simMsg").innerHTML = !on.size ? "Шараларды таңда: әр шараның «бағасы» бар." : `СИ ${S.base.toString().replace(".", ",")} → <b>${si.toFixed(1).replace(".", ",")}</b>. ${si <= 4 ? "Деңгей «көтеріңкіге» дейін төмендеді!" : si <= 10 ? "Деңгей әлі «жоғары» — тағы не істеуге болады?" : ""}${trap ? "<br>⚠ Мониторинг деректі жақсартады, бірақ шығарындыны азайтпайды." : ""}`;
+  }
+  draw();
+})();
+})();

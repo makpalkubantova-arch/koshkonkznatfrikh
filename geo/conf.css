@@ -1,0 +1,103 @@
+/* ================= КОНФЕРЕНЦИЯ СТИЛІ: салмақты, жарқын, жылтыр ================= */
+:root{--ink:#0B2E2A;--ink2:#284a45;--muted:#557370;--em:#0F766E;--em2:#10B981;--sky:#0EA5E9;--sun:#F5B700;--line:#E2ECE9;
+  --r:22px;--shadow:0 1px 2px rgba(11,46,42,.06),0 18px 40px -22px rgba(11,46,42,.35)}
+body{background:#F5F9F8;color:var(--ink)}
+.bg{background:radial-gradient(1200px 600px at 85% -10%,rgba(14,165,233,.16),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(16,185,129,.14),transparent 60%),linear-gradient(180deg,#F7FBFA,#EEF6F4)}
+.bg .blob,.bg .bubbles,.bg .sheen,.leaves,.bg-sun,.bg-eagle{display:none!important}
+.flag-band{width:6px!important;background:linear-gradient(180deg,#0EA5E9,#10B981,#F5B700)!important;box-shadow:none}
+.big-badge{display:none!important}
+#confetti{display:none}
+
+/* топ-бар */
+.topbar{background:rgba(255,255,255,.86);border-bottom:1px solid var(--line);box-shadow:0 6px 24px -18px rgba(11,46,42,.4)}
+.brand-mark{border-radius:12px!important;background:linear-gradient(135deg,#0F766E,#0EA5E9)!important}
+.brand-mark::after{content:"ЭМ"!important;font:900 14px var(--display)!important;color:#fff}
+.icon-btn,.pill-btn{border-radius:12px!important}
+
+/* кезең баннері: жылтыр градиент + толқын */
+.stage-head{border-radius:26px;padding:34px 40px 46px;background:linear-gradient(115deg,#0B3D3A 0%,#0F766E 38%,#0E9F8E 62%,#0EA5E9 100%);
+  box-shadow:0 30px 60px -32px rgba(11,61,58,.8),inset 0 1px 0 rgba(255,255,255,.25)}
+.stage-head::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C200 30 400 110 600 70 C800 30 1000 110 1200 70 V120 H0Z' fill='%23ffffff' fill-opacity='.10'/%3E%3Cpath d='M0 90 C200 60 400 120 600 90 C800 60 1000 120 1200 90 V120 H0Z' fill='%23ffffff' fill-opacity='.12'/%3E%3C/svg%3E") 0 100%/200% 70px repeat-x;
+  opacity:1;mix-blend-mode:normal;animation:waves 14s linear infinite}
+@keyframes waves{to{background-position:-1200px 100%}}
+.stage-head::after{background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent)}
+.stage-head h2{font-weight:800;letter-spacing:-.015em;text-shadow:none}
+.stage-head h2::after{width:84px;height:4px;background:linear-gradient(90deg,#F5B700,#7EE0B5)}
+.stage-head .kicker{background:rgba(255,255,255,.14);color:#E6FFF6;border:1px solid rgba(255,255,255,.35);letter-spacing:.12em;font-weight:700}
+.stage-head .lead{color:#E3F7F2}
+.stage-head .lead b{color:#FFE08A}
+.stage-head .phase-chip{background:rgba(255,255,255,.9);color:#0B3D3A}
+
+/* карточкалар */
+.glass{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:none}
+.card::after{display:none}
+.card h3{font-weight:800;color:var(--ink)}
+.kicker{color:#0F766E;background:#EAF7F3;border:1px solid #CBEBE1;letter-spacing:.1em}
+
+/* батырмалар */
+.btn{border-radius:12px;font-weight:700;letter-spacing:0}
+.btn.primary{background:linear-gradient(135deg,#0F766E,#10B981);box-shadow:0 10px 22px -12px rgba(15,118,110,.9)}
+.btn.primary:active{transform:translateY(1px);box-shadow:0 4px 10px -6px rgba(15,118,110,.9)}
+.btn.gold{background:linear-gradient(135deg,#F5B700,#F59E0B);color:#2b1d00;box-shadow:0 10px 22px -12px rgba(245,158,11,.9)}
+.btn.glass{background:#fff;border:1px solid var(--line)}
+
+/* басты бет */
+.mega .l1{color:#0F766E;font-weight:700}
+.mega .l2{background:linear-gradient(100deg,#0B3D3A,#0F766E 40%,#0EA5E9 70%,#0B3D3A);background-size:200% 100%;-webkit-background-clip:text;background-clip:text}
+.mega .l3{color:#10B981;text-shadow:none}
+.hero-globe{border-radius:28px;border:1px solid var(--line)}
+.meta-chips span{background:#fff;border:1px solid var(--line);border-radius:10px}
+
+/* шақырту */
+.invite{background:linear-gradient(135deg,#0B3D3A,#0F766E 45%,#0EA5E9)}
+.inv-body{background:rgba(255,255,255,.96);border-radius:28px}
+.inv-title span{background:linear-gradient(100deg,#0F766E,#0EA5E9,#10B981);-webkit-background-clip:text;background-clip:text}
+.inv-topic{background:linear-gradient(90deg,#0F766E,#0EA5E9)}
+.inv-sun{opacity:.25}
+
+/* кезең тізімі */
+.side .si i,.mini-road i{font-style:normal;font:800 12px var(--display);color:#0F766E}
+
+/* рефлексия */
+#refl .st-card{border:1px solid var(--line)}
+
+/* графиктер */
+.charts{margin-top:16px}
+.chart-svg{width:100%;height:auto;display:block}
+.chart-svg .ax{font:600 13px var(--body);fill:#557370}
+.chart-svg .val{font:800 14px var(--display);fill:#0B2E2A}
+.chart-svg .band{font:700 12px var(--body);fill:#9a5a3a}
+.ch-line{stroke-dasharray:1;stroke-dashoffset:1;animation:drawl 2.2s ease forwards}
+@keyframes drawl{to{stroke-dashoffset:0}}
+.ch-bar{animation:growb 1.4s cubic-bezier(.3,1.3,.5,1) both}
+@keyframes growb{from{transform:scaleY(0)}}
+.ch-pt{transition:opacity .3s}.ch-pt.on circle{fill:#F5B700}.ch-pt.on rect{stroke:#0B2E2A;stroke-width:3}
+
+/* ШЖШ-зертхана */
+.lab-row{margin:18px 0;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:#F7FBFA}
+.lab-h{display:flex;justify-content:space-between;font-size:18px}.lab-h span{color:var(--muted);font-weight:600}
+.lab-row input[type=range]{width:100%;margin:12px 0 4px;accent-color:#0F766E;height:28px}
+.lab-v{font:800 22px var(--display);color:#0F766E}
+.lab-formula{font:700 clamp(20px,2vw,28px)/1.6 var(--display);margin:10px 0 18px}
+.lab-formula span{background:#EAF7F3;border-radius:8px;padding:2px 8px}
+.lab-formula .ok{color:#0F766E}.lab-formula .bad{color:#DC2626}
+.lab-meter{position:relative;height:30px;border-radius:15px;background:#EEF3F2;overflow:hidden}
+.lab-fill{height:100%;border-radius:15px;transition:width .4s}.lab-fill.ok{background:linear-gradient(90deg,#10B981,#0F766E)}.lab-fill.bad{background:linear-gradient(90deg,#F59E0B,#DC2626)}
+.lab-one{position:absolute;left:50%;top:0;bottom:0;border-left:3px dashed #0B2E2A;padding-left:8px;font:800 12px var(--display);line-height:30px}
+.lab-verdict{margin-top:16px;font:800 20px var(--display);padding:12px 16px;border-radius:12px}
+.lab-verdict.ok{background:#E8F8F1;color:#0F766E}.lab-verdict.bad{background:#FDECEC;color:#B91C1C}
+.lab-book{margin-top:16px;padding:14px 16px;border-left:5px solid #F5B700;background:#FFF8E1;border-radius:10px;line-height:1.55}
+
+/* Экосимулятор */
+.grid.sim{display:grid;grid-template-columns:1.45fr 1fr;gap:18px}
+.sim-city{padding:0;overflow:hidden;min-height:380px}.sim-city svg{width:100%;height:100%;display:block}
+.sim-kpi{display:flex;gap:14px}.sim-kpi div{flex:1;padding:12px 14px;border-radius:14px;background:#F7FBFA;border:1px solid var(--line)}
+.sim-kpi small{display:block;color:var(--muted);font-weight:600}.sim-kpi b{font:900 34px var(--display)}
+.sim-bar{height:12px;border-radius:6px;background:#EEF3F2;margin:12px 0;overflow:hidden}.sim-bar i{display:block;height:100%;transition:all .5s}
+.sim-list{display:flex;flex-direction:column;gap:8px}
+.sim-m{display:flex;align-items:center;gap:12px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff;transition:all .2s}
+.sim-m b{display:block;font-size:15px}.sim-m small{color:var(--muted)}
+.sim-m.on{border-color:#10B981;background:#EAF7F3;box-shadow:inset 4px 0 0 #10B981}
+.sim-ico{font-size:26px;width:36px;text-align:center}.sim-c{margin-left:auto;font:900 16px var(--display);color:#0F766E;background:#EAF7F3;border-radius:10px;padding:4px 10px}
+.sim-msg{margin-top:12px;line-height:1.5}
+@media (max-width:900px){.grid.sim{grid-template-columns:1fr}}

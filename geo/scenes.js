@@ -65,7 +65,8 @@ window.SCENES = (() => {
 
   const S = {
     hero: () => svg(city(6) + tag(640, 170, "Бақылау бекеті · 24 көрсеткіш", "#0FA3B1"), "Астана: экомониторинг", "xMidYMid meet", "60 -120 1080 520"),
-    draw: key => {
+    draw: (key, si) => {
+      if (key === "sim") return svg(city(si), "Экосимулятор", "xMidYMax slice");
       if (/^\d{4}$/.test(String(key))) {
         const d = (DATA.timeMachine || []).find(x => String(x.y) === String(key)) || { si: 6 };
         const L = LV[lvlOf(d.si)];
