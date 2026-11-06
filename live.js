@@ -19,10 +19,17 @@ window.LIVE = (() => {
     return r.json();
   }
   let pending = null, pushT = null;
+  // интернет үзілсе: соңғы нәтиже телефонда сақталады және байланыс қалпына келгенше 5 секунд сайын қайта жіберіледі
+  function flush() { const p = pending; if (!p || !on()) return;
+    req(`students/${p.id}`, "PUT", p.rec).then(() => { if (pending === p) { pending = null; SS("kkPend", null); } })
+      .catch(() => { clearTimeout(pushT); pushT = setTimeout(flush, 5000); }); }
+  try { const sv = LS("kkPend"); if (sv) { pending = JSON.parse(sv); setTimeout(flush, 1500); } } catch {}
+  window.addEventListener("online", () => { clearTimeout(pushT); flush(); });
   return {
     on, get url() { return url; }, room, teacher: tq,
     setUrl(u) { url = (u || "").trim().replace(/\/+$/, ""); SS("kkDb", url || null); },
-    pushStudent(id, rec) { pending = { id, rec }; clearTimeout(pushT); pushT = setTimeout(() => { const p = pending; pending = null; req(`students/${p.id}`, "PUT", p.rec).catch(() => {}); }, 400); },
+    pushStudent(id, rec) { pending = { id, rec }; SS("kkPend", JSON.stringify(pending)); clearTimeout(pushT); pushT = setTimeout(flush, 400); },
+    unsent: () => !!pending, drop() { pending = null; SS("kkPend", null); clearTimeout(pushT); },
     pushGroup(g, pts) { return req(`groups/${g}`, "PUT", pts); },
     pushNote(rec) { return req("notes", "POST", rec); },
     setStage(id) { return req("state", "PUT", { stage: id, ts: Date.now() }); },

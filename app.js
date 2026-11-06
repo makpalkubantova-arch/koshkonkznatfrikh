@@ -173,7 +173,7 @@ $("#clkPlay").onclick = () => {
 };
 /* ---------- жаңа сабақ (сессия): бұрынғы оқушылар мен нәтижелер тазаланады ---------- */
 const RESULT_KEYS = ["kkAI", "kkDuel", "kkEssay", "kkLvl", "kkLvlRes", "kkMe", "kkPB", "kkQuiz", "kkRefl", "kkRub", "kkScore", "kkTally", "kkWit", "kkNotes", "kkBoard"];
-const wipeResults = () => RESULT_KEYS.forEach(k => { try { localStorage.removeItem(k); } catch {} });
+const wipeResults = () => { RESULT_KEYS.forEach(k => { try { localStorage.removeItem(k); } catch {} }); try { LIVE.drop(); } catch {} };
 async function newSession() {
   let n = 0; wipeResults(); try { rtBonus = {}; } catch {}
   if (LIVE.on()) { try { n = await LIVE.count(); await LIVE.clear(); await LIVE.setSession("s" + Date.now().toString(36)); } catch { toast("⚠️ Firebase-ті тазалау мүмкін болмады"); } }
