@@ -1,12 +1,15 @@
 /* Тірі рейтинг: Firebase Realtime Database (REST, SDK қажет емес).
    Мекенжай data.js ішіндегі DATA.live.url арқылы, мұғалімнің баптауынан немесе QR-дағы ?db= параметрінен алынады. */
 window.LIVE = (() => {
+  const D = typeof DATA !== "undefined" ? DATA : window.DATA;
   const LS = k => { try { return localStorage.getItem(k); } catch { return null; } };
   const SS = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
   const qp = new URLSearchParams(location.search).get("db");
   if (qp) SS("kkDb", qp);
-  let url = (LS("kkDb") || (window.DATA && DATA.live && DATA.live.url) || "").trim().replace(/\/+$/, "");
-  const room = (window.DATA && DATA.live && DATA.live.room) || "kk-11a";
+  let url = (LS("kkDb") || (D && D.live && D.live.url) || "").trim().replace(/\/+$/, "");
+  // әр мұғалімнің жеке бөлмесі: сайт сілтемесіне ?t=1 (немесе ?t=aizhan) қосылады, QR-кодтар оны оқушыларға өзі жеткізеді
+  const tq = (new URLSearchParams(location.search).get("t") || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 24);
+  const room = ((D && D.live && D.live.room) || "kk-11a") + (tq ? "-t-" + tq : "");
   const on = () => /^https:\/\/[\w.-]+\.(firebaseio\.com|firebasedatabase\.app)$/.test(url);
   const base = () => `${url}/${room}`;
   async function req(path, method = "GET", body) {
@@ -17,7 +20,7 @@ window.LIVE = (() => {
   }
   let pending = null, pushT = null;
   return {
-    on, get url() { return url; },
+    on, get url() { return url; }, room, teacher: tq,
     setUrl(u) { url = (u || "").trim().replace(/\/+$/, ""); SS("kkDb", url || null); },
     pushStudent(id, rec) { pending = { id, rec }; clearTimeout(pushT); pushT = setTimeout(() => { const p = pending; pending = null; req(`students/${p.id}`, "PUT", p.rec).catch(() => {}); }, 400); },
     pushGroup(g, pts) { return req(`groups/${g}`, "PUT", pts); },

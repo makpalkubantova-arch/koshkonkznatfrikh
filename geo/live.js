@@ -1,12 +1,13 @@
 /* Тірі рейтинг: Firebase Realtime Database (REST, SDK қажет емес).
    Мекенжай data.js ішіндегі DATA.live.url арқылы, мұғалімнің баптауынан немесе QR-дағы ?db= параметрінен алынады. */
 window.LIVE = (() => {
+  const D = typeof DATA !== "undefined" ? DATA : window.DATA;
   const LS = k => { try { return localStorage.getItem(k); } catch { return null; } };
   const SS = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
   const qp = new URLSearchParams(location.search).get("db");
   if (qp) SS("eoDb", qp);
-  let url = (LS("eoDb") || (window.DATA && DATA.live && DATA.live.url) || "").trim().replace(/\/+$/, "");
-  const room = (window.DATA && DATA.live && DATA.live.room) || "eo-11a";
+  let url = (LS("eoDb") || (D && D.live && D.live.url) || "").trim().replace(/\/+$/, "");
+  const room = (D && D.live && D.live.room) || "eo-11a";
   const on = () => /^https:\/\/[\w.-]+\.(firebaseio\.com|firebasedatabase\.app)$/.test(url);
   const base = () => `${url}/${room}`;
   async function req(path, method = "GET", body) {

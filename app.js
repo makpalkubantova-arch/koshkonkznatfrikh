@@ -107,7 +107,7 @@ ST.forEach(s => {
     h("div", { class: "tp-grid" }, h("div", {}, h("b", {}, "Мұғалімнің әрекеті"), k.teacher), h("div", {}, h("b", {}, "Оқушының әрекеті"), k.student), h("div", {}, h("b", {}, "Бағалау"), k.assess), h("div", {}, h("b", {}, "Ресурстар"), k.res))));
 });
 function teachSet(on) { document.body.classList.toggle("teach", on); store.set("kkTeach", on); $("#gTeach").classList.toggle("on", on); $("#gTeachSt").textContent = on ? "Қосулы · басып өшіру" : "Өшірулі · басып қосу"; }
-$("#gearBtn").onclick = () => { $("#gLiveSt").textContent = LIVE.on() ? "✅ Қосулы" : "Өшірулі · баптау"; $("#gear").hidden = false; };
+$("#gearBtn").onclick = () => { $("#gLiveSt").textContent = LIVE.on() ? "✅ Қосулы · " + (LIVE.teacher ? "мұғалім: " + LIVE.teacher : "жалпы бөлме") : "Өшірулі · баптау"; $("#gear").hidden = false; };
 $("#gearClose").onclick = () => $("#gear").hidden = true;
 $("#gTeach").onclick = () => { const on = !document.body.classList.contains("teach"); teachSet(on); toast(on ? "👩‍🏫 ҚМЖ панельдері мен құжаттар ашылды" : "🎓 Оқушы/қонақ режимі"); };
 $$("#gear [data-g]").forEach(b => b.onclick = () => { $("#gear").hidden = true; go(b.dataset.g); });
