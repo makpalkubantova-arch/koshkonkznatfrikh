@@ -712,7 +712,17 @@ $("#whoOk").onclick = () => {
 whoLbl();
 
 /* ---------- тірі рейтинг ---------- */
-let rtTimer = null, rtBonus = {};
+let rtTimer = null, rtBonus = {}, rtLast = [];
+$("#rtExcel").onclick = () => {
+  if (!rtLast.length) { toast("Әзірге нәтиже жоқ"); return; }
+  const q = v => { v = String(v ?? ""); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const head = ["№", "Оқушы", "Топ", ...Object.values(SCORE_KEYS).map(v => `${v[0]} (${v[1]})`), `Барлығы (${MAXP})`, "%", "Балл (1–10)", "Деңгей"];
+  const rows = rtLast.map((s, i) => { const t = s.total || 0, G = gradeOf(t); return [i + 1, s.name || "", DATA.statusInfo[s.group]?.group || "", ...Object.keys(SCORE_KEYS).map(k => (s.scores || {})[k] ?? ""), t, G.p, G.mark, G.name]; });
+  const info = [["Пән: Қазақстан тарихы · 11 «А» · «ҚР көші-қон саясаты»"], ["Күні: " + new Date().toLocaleDateString("kk-KZ") + " · Оқушылар саны: " + rtLast.length], []];
+  const csv = "\uFEFF" + [...info, head, ...rows].map(r => r.map(q).join(";")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `Natizheler_11A_${new Date().toISOString().slice(0, 10)}.csv`; document.body.append(a); a.click(); a.remove(); toast("📥 Excel файлы жүктелді");
+};
 const GCOL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" };
 async function rtLoad() {
   clearTimeout(rtTimer);
@@ -728,6 +738,7 @@ async function rtLoad() {
   }
   rtBonus = groups;
   students.sort((x, y) => (y.total || 0) - (x.total || 0) || (x.ts || 0) - (y.ts || 0));
+  rtLast = students;
   const top = students.slice(0, 3), order = [1, 0, 2];
   $("#podium").innerHTML = "";
   order.forEach(k => { const s = top[k]; const p = k + 1;
