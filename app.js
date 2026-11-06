@@ -168,8 +168,26 @@ function clkDraw() {
 }
 $("#clkPlay").onclick = () => {
   if (clkStart) { if (!confirm("Сабақ сағатын қайта бастаймыз ба?")) return; clkStart = null; store.set("kkClk", null); $("#clkPlay").textContent = "▶"; clkDraw(); return; }
-  clkStart = Date.now(); store.set("kkClk", clkStart); $("#clkPlay").textContent = "↺"; toast("⏱ Сабақ басталды! Сәттілік!");
+  clkStart = Date.now(); store.set("kkClk", clkStart); $("#clkPlay").textContent = "↺";
+  newSession().then(n => toast(n ? `⏱ Сабақ басталды! Дайындықтағы ${n} оқушы тазаланды — енді қайта қосылады` : "⏱ Сабақ басталды! Сәттілік!"));
 };
+/* ---------- жаңа сабақ (сессия): бұрынғы оқушылар мен нәтижелер тазаланады ---------- */
+const RESULT_KEYS = ["kkAI", "kkDuel", "kkEssay", "kkLvl", "kkLvlRes", "kkMe", "kkPB", "kkQuiz", "kkRefl", "kkRub", "kkScore", "kkTally", "kkWit", "kkNotes", "kkBoard"];
+const wipeResults = () => RESULT_KEYS.forEach(k => { try { localStorage.removeItem(k); } catch {} });
+async function newSession() {
+  let n = 0; wipeResults(); try { rtBonus = {}; } catch {}
+  if (LIVE.on()) { try { n = await LIVE.count(); await LIVE.clear(); await LIVE.setSession("s" + Date.now().toString(36)); } catch { toast("⚠️ Firebase-ті тазалау мүмкін болмады"); } }
+  joinTick(); return n;
+}
+/* ---------- тақтадағы «қосылған оқушылар» есептегіші ---------- */
+let joinT = null;
+async function joinTick() {
+  clearTimeout(joinT); if (STUDENT) return;
+  const box = $$(".join-n"); let txt = "—", tip = "Firebase қосылмаған: оқушылар саны тек тірі режимде көрінеді (⚙️ → 🛰️ Тірі рейтинг)";
+  if (LIVE.on()) { try { txt = String(await LIVE.count()); tip = "Сабаққа QR арқылы қосылған оқушылар"; } catch { tip = "Байланыс жоқ"; } }
+  box.forEach(b => { b.textContent = txt; b.closest("[data-join]").title = tip; b.closest("[data-join]").classList.toggle("off", !LIVE.on()); });
+  joinT = setTimeout(joinTick, LIVE.on() ? 4000 : 20000);
+}
 if (clkStart) $("#clkPlay").textContent = "↺";
 setInterval(clkDraw, 1000); clkDraw();
 
@@ -688,7 +706,7 @@ function whoOpen(g) {
 $("#whoBtn").onclick = () => whoOpen();
 $("#whoOk").onclick = () => {
   const name = $("#whoName").value.trim(); if (name.length < 2) { toast("Атыңды жаз ✍️"); return; }
-  const old = me(); store.set("kkMe", { id: old?.id || ("s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)), name, group: whoG });
+  const old = me(); store.set("kkMe", { id: old?.id || ("s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)), name, group: whoG, ts: old?.ts || Date.now() });
   $("#who").hidden = true; whoLbl(); livePush(); if (ST[cur].id === "hub") hubRender(); toast(`Сәлем, ${name.split(" ")[0]}! 🌞`);
 };
 whoLbl();
@@ -813,6 +831,8 @@ function hubRender() {
 let followed = null, followTs = 0;
 async function follow() {
   if (!STUDENT || MODE === "g" || !LIVE.on()) return;
+  try { const ss = await LIVE.getSession(), loc = store.get("kkSess", null);
+    if (ss && ss.id !== loc) { const m = me(); store.set("kkSess", ss.id); if (loc || (m && (m.ts || 0) < ss.ts)) { wipeResults(); whoLbl(); if (ST[cur].id === "hub") hubRender(); toast("🔔 Жаңа сабақ басталды — атыңды қайта жаз"); setTimeout(() => whoOpen(), 700); } } } catch {}
   try { const st = await LIVE.getStage(); if (st && st.ts > followTs) { followTs = st.ts; if (st.stage !== followed && SALLOW.includes(st.stage)) { followed = st.stage; if (ST[cur].id !== st.stage) { go(st.stage); toast("📺 Тақтада жаңа тапсырма!"); } } } } catch {}
   setTimeout(follow, 3000);
 }
@@ -888,4 +908,5 @@ renderMyScore();
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 go(location.hash.slice(1) || (STUDENT ? (MODE === "g" ? "wall" : "hub") : "invite"), false);
 addEventListener("load", () => { scrollTo(0, 0); setTimeout(() => scrollTo(0, 0), 120); });
+if (!STUDENT) setTimeout(joinTick, 1200);
 })();

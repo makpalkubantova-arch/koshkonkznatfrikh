@@ -991,3 +991,12 @@ body.fitted #st-prompt .tl-slot .drop{min-height:70px}
 .an-res{display:flex;gap:10px;justify-content:center;margin:0 0 16px}
 .an-res div{padding:10px 14px;border-radius:16px;background:#f1fbfe;border:2px solid #d6eef6;min-width:110px}
 .an-res b{display:block;font:900 26px var(--display)}.an-res small{color:var(--muted);font-weight:700;font-size:12px}
+
+/* қосылған оқушылар есептегіші */
+.join-chip{flex:none;display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:16px;background:linear-gradient(135deg,#0F766E,#0EA5E9);color:#fff;box-shadow:var(--shadow)}
+.join-chip i{font-style:normal;font-size:20px}.join-chip b{font-size:24px;font-weight:900;min-width:26px;text-align:center}.join-chip small{font-size:10px;line-height:1.1;opacity:.9}
+.join-chip.off,.inv-join.off{filter:grayscale(1);opacity:.6}
+.inv-join{display:inline-flex;align-items:center;gap:10px;margin:14px auto 4px;padding:10px 20px;border-radius:999px;background:linear-gradient(135deg,#0F766E,#0EA5E9);color:#fff;font-weight:700;box-shadow:0 10px 24px rgba(14,165,233,.3)}
+.inv-join i{font-style:normal;font-size:22px}.inv-join b{font-size:30px;font-weight:900}
+body.student .join-chip{display:none}
+@media (max-width:900px){.join-chip small{display:none}}

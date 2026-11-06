@@ -26,6 +26,9 @@ window.LIVE = (() => {
     getStage() { return req("state"); },
     async read() { return (await req("")) || {}; },
     async clear() { return req("", "DELETE"); },
+    setSession(id) { return req("session", "PUT", { id, ts: Date.now() }); },
+    getSession() { return req("session"); },
+    async count() { if (!on()) throw new Error("off"); const r = await fetch(`${base()}/students.json?shallow=true`); if (!r.ok) throw new Error("HTTP " + r.status); const d = await r.json(); return d ? Object.keys(d).length : 0; },
     test: async () => { await req("ping", "PUT", Date.now()); return true; }
   };
 })();
