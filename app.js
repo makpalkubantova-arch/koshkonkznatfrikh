@@ -879,6 +879,8 @@ async function lrLoad() {
     const avg = done.length ? done.reduce((t, s) => t + s.scores[k], 0) / done.length : 0;
     const full = done.filter(s => s.scores[k] >= mx).length;
     box.innerHTML = `<div class="lr-t"><span class="lr-dot"></span> Тірі: сынып нәтижесі</div><div><b>${done.length}<span style="font-size:18px;color:#5d7591"> / ${st.length}</span></b><small>📨 жауап берді</small></div><div><b>${String(Math.round(avg * 10) / 10).replace(".", ",")}<span style="font-size:18px;color:#5d7591"> / ${mx}</span></b><small>📊 орташа ұпай</small></div><div><b>${full}</b><small>✅ толық дұрыс</small></div><div><b>${done.length ? Math.round(avg / mx * 100) : 0}%</b><small>🎯 орындалу</small></div>`;
+    const NM = { em: "✈️", re: "🏡", in: "🔁" }, rk = done.slice().sort((a, b) => (b.scores[k] || 0) - (a.scores[k] || 0) || (a.ts || 0) - (b.ts || 0)).slice(0, 10);
+    if (rk.length) box.insertAdjacentHTML("beforeend", `<div class="lr-list"><span class="lr-lh">🏆 Осы тапсырманың рейтингі</span>${rk.map((s, n) => `<p class="${s.scores[k] >= mx ? "full" : ""}"><i>${["🥇", "🥈", "🥉"][n] || n + 1}</i><b>${esc(s.name || "?")}</b><span>${NM[s.group] || ""}</span><em>${s.scores[k]}/${mx}</em></p>`).join("")}</div>`);
   }
   lrT = setTimeout(lrLoad, 4000);
 }
