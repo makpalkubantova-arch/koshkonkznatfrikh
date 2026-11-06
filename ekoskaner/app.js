@@ -43,7 +43,7 @@ function qrSvg(text) {
   const n = q.getModuleCount(), m = 2, S = n + 2 * m, fin = (r, c) => (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
   let d = ""; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c) && !fin(r, c)) d += `<rect x="${c + m + .08}" y="${r + m + .08}" width=".84" height=".84" rx=".28"/>`;
   const eye = (x, y) => `<rect x="${x + m + .5}" y="${y + m + .5}" width="6" height="6" rx="1.6" fill="none" stroke="#0B3D3A" stroke-width="1"/><rect x="${x + m + 2}" y="${y + m + 2}" width="3" height="3" rx=".8" fill="#0EA5E9"/>`;
-  return `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0F766E"/><stop offset="1" stop-color="#0EA5E9"/></linearGradient></defs><rect width="${S}" height="${S}" fill="#fff"/><g fill="url(#${id})">${d}</g>${eye(0, 0)}${eye(n - 7, 0)}${eye(0, n - 7)}</svg>`;
+  return `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00799A"/><stop offset="1" stop-color="#0EA5E9"/></linearGradient></defs><rect width="${S}" height="${S}" fill="#fff"/><g fill="url(#${id})">${d}</g>${eye(0, 0)}${eye(n - 7, 0)}${eye(0, n - 7)}</svg>`;
 }
 const link = (m, h) => { const u = new URL(location.href); u.hash = ""; u.searchParams.delete("m"); u.searchParams.set("m", m); if (LIVE.on()) u.searchParams.set("db", LIVE.url); return u.toString() + (h ? "#" + h : ""); };
 
@@ -137,7 +137,7 @@ const TASK = {
     const calc = () => { const ra = s.a / E.a.pdk, rb = s.b / E.b.pdk, sum = ra + rb, ok = sum < 1;
       $("[data-v=a]", root).textContent = fmt(s.a, 3); $("[data-v=b]", root).textContent = fmt(s.b, 4);
       $("[data-f]", root).innerHTML = `${fmt(ra, 3)} + ${fmt(rb, 3)} = <span class="${ok ? "ok" : "bad"}">${fmt(sum, 3)}</span>`;
-      const m = $("[data-m]", root); m.style.width = Math.min(100, sum * 50) + "%"; m.style.background = ok ? "linear-gradient(90deg,#10B981,#0F766E)" : "linear-gradient(90deg,#F59E0B,#DC2626)";
+      const m = $("[data-m]", root); m.style.width = Math.min(100, sum * 50) + "%"; m.style.background = ok ? "linear-gradient(90deg,#10B981,#00799A)" : "linear-gradient(90deg,#F59E0B,#DC2626)";
       const v = $("[data-vd]", root); v.className = "verd " + (ok ? "ok" : "bad"); v.textContent = ok ? "Қосынды < 1 — нормаға сай" : "Қосынды ≥ 1 — нормадан асады!"; };
     $$("input", root).forEach(i => i.oninput = () => { s[i.dataset.k] = +i.value; calc(); });
     $("[data-a=book]", root).onclick = () => { s.a = E.a.c; s.b = E.b.c; $$("input", root).forEach(i => i.value = s[i.dataset.k]); calc(); toast("Оқулықта 0,996 деп жазылған. Тексеріп көр!"); };
@@ -204,7 +204,7 @@ if (MODE !== "b") {
       return;
     }
     const s = ST.find(x => x.id === id);
-    ph.innerHTML = `${top()}<div class="ph-h"><small>${esc(s.kicker)}</small><h2>${esc(s.title)}</h2></div><div class="howp">${DATA.how[id].map((h, i) => `<span><i>${i + 1}</i>${esc(h)}</span>`).join("")}</div><div class="card task-ph" id="tk"></div><button class="btn lt" id="bk">← Тапсырмалар</button>`;
+    ph.innerHTML = `${top()}<div class="ph-h"><small>${esc(s.kicker)}</small><h2>${esc(s.title)}</h2>${s.val ? `<span class="seal">Адал азамат · ${esc(s.val)}</span>` : ""}</div><div class="howp">${DATA.how[id].map((h, i) => `<span><i>${i + 1}</i>${esc(h)}</span>`).join("")}</div><div class="card task-ph" id="tk"></div><button class="btn lt" id="bk">← Тапсырмалар</button>`;
     TASK[id]($("#tk")); $("#bk").onclick = hub;
   }
   if (MODE === "g") guest(); else if (!me()) join(); else hub();
@@ -278,7 +278,7 @@ $$("[data-close]").forEach(b => b.onclick = () => b.closest(".modal").hidden = t
 $("#qrBtn").onclick = () => { const s = ST[cur], g = s.id === "feedback" || s.id === "invite"; const u = link(g ? "g" : "s", TASKS.includes(s.id) ? s.id : ""); $("#qrT").textContent = g ? "Қонақтар мен мұғалімдерге: кері байланыс" : "Оқушыларға: экосканерге қосылу"; $("#qrBig").innerHTML = qrSvg(u); $("#qrUrl").textContent = u; $("#qrModal").hidden = false; };
 
 /* ---------- кезеңдер ---------- */
-const HD = (s, p, tag) => `<div class="hd"><span class="k">${esc(s.kicker)}${s.min ? " · " + s.min + " мин" : ""}</span><h2>${esc(s.title)}</h2>${p ? `<p>${p}</p>` : ""}${tag ? `<div class="tag">${tag}</div>` : ""}</div>`;
+const HD = (s, p, tag) => `<div class="hd"><span class="k">${esc(s.kicker)}${s.min ? " · " + s.min + " мин" : ""}</span>${s.val ? `<span class="seal">Адал азамат · ${esc(s.val)}</span>` : ""}<h2>${esc(s.title)}</h2>${p ? `<p>${p}</p>` : ""}${tag ? `<div class="tag">${tag}</div>` : ""}</div>`;
 const modeBadge = s => `<span class="mode m-${s.mode === "Жеке" ? "i" : s.mode === "Жұппен" ? "p" : "g"}">${s.mode === "Жеке" ? "👤" : s.mode === "Жұппен" ? "👥" : "👨‍👩‍👧"} ${s.mode}</span> <span class="mode m-c">${s.crit} · ${PTS[s.id]} ұпай</span>`;
 const howStrip = id => `<div class="how">${DATA.how[id].map((h, i) => `<div style="animation-delay:${i * .15}s"><i>${i + 1}</i>${esc(h)}</div>`).join(`<span>→</span>`)}</div>`;
 const resPanel = id => `<aside class="side"><div class="card res-c"><div class="res-h"><div class="qrmini">${qrSvg(link("s", id))}</div><div><div class="lbl">Нәтижелер · тірі</div><div class="res-n" id="resN">—</div></div></div><div class="res-list" id="resList"><p class="muted sm">Оқушылар орындаған сайын осында шығады</p></div></div></aside>`;
@@ -292,7 +292,7 @@ const R = {
       <div class="inv-side"><div class="card fcol c"><div class="lbl">Қонақтарға · кері байланыс</div><div class="qrbox">${qrSvg(link("g"))}</div><p class="muted sm">Сабақ соңында пікіріңізді осы QR арқылы қалдырыңыз</p></div>
       <button class="btn big go" id="startBtn">▶ Сабақты бастау</button><p class="muted sm c">Басқанда 45 минуттық сағат іске қосылады, дайындық нәтижелері тазаланады</p></div></div></div>`,
   welcome: s => `<div class="st">${HD(s, "Құрметті қонақтар, жас сарапшылар! Бүгін біз қоршаған ортаның «анализін» оқуды үйренеміз.")}<div class="body wel2">
-      <div class="hook" style="background-image:url(media/p3.jpg)"><div class="hook-in"><div class="lbl">2026 жылғы нақты деректер</div><h3>Бұлардың қайсысы қауіпті? Оны қалай білеміз?</h3>
+      <div class="hook" style="background-image:url(media/p3.jpg)"><div class="hook-in"><span class="phen">Феномен: неге қыста Астананың үстінде түтін тұрады?</span><div class="lbl">Астана: жеке үйлердің 73–80%-ы көмірмен жылытылады · 2026 жылғы нақты деректер</div><h3>Бұлардың қайсысы қауіпті? Оны қалай білеміз?</h3>
       <div class="hooks">${DATA.hook.map(([a, b], i) => `<div style="animation-delay:${.3 + i * .2}s"><em>?</em><b>${a}</b><span>${esc(b)}</span></div>`).join("")}</div><div class="lbl" style="margin-top:14px">🧪 Тәжірибе: екі банка қар сүзгіде — қай сүзгі қараяды? Жауабы сабақ соңында!</div></div></div>
       <div class="card fcol c join"><div class="lbl">Экосканерге қосыл</div><div class="qrbox">${qrSvg(link("s"))}</div><p class="muted sm">QR → аты-жөнің → тобың</p>
       <div class="groups">${Object.entries(DATA.groups).map(([k, g]) => `<div style="--gc:${g.c}"><i>${g.i}</i>${g.n}<b data-gc="${k}">0</b></div>`).join("")}</div><div class="bigjoin"><b class="join-n">—</b><span>оқушы қосылды</span></div></div></div></div>`,
@@ -300,7 +300,7 @@ const R = {
     <div class="card"><h3>📈 Күтілетін нәтиже</h3><div class="tiers">${DATA.tiers.map(([a, b], i) => `<div style="animation-delay:${.3 + i * .15}s"><b>${a}:</b> ${esc(b)}</div>`).join("")}</div><p class="muted sm" style="margin-top:14px">Оқулық §22 (89–94-б.) + Қазгидромет 2026 бюллетендерінің нақты деректері. Феноменге негізделген оқыту: жергілікті (Астана, Қарағанды обл.) деректер арқылы жалпы заңдылықты түсінеміз.</p></div></div></div>`,
   rules: s => `<div class="st">${HD(s, "Сарапшылар кодексі")}<div class="body rules">${DATA.rules.map(([i, t, d], k) => `<div class="card rule" data-n="${k + 1}" style="animation-delay:${k * .1}s"><div class="ic">${i}</div><h4>${esc(t)}</h4><p>${esc(d)}</p></div>`).join("")}</div></div>`,
   assess: s => `<div class="st">${HD(s, `6 тапсырма · барлығы <b>${MAXP} ұпай</b> → пайыз → <b>1–10 балл</b>. Ұпайлар тақтаға автоматты түседі, әр оқушы өз телефонынан тек өз нәтижесін көреді.`)}<div class="body cols2"><div class="card"><h3>Тапсырмалар мен ұпай</h3><div class="pbars">${TASKS.map(k => { const t = ST.find(x => x.id === k); return `<div class="pbar"><span>${esc(t.title.split(" · ")[1])} <small>${t.mode} · ${t.crit}</small></span><i style="width:${PTS[k] / 8 * 100}%"></i><b>${PTS[k]}</b></div>`; }).join("")}</div></div>
-    <div class="card"><h3>Деңгейлер</h3><div class="scale v"><div style="background:#E8F8F1;color:#0F766E">Жоғары · 85%+ · 9–10 балл</div><div style="background:#E0F2FE;color:#0369A1">Орта · 50–84% · 5–8 балл</div><div style="background:#FEF3C7;color:#92400E">Қолдау қажет · 50%-ға дейін</div></div><p class="muted sm" style="margin-top:12px">3-тапсырмада топтың қорғауына мұғалім +1/+2 бонус береді.</p></div></div></div>`,
+    <div class="card"><h3>Деңгейлер</h3><div class="scale v"><div style="background:#E8F8F1;color:#00799A">Жоғары · 85%+ · 9–10 балл</div><div style="background:#E0F2FE;color:#0369A1">Орта · 50–84% · 5–8 балл</div><div style="background:#FEF3C7;color:#92400E">Қолдау қажет · 50%-ға дейін</div></div><p class="muted sm" style="margin-top:12px">3-тапсырмада топтың қорғауына мұғалім +1/+2 бонус береді.</p></div></div></div>`,
   video: s => `<div class="st">${HD(s, "1 минут 55 секунд: оқулықтағы 4 сызба + Қазгидрометтің 2026 жылғы нақты деректері")}<div class="body vid"><div class="card" style="padding:10px"><video controls preload="metadata" poster="media/poster.jpg" playsinline><source src="media/ekoskaner.mp4" type="video/mp4"></video></div></div></div>`,
   learn: s => `<div class="st">${HD(s, "Оқулықтағы 25–28-сызбалар · әр қадамда нақты мысал және жедел сұрақ", "ЖАҢА САБАҚ")}<div class="body learn"><div class="lnav" id="lnav">${DATA.learnTabs.map((t, i) => `<button data-l="${i}">${esc(t.t)}</button>`).join("")}</div><div id="lbox" class="lbox"></div></div></div>`,
   t1: s => `<div class="st">${HD(s, "Қазгидромет 2026 бюллетенінен алынған 12 нақты көрсеткішті 25-сызба бойынша 4 ортаға жікте.", modeBadge(s))}<div class="body task">${howStrip("t1")}<div class="card tk" id="tk"></div>${resPanel("t1")}</div></div>`,
@@ -320,7 +320,7 @@ const R = {
     <div class="fbqr"><div><div class="qrbox s">${qrSvg(link("s", "feedback"))}</div><small>Оқушыларға</small></div><div><div class="qrbox s">${qrSvg(link("g"))}</div><small>Қонақтарға</small></div></div><p class="muted sm" id="starAvg">⭐ Қонақтардың бағасы осында шығады</p></div>
     <div class="card fcol wallc"><div class="tabs" id="wtabs"><button class="on" data-w="all">Барлығы</button><button data-w="s">🎓 Оқушылар</button><button data-w="g">🎩 Мұғалімдер мен қонақтар</button><span class="wn" id="wn"></span></div><div class="wall" id="wall"></div></div></div></div>`,
   home: s => `<div class="st">${HD(s, "Сканер жұмысын жалғастырамыз — енді өз ауданыңда!")}<div class="body hw">${DATA.homework.map((h, i) => `<div class="card hwc" style="animation-delay:${i * .15}s"><div class="big3">${h.i}</div><span class="pill lv">${esc(h.lv)}</span><p>${esc(h.t)}</p></div>`).join("")}</div></div>`,
-  bye: s => `<div class="st"><div class="body bye2" style="background-image:url(media/p5.jpg)"><div class="bye-in"><div class="lbl gold">Экосканер · сабақ аяқталды</div><h1>Рахмет!</h1><p class="wish">${esc(DATA.wish)}</p><p class="by">Құрметті қонақтар, сабағымызға келгендеріңізге рахмет! · ${esc(L.teacher)}</p></div></div></div>`
+  bye: s => `<div class="st"><div class="body bye2" style="background-image:url(media/p1.jpg)"><div class="bye-in"><div class="lbl gold">Экосканер · сабақ аяқталды</div><h1>Рахмет!</h1><p class="wish">${esc(DATA.wish)}</p><p class="by">Құрметті қонақтар, сабағымызға келгендеріңізге рахмет! · ${esc(L.teacher)}</p></div></div></div>`
 };
 
 /* ---------- жаңа сабақ: 6 бөлім ---------- */
@@ -340,7 +340,7 @@ function learn(i) {
 }
 
 function render() {
-  const s = ST[cur]; $("#main").innerHTML = R[s.id](s); seen.clear();
+  const s = ST[cur]; document.body.dataset.part = s.part; $("#main").innerHTML = R[s.id](s); seen.clear();
   if (s.id === "invite") $("#startBtn").onclick = () => clkStart ? go(1, true) : startLesson();
   if (s.id === "learn") { learn(lt); $("#lnav").onclick = e => { const b = e.target.closest("[data-l]"); if (b) learn(+b.dataset.l); }; }
   if (TASK[s.id] && $("#tk")) TASK[s.id]($("#tk"));

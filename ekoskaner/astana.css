@@ -1,0 +1,37 @@
+/* «Астананың аспанын ашамыз» — тұман → ашық аспан · ту түстері · «Адал азамат» алтын мөрі */
+:root{
+  --ink:#0B2545;--ink2:#33506B;--mut:#5A7690;--line:#DCE6EE;--bg:#F2F8FB;
+  --em:#00799A;--em2:#00AFCA;--sky:#0EA5E9;--amb:#FEC50C;
+  --g1:linear-gradient(120deg,#0B2545 0%,#1D4E89 45%,#00799A 78%,#00AFCA 100%);
+  --sh:0 1px 2px rgba(11,37,69,.06),0 22px 44px -26px rgba(11,37,69,.45);
+  --gold:#FEC50C;--navy:#0B2545;
+}
+/* аспан сабақ бөлігіне қарай ашылады */
+.aurora{transition:background 1.2s ease}
+body[data-part="0"] .aurora,body[data-part="1"] .aurora{background:radial-gradient(900px 500px at 80% -10%,rgba(255,255,255,.35),transparent 60%),linear-gradient(180deg,#C9C6BE 0%,#DAD7D0 45%,#E9E7E2 100%)}
+body[data-part="0"] .aurora i,body[data-part="1"] .aurora i{background:#9A958A!important;opacity:.28}
+body[data-part="2"] .aurora{background:radial-gradient(900px 500px at 85% -10%,rgba(254,197,12,.12),transparent 60%),linear-gradient(180deg,#D7E1E8 0%,#E7EEF3 55%,#F1F5F8 100%)}
+body[data-part="2"] .aurora i:nth-child(1){background:#A9C3D6!important}body[data-part="2"] .aurora i:nth-child(2){background:#BFD9E6!important}
+body[data-part="3"] .aurora{background:radial-gradient(1000px 600px at 90% -10%,rgba(0,175,202,.20),transparent 60%),linear-gradient(180deg,#E3F2FA 0%,#EEF7FC 60%,#F6FAFD 100%)}
+body[data-part="3"] .aurora i:nth-child(1){background:#7FDBEA!important}body[data-part="3"] .aurora i:nth-child(2){background:#9CC9F0!important}
+body[data-part="4"] .aurora{background:radial-gradient(700px 520px at 88% 0%,rgba(254,197,12,.45),transparent 60%),linear-gradient(180deg,#BFE6F6 0%,#DDF2FB 55%,#F4FBFE 100%)}
+body[data-part="4"] .aurora i:nth-child(1){background:#7FDBEA!important}body[data-part="4"] .aurora i:nth-child(2){background:#FEC50C!important;opacity:.22}
+/* Астана силуэті */
+body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:22vh;background:url(media/skyline.svg) center bottom/100% auto no-repeat;opacity:.09;z-index:0;pointer-events:none;transition:opacity 1s}
+body[data-part="0"]::after,body[data-part="1"]::after{opacity:.16}
+body[data-part="4"]::after{opacity:.12}
+/* тақырып жолағы: қошқармүйіз өрнегі */
+.hd{background:var(--g1)}
+body[data-part="0"] .hd,body[data-part="1"] .hd{background:linear-gradient(120deg,#2E3236 0%,#4B4943 55%,#6B6352 100%)}
+.hd::after{height:22px;background:url(media/ornament.svg) left bottom/40px 20px repeat-x;opacity:.55}
+.hd p{color:#E6F1F7}
+.hd .tag{color:#0B2545;background:linear-gradient(135deg,#FFE27A,#FEC50C)}
+/* «Адал азамат» алтын мөрі */
+.seal{display:inline-flex;align-items:center;gap:6px;margin-left:8px;font:800 12px var(--d);letter-spacing:.08em;text-transform:uppercase;color:#0B2545;background:#FEC50C;border:2px solid #fff;box-shadow:0 0 0 2px #FEC50C,0 8px 18px -8px rgba(254,197,12,.8);padding:5px 12px;border-radius:999px;vertical-align:middle}
+.seal::before{content:"";width:14px;height:10px;background:url(media/ornament.svg) center/contain no-repeat;filter:brightness(.25)}
+.ph-h .seal{margin:6px 0 0;font-size:11px}
+/* брендтік белгі */
+.case-no{background:linear-gradient(135deg,#0B2545,#1D4E89);box-shadow:0 8px 18px -10px #0B2545;border-bottom:3px solid #FEC50C}
+.hook-in{background:linear-gradient(180deg,rgba(30,32,34,.15),rgba(30,32,34,.88))}
+.hook-in .lbl{color:#FEC50C}
+.phen{display:inline-flex;gap:10px;align-items:center;align-self:flex-start;font:800 15px var(--d);color:#0B2545;background:#FEC50C;border-radius:999px;padding:8px 16px}
