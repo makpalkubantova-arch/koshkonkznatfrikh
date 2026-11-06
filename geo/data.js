@@ -3,7 +3,7 @@
 const DATA = {
 
 /* ТІРІ РЕЙТИНГ: Firebase Realtime Database мекенжайы (README қараңыз). Бос болса — әр телефон өз балын ғана көреді. */
-live: { url: "", room: "eco-11-astana-2026-11-13" },
+live: { url: "https://koshkonsayasatyashyksabak-default-rtdb.firebaseio.com", room: "eco-11-astana-2026-11-13" },
 
 grades: [ { min: 85, name: "Жоғары", ico: "🚀", color: "#12a86f" },
           { min: 50, name: "Орта", ico: "👍", color: "#0f9fb5" },

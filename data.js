@@ -3,7 +3,7 @@ const DATA = {
 
 /* ТІРІ РЕЙТИНГ: Firebase Realtime Database мекенжайын осында қойыңыз (README қараңыз),
    мысалы "https://kosh-kon-default-rtdb.firebaseio.com". Бос болса — әр телефон өз балын ғана көреді. */
-live: { url: "", room: "kk-11a-2026-11-13" },
+live: { url: "https://koshkonsayasatyashyksabak-default-rtdb.firebaseio.com", room: "kk-11a-2026-11-13" },
 
 /* Формативтік бағалау: ұпай → % → 1–10 балл; деңгей (Жоғары 85%+, Орта 50%+, Қолдау қажет). Қажет болса өзгертіңіз. */
 grades: [ { min: 85, name: "Жоғары", ico: "🚀", color: "#12a86f" },
