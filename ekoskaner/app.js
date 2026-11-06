@@ -130,7 +130,7 @@ const TASK = {
   },
   t4(root) {
     const E = DATA.t4, s = { a: E.a.c, b: E.b.c };
-    root.innerHTML = `<div class="labg"><div class="labc">
+    root.innerHTML = `<div class="exp" style="margin-bottom:10px">🤖 Тақтада ЖИ-ге сұрақ қойылды. Оның жауабын және оқулықтағы шешімді осы есептегішпен тексер — шешімді өзің қабылда.</div><div class="labg"><div class="labc">
         ${["a", "b"].map(k => `<div class="lab-r"><div class="h"><b>${E[k].n}</b><span>ШШК = ${fmt(E[k].pdk, 2)} мг/м³</span></div><input type="range" data-k="${k}" min="0" max="${E[k].pdk * 2}" step="${E[k].pdk / 200}" value="${E[k].c}"><div class="v"><span data-v="${k}"></span> мг/м³</div></div>`).join("")}
         <div class="lab-f" data-f></div><div class="meter"><i data-m></i><div class="one">1,0 — шек</div></div><div class="verd" data-vd></div>
         <button class="btn am" data-a="book">📖 Оқулықтағы мәндер (93-б.)</button></div><div data-qs></div></div>`;
@@ -150,8 +150,8 @@ const TASK = {
       const done = ord.length === T.order.length, ok = done && ord.every((v, i) => v === i);
       root.innerHTML = `<h5 class="qk">А. 27-сызба: кезеңдерді ретімен бас</h5><div class="ordr">${mix.map(i => { const pos = ord.indexOf(i); return `<button class="ob ${pos >= 0 ? (done ? (ord[pos] === pos ? "ok" : "no") : "on") : ""}" data-o="${i}">${pos >= 0 ? `<i>${pos + 1}</i>` : ""}${esc(T.order[i])}</button>`; }).join("")}</div>
         ${done ? `<div class="exp">${ok ? "✓ Реті дұрыс!" : "✗ Дұрыс реті: " + T.order.join(" → ")}</div>` : `<button class="btn lt" data-a="clr" style="margin-top:8px">Тазалау</button>`}
-        <h5 class="qk">Б. Әдіс пен деңгейді таңда</h5><div data-q></div>`;
-      const calc = (st) => { const m = T.match.filter((q, i) => st[i] === q.a).length; const sc = (ok ? 1 : 0) + m / T.match.length * 2; setScore("t5", Math.round(sc), done && Object.keys(st).length === T.match.length); };
+        <div data-q></div>`;
+      const calc = (st) => { const m = T.match.filter((q, i) => st[i] === q.a).length; const sc = (ok ? 1 : 0) + m / T.match.length * 4; setScore("t5", Math.round(sc), done && Object.keys(st).length === T.match.length); };
       TASK.mcq($("[data-q]", root), T.match, "t5", false, { noReset: true, onAnswer: st => calc(st) });
       root.onclick = e => { if (e.target.closest("[data-q]")) return;
         const b = e.target.closest("[data-o]"); if (b && !done) { const i = +b.dataset.o; if (!ord.includes(i)) { ord.push(i); store.set("t5o", ord); if (ord.length === T.order.length) calc(store.get("q_t5", {})); draw(); } }
@@ -192,13 +192,13 @@ if (MODE !== "b") {
       <div class="ph-list">${TASKS.map(id => { const s = ST.find(x => x.id === id); return `<button data-o="${id}" class="${follow === id ? "now" : ""} ${at[id] ? "done" : ""}"><span><small>${esc(s.mode)} · ${esc(s.crit)}</small>${esc(s.title)}</span><b>${at[id] ? "✓ " : ""}${sc[id] ?? "—"} / ${PTS[id]}</b></button>`; }).join("")}
       <button data-o="self"><span><small>Рефлексия</small>«Менің аспаным»</span><b>→</b></button></div>
       <div class="card mine"><b>Менің нәтижем:</b> ${total()} / ${MAXP} ұпай · ${mark(total()).m} балл · ${mark(total()).lv}</div>`;
-    ph.onclick = e => { const b = e.target.closest("[data-o]"); if (b) openTask(b.dataset.o); };
+    ph.onclick = e => { const b = e.target.closest("[data-o]"); if (b && TASKS.includes(b.dataset.o)) openTask(b.dataset.o); };
   }
   function openTask(id) {
     open = id;
     if (id === "self") {
       ph.innerHTML = `${top()}<div class="ph-h"><small>Рефлексия</small><h2>Менің аспаным қандай?</h2></div><div class="card"><div class="sky">${DATA.selfCheck.map(([i, t], k) => `<button data-sk="${k}" class="${store.get("mySky", null) === k ? "on" : ""}"><i>${i}</i>${t}</button>`).join("")}</div>
-      <textarea id="sn" maxlength="200" placeholder="«Бүгін мен … білдім»" style="margin-top:10px"></textarea><button class="btn" id="sv" style="margin-top:10px">Тақтаға жіберу 🚀</button></div><button class="btn lt" id="bk">← Тапсырмалар</button>`;
+      <textarea id="sn" maxlength="200" placeholder="Эко-уәдем: «Мен … »" style="margin-top:10px"></textarea><button class="btn" id="sv" style="margin-top:10px">Тақтаға жіберу 🚀</button></div><button class="btn lt" id="bk">← Тапсырмалар</button>`;
       ph.onclick = e => { const b = e.target.closest("[data-sk]"); if (b) { store.set("mySky", +b.dataset.sk); push(); $$(".sky button").forEach(x => x.classList.toggle("on", x === b)); } if (e.target.id === "bk") hub(); };
       $("#sv").onclick = async () => { const t = $("#sn").value.trim(); if (!t) { toast("Сөйлемді жаз"); return; } const rec = { role: "Оқушы", name: me()?.name || "", like: t, sky: store.get("mySky", null), ts: Date.now() }; try { if (LIVE.on()) await LIVE.pushNote(rec); else store.set("notes", [...store.get("notes", []), rec]); toast("Жіберілді! ✅"); $("#sn").value = ""; } catch { toast("Жіберілмеді"); } };
       return;
@@ -293,7 +293,7 @@ const R = {
       <button class="btn big go" id="startBtn">▶ Сабақты бастау</button><p class="muted sm c">Басқанда 45 минуттық сағат іске қосылады, дайындық нәтижелері тазаланады</p></div></div></div>`,
   welcome: s => `<div class="st">${HD(s, "Құрметті қонақтар, жас сарапшылар! Бүгін біз қоршаған ортаның «анализін» оқуды үйренеміз.")}<div class="body wel2">
       <div class="hook" style="background-image:url(media/p3.jpg)"><div class="hook-in"><div class="lbl">2026 жылғы нақты деректер</div><h3>Бұлардың қайсысы қауіпті? Оны қалай білеміз?</h3>
-      <div class="hooks">${DATA.hook.map(([a, b], i) => `<div style="animation-delay:${.3 + i * .2}s"><em>?</em><b>${a}</b><span>${esc(b)}</span></div>`).join("")}</div></div></div>
+      <div class="hooks">${DATA.hook.map(([a, b], i) => `<div style="animation-delay:${.3 + i * .2}s"><em>?</em><b>${a}</b><span>${esc(b)}</span></div>`).join("")}</div><div class="lbl" style="margin-top:14px">🧪 Тәжірибе: екі банка қар сүзгіде — қай сүзгі қараяды? Жауабы сабақ соңында!</div></div></div>
       <div class="card fcol c join"><div class="lbl">Экосканерге қосыл</div><div class="qrbox">${qrSvg(link("s"))}</div><p class="muted sm">QR → аты-жөнің → тобың</p>
       <div class="groups">${Object.entries(DATA.groups).map(([k, g]) => `<div style="--gc:${g.c}"><i>${g.i}</i>${g.n}<b data-gc="${k}">0</b></div>`).join("")}</div><div class="bigjoin"><b class="join-n">—</b><span>оқушы қосылды</span></div></div></div></div>`,
   goals: s => `<div class="st">${HD(s, `Оқу мақсаты: <b>${esc(L.goal)}</b>`)}<div class="body cols2"><div class="card"><h3>🎯 Бағалау критерийлері</h3><div class="crit">${DATA.criteria.map(([k, d, t]) => `<div><b>${k}</b><span>${esc(d)}<small> · ${t}</small></span></div>`).join("")}</div></div>
@@ -309,14 +309,14 @@ const R = {
       return `<div class="dos" style="--gc:${G.c}"><div class="dos-h">${G.i} <b>${esc(G.n)}</b><span>${esc(D.period)}</span></div><div class="dos-g">${gauge(D.si, D.ez)}<div class="dos-k"><div><small>СИ</small><b>${fmt(D.si)}</b></div><div><small>ЕЖҚ</small><b>${fmt(D.ez)}%</b></div></div></div>${hbars(D.air.slice(0, 4), Math.max(...D.air.map(a => a[1])) * 1.1)}<ul class="dos-f">${D.facts.slice(0, 2).map(f => `<li>${esc(f)}</li>`).join("")}</ul>
       <div class="dos-r" id="gr-${g}"><p class="muted sm">Топтың жауабы күтілуде… 📡</p></div><div class="bon">Қорғау: <button data-bonus="${g}" data-v="1">+1</button><button data-bonus="${g}" data-v="2">+2</button><b id="bo-${g}"></b></div></div>`; }).join("")}</div>
       </div></div>`,
-  t4: s => `<div class="st">${HD(s, "Оқулық, 93–94-б.: бірге жинақталатын заттар үшін C₁/ШШК₁ + C₂/ШШК₂ < 1 болуы тиіс. Оқулықтағы шешімді тексер!", modeBadge(s))}<div class="body task">${howStrip("t4")}<div class="card tk" id="tk"></div>${resPanel("t4")}</div></div>`,
-  t5: s => `<div class="st">${HD(s, "27–28-сызбалар: мониторинг кезеңдері, бағалау әдістері және деңгейлері.", modeBadge(s))}<div class="body task">${howStrip("t5")}<div class="card tk" id="tk"></div>${resPanel("t5")}</div></div>`,
-  t6: s => `<div class="st">${HD(s, "8 сұрақ — 4 минут. Телефоннан жауап бер, жүйе бірден тексереді.", modeBadge(s))}<div class="body task">${howStrip("t6")}<div class="card tk" id="tk"></div>${resPanel("t6")}</div></div>`,
+  t4: s => `<div class="st">${HD(s, "Оқулық, 93–94-б.: C₁/ШШК₁ + C₂/ШШК₂ < 1 болуы тиіс. ЖИ жауабын да, оқулықты да тексер — шешім сенікі!", modeBadge(s))}<div class="body task">${howStrip("t4")}<div class="card tk" id="tk"></div>${resPanel("t4")}</div></div>`,
+  t5: s => `<div class="st">${HD(s, "27–28-сызбалар: мониторинг кезеңдері, әдістері, деңгейлері + «Адал азамат»: ластануды көрсең, не істейсің?", modeBadge(s))}<div class="body task">${howStrip("t5")}<div class="card tk" id="tk"></div>${resPanel("t5")}</div></div>`,
+  t6: s => `<div class="st">${HD(s, "6 сұрақ — 3 минут. Телефоннан жауап бер, жүйе бірден тексереді.", modeBadge(s))}<div class="body task">${howStrip("t6")}<div class="card tk" id="tk"></div>${resPanel("t6")}</div></div>`,
   sum: s => `<div class="st">${HD(s, "Сканерлеу аяқталды: не үйрендік, кім үздік, қай критерийді меңгердік?", "ҚОРЫТЫНДЫ")}<div class="body sumb">
     <div class="card"><h3>🏆 Үздік сарапшылар</h3><div class="lead" id="lead"><p class="muted">Нәтижелер Firebase арқылы тірі шығады.</p></div><h3 style="margin-top:14px">Топтар</h3><div class="gbars" id="gbars"></div></div>
     <div class="card"><h3>📊 Критерийлерді меңгеру (сынып)</h3><div class="kbars" id="kbars"></div><div class="live" id="clsBox" style="margin-top:14px"></div></div>
     <div class="card"><h3>🌳 Жіктеу ағашы</h3><div class="tree2"><div class="tr-root">Қоршаған орта сапасы</div><div class="tr-br">${[["Ортасы", "ауа · су · топырақ · экожүйе"], ["Норматив", "4 түр · I–IV класс"], ["Деңгей", "СИ/ЕЖҚ · су 1–6 класс"], ["Мониторинг", "4 кезең · 3 әдіс · 4 деңгей"]].map(([a, b], i) => `<div style="animation-delay:${.3 + i * .2}s"><b>${a}</b><small>${b}</small></div>`).join("")}</div></div><div class="vlist">${DATA.verdict.map((v, i) => `<div style="animation-delay:${1 + i * .2}s">${esc(v)}</div>`).join("")}</div></div></div></div>`,
-  feedback: s => `<div class="st">${HD(s, "Оқушылар: «Менің аспаным» + «Бүгін мен … білдім» · Мұғалімдер, әріптестер, қонақтар: жұлдыз + ұнағаны + ұсыныс")}<div class="body fb"><div class="card fcol"><h3>☀️ Сыныптың аспаны</h3><div class="sky" id="sky">${DATA.selfCheck.map(([i, t], k) => `<button data-sk="${k}"><i>${i}</i>${t}<b>0</b></button>`).join("")}</div>
+  feedback: s => `<div class="st">${HD(s, "Оқушылар: «Менің аспаным» + эко-уәде · Мұғалімдер, әріптестер, қонақтар: жұлдыз + ұнағаны + ұсыныс")}<div class="body fb"><div class="card fcol"><h3>☀️ Сыныптың аспаны</h3><div class="sky" id="sky">${DATA.selfCheck.map(([i, t], k) => `<button data-sk="${k}"><i>${i}</i>${t}<b>0</b></button>`).join("")}</div>
     <div class="fbqr"><div><div class="qrbox s">${qrSvg(link("s", "feedback"))}</div><small>Оқушыларға</small></div><div><div class="qrbox s">${qrSvg(link("g"))}</div><small>Қонақтарға</small></div></div><p class="muted sm" id="starAvg">⭐ Қонақтардың бағасы осында шығады</p></div>
     <div class="card fcol wallc"><div class="tabs" id="wtabs"><button class="on" data-w="all">Барлығы</button><button data-w="s">🎓 Оқушылар</button><button data-w="g">🎩 Мұғалімдер мен қонақтар</button><span class="wn" id="wn"></span></div><div class="wall" id="wall"></div></div></div></div>`,
   home: s => `<div class="st">${HD(s, "Сканер жұмысын жалғастырамыз — енді өз ауданыңда!")}<div class="body hw">${DATA.homework.map((h, i) => `<div class="card hwc" style="animation-delay:${i * .15}s"><div class="big3">${h.i}</div><span class="pill lv">${esc(h.lv)}</span><p>${esc(h.t)}</p></div>`).join("")}</div></div>`,
