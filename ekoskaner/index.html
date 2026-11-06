@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Экосканер · Қоршаған ортаның сапасы · География 11</title>
+<meta name="description" content="География, 11-сынып, §22 «Қоршаған ортаның сапасы». Ашық сабақ: Экосканер — нақты деректерді жіктейміз.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="scan.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<div id="stageWrap">
+  <div id="canvas">
+    <header class="bar">
+      <div class="case"><span class="case-no">ЭКО<br>СКАН</span><span class="case-t"><b>Экосканер</b><small>География · 11 · §22</small></span></div>
+      <nav class="road" id="road"></nav>
+      <div class="bar-r">
+        <div class="join-chip" id="joinChip" title="Сабаққа қосылған оқушылар"><i>👥</i><b class="join-n">—</b><small>оқушы<br>қосылды</small></div>
+        <div class="ring" id="ring" title="Кезең таймері"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" class="rb"/><circle cx="32" cy="32" r="28" class="rf" id="ringF"/></svg><b id="ringT">00:00</b></div>
+        <button class="ib" id="play" title="Кезең таймері: бастау / тоқтату">▶</button>
+        <button class="clock" id="clock" title="Сабақтың 45 минуты. Басқанда жаңа сабақ басталады (дайындық нәтижелері тазаланады)"><b id="clk">45:00</b><small id="clkS">▶ бастау</small></button>
+        <button class="ib" id="qrBtn" title="QR-код">QR</button>
+        <button class="ib" id="gear" title="Мұғалімге">⚙</button>
+        <button class="ib" id="fs" title="Толық экран">⛶</button>
+      </div>
+    </header>
+    <main id="main"></main>
+    <footer class="foot">
+      <button class="nav" id="prev">← Алдыңғы</button>
+      <div class="foot-c"><span id="partLbl"></span><b id="stLbl"></b></div>
+      <button class="nav pri" id="next">Келесі →</button>
+    </footer>
+  </div>
+</div>
+
+<div id="phone" hidden></div>
+
+<div class="modal" id="qrModal" hidden><div class="mbox"><button class="x" data-close>✕</button><h3 id="qrT">Телефонмен кір</h3><div id="qrBig"></div><p class="mono" id="qrUrl"></p></div></div>
+<div class="modal" id="gearModal" hidden><div class="mbox wide"><button class="x" data-close>✕</button><h3>Мұғалімнің панелі</h3><div id="gearBody"></div></div></div>
+<div class="over" id="over" hidden></div>
+<div class="toast" id="toast"></div>
+
+<script src="vendor/qrcode.js"></script>
+<script src="data.js"></script>
+<script src="live.js"></script>
+<script src="emo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
