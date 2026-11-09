@@ -25,9 +25,7 @@ const MQ = new URLSearchParams(location.search).get("m");
 if (MQ === "s" || MQ === "g" || MQ === "b") store.set("kkMode", MQ);
 const MODE = store.get("kkMode", "b"), STUDENT = MODE === "s" || MODE === "g";
 /* телефонда тек квиз: қалған тапсырмалар тақтада және жұмыс парағында, балдарды топ хатшысы енгізеді */
-const EBKQ = new URLSearchParams(location.search).get("ebk"); if (EBKQ === "1") store.set("kkEbk", true);
-const EBK = store.get("kkEbk", false); // ЕБҚ оқушысы: телефонда квизбен қатар суретті тапсырма да ашылады
-const SALLOW = MODE === "g" ? ["wall"] : EBK ? ["hub", "levels", "quiz", "wall"] : ["hub", "quiz", "wall"];
+const SALLOW = MODE === "g" ? ["wall"] : ["hub", "quiz", "wall"];
 if (STUDENT) document.body.classList.add("student");
 
 /* ---------- toast + confetti ---------- */
@@ -487,7 +485,7 @@ $("#tlCheck").onclick = () => {
 };
 
 /* ---------- 6. levels ---------- */
-let lvl = store.get("kkLvl", null); if (EBK && !lvl) lvl = "E"; const lvlRes = store.get("kkLvlRes", {});
+let lvl = store.get("kkLvl", null); if (lvl === "E") lvl = null; const lvlRes = store.get("kkLvlRes", {});
 DATA.levels.forEach(l => $("#lvlPick").append(h("button", { class: "lv", "data-l": l.id, onclick: () => { lvl = l.id; store.set("kkLvl", lvl); lvlRender(); } }, h("div", { class: "badge", style: `color:${l.color}` }, l.badge), h("b", {}, l.name), h("small", {}, l.sub))));
 function lvlSave(v) { lvlRes[lvl] = v; store.set("kkLvlRes", lvlRes); setScore("levels", Math.max(...Object.values(lvlRes))); }
 function lvlRender() {
@@ -595,7 +593,7 @@ reflRender();
     ["Ұғымды тап", "Жеке", "К1", DATA.termsDesc.map(d => d[0]), 5],
     ["ЖИ-куәгерлер: қатені тап", "Жұп", "К4", ["ЖИ мәтініндегі әр қатені табады (6 қате)", "Қатені оқулық/ресми дерекпен дәлелдейді"], 6],
     ["Промпт шеберханасы", "Топ", "К3, К4", DATA.grpRubric.map(d => d[0]), 5],
-    ["Сараланған тапсырма (A/B/C/ЕБҚ)", "Жеке", "К1, К2", ["A: 4 сұраққа дұрыс жауап береді", "B: 4 себепті салдарымен байланыстырады", "C: " + DATA.levelC.desc.map(d => d[0].toLowerCase()).join("; "), "ЕБҚ: 4 суретті ұғыммен сәйкестендіреді"], 4],
+    ["Сараланған тапсырма (A/B/C)", "Жеке", "К1, К2", ["A: 4 сұраққа дұрыс жауап береді", "B: 4 себепті салдарымен байланыстырады", "C: " + DATA.levelC.desc.map(d => d[0].toLowerCase()).join("; ") ], 4],
     ["Дерек дуэлі", "Жұп", "К4", ["Оқулық пен 2026 жылғы ресми деректі салыстырады", "Өзгерісті дұрыс болжайды (әр карточка — 1 ұпай)"], 6],
     ["Квиз (2 раунд)", "Жеке", "К1–К4", ["10 сұраққа жауап береді (әр дұрыс жауап — 1 ұпай)", "Жүйе деңгейді (жоғары/орта/бастапқы) өзі анықтайды"], 10]
   ];
@@ -1063,8 +1061,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       h("textarea", { id: "axRosIn", placeholder: "Аянат озат\nКәмшат екпінді\nЖанарыс қанағат" }),
       h("div", { class: "row gap mt" }, h("button", { class: "btn gold", id: "axRosGo" }, "🎲 Теңдестіріп бөлу"), h("button", { class: "btn glass", id: "axRosClr" }, "Тізімді тазалау"), h("span", { class: "muted small", id: "axRosSt" }, "")),
       h("div", { class: "grid3", id: "axRosOut" }),
-      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axSecQr", style: "width:150px" }), h("div", {}, h("b", {}, "📒 Хатшы телефоны (әр топқа біреу)"), h("p", { class: "muted small" }, "Хатшы осы QR-ды сканерлеп, тобын таңдайды да, жұмыс парағындағы балдарды топ мүшелеріне қояды. Балдар тақтадағы 🏆 Рейтингке бірден түседі. Оқушылардың өз телефоны тек квизге керек."), h("code", { id: "axSecUrl", style: "font-size:11px;word-break:break-all" }))),
-      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axEbkQr", style: "width:150px" }), h("div", {}, h("b", {}, "🌟 ЕБҚ оқушысының телефоны"), h("p", { class: "muted small" }, "ЕБҚ оқушысы осы QR арқылы кіреді: телефонында квизбен қатар «Суретті сөзбен сәйкестендір» тапсырмасы ашылады, балы рейтингке өзі түседі.")))));
+      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axSecQr", style: "width:150px" }), h("div", {}, h("b", {}, "📒 Хатшы телефоны (әр топқа біреу)"), h("p", { class: "muted small" }, "Хатшы осы QR-ды сканерлеп, тобын таңдайды да, жұмыс парағындағы балдарды топ мүшелеріне қояды. Балдар тақтадағы 🏆 Рейтингке бірден түседі. Оқушылардың өз телефоны тек квизге керек."), h("code", { id: "axSecUrl", style: "font-size:11px;word-break:break-all" })))));
     document.body.append(dr);
     const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, LC = { A: "#12a86f", B: "#0089B5", C: "#E0A400" }, LN = { A: "озат", B: "екпінді", C: "қанағат" };
     const out = () => { $("#axRosOut").innerHTML = roster.length ? GK.map(g => { const m = roster.filter(r => r.g === g), info = DATA.statusInfo[g];
@@ -1081,7 +1078,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       roster = balance(list); W("kkRoster", roster); out(); send(); confetti(40); };
     $("#axRosClr").onclick = () => { roster = []; W("kkRoster", []); out(); send(); };
     const gb = h("button", {}, h("i", {}, "👥"), h("b", {}, "Топтарды теңдестіру"), h("small", {}, "озат · екпінді · қанағат"));
-    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); const u = baseUrl("h") + "#home"; $("#axSecQr").innerHTML = fancyQr(u); $("#axSecUrl").textContent = u; const ue = baseUrl("s").replace("m=s", "m=s&ebk=1") + "#levels"; $("#axEbkQr").innerHTML = fancyQr(ue); };
+    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); const u = baseUrl("h") + "#home"; $("#axSecQr").innerHTML = fancyQr(u); $("#axSecUrl").textContent = u; };
     window.AXROS = () => gb.onclick();
     $(".gear-grid").append(gb);
   }
