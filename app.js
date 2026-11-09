@@ -25,7 +25,9 @@ const MQ = new URLSearchParams(location.search).get("m");
 if (MQ === "s" || MQ === "g" || MQ === "b") store.set("kkMode", MQ);
 const MODE = store.get("kkMode", "b"), STUDENT = MODE === "s" || MODE === "g";
 /* телефонда тек квиз: қалған тапсырмалар тақтада және жұмыс парағында, балдарды топ хатшысы енгізеді */
-const SALLOW = MODE === "g" ? ["wall"] : ["hub", "quiz", "wall"];
+const EBKQ = new URLSearchParams(location.search).get("ebk"); if (EBKQ === "1") store.set("kkEbk", true);
+const EBK = store.get("kkEbk", false); // ЕБҚ оқушысы: телефонда квизбен қатар суретті тапсырма да ашылады
+const SALLOW = MODE === "g" ? ["wall"] : EBK ? ["hub", "levels", "quiz", "wall"] : ["hub", "quiz", "wall"];
 if (STUDENT) document.body.classList.add("student");
 
 /* ---------- toast + confetti ---------- */
@@ -485,7 +487,7 @@ $("#tlCheck").onclick = () => {
 };
 
 /* ---------- 6. levels ---------- */
-let lvl = store.get("kkLvl", null); const lvlRes = store.get("kkLvlRes", {});
+let lvl = store.get("kkLvl", null); if (EBK && !lvl) lvl = "E"; const lvlRes = store.get("kkLvlRes", {});
 DATA.levels.forEach(l => $("#lvlPick").append(h("button", { class: "lv", "data-l": l.id, onclick: () => { lvl = l.id; store.set("kkLvl", lvl); lvlRender(); } }, h("div", { class: "badge", style: `color:${l.color}` }, l.badge), h("b", {}, l.name), h("small", {}, l.sub))));
 function lvlSave(v) { lvlRes[lvl] = v; store.set("kkLvlRes", lvlRes); setScore("levels", Math.max(...Object.values(lvlRes))); }
 function lvlRender() {
@@ -953,7 +955,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   .ax-ros .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
   .ax-ros .gc{border-radius:14px;padding:10px 12px;background:#fff;border-top:6px solid}
   .ax-ros .gc .r{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #eef3f5;font-size:14px;height:auto}
-  #axSecQr,#axSecQr *{max-width:150px!important;max-height:170px!important}#axSecQr svg,#axSecQr img,#axSecQr canvas{width:150px!important;height:150px!important}
+  #axSecQr,#axSecQr *,#axEbkQr,#axEbkQr *{max-width:150px!important;max-height:170px!important}#axSecQr svg,#axSecQr img,#axSecQr canvas,#axEbkQr svg,#axEbkQr img,#axEbkQr canvas{width:150px!important;height:150px!important}
   .ax-ros .axlv{font:800 11px var(--display);padding:2px 8px;border-radius:999px;color:#fff}
   `;
   document.head.append(Object.assign(document.createElement("style"), { textContent: css }));
@@ -1061,7 +1063,8 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       h("textarea", { id: "axRosIn", placeholder: "Аянат озат\nКәмшат екпінді\nЖанарыс қанағат" }),
       h("div", { class: "row gap mt" }, h("button", { class: "btn gold", id: "axRosGo" }, "🎲 Теңдестіріп бөлу"), h("button", { class: "btn glass", id: "axRosClr" }, "Тізімді тазалау"), h("span", { class: "muted small", id: "axRosSt" }, "")),
       h("div", { class: "grid3", id: "axRosOut" }),
-      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axSecQr", style: "width:150px" }), h("div", {}, h("b", {}, "📒 Хатшы телефоны (әр топқа біреу)"), h("p", { class: "muted small" }, "Хатшы осы QR-ды сканерлеп, тобын таңдайды да, жұмыс парағындағы балдарды топ мүшелеріне қояды. Балдар тақтадағы 🏆 Рейтингке бірден түседі. Оқушылардың өз телефоны тек квизге керек."), h("code", { id: "axSecUrl", style: "font-size:11px;word-break:break-all" })))));
+      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axSecQr", style: "width:150px" }), h("div", {}, h("b", {}, "📒 Хатшы телефоны (әр топқа біреу)"), h("p", { class: "muted small" }, "Хатшы осы QR-ды сканерлеп, тобын таңдайды да, жұмыс парағындағы балдарды топ мүшелеріне қояды. Балдар тақтадағы 🏆 Рейтингке бірден түседі. Оқушылардың өз телефоны тек квизге керек."), h("code", { id: "axSecUrl", style: "font-size:11px;word-break:break-all" }))),
+      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axEbkQr", style: "width:150px" }), h("div", {}, h("b", {}, "🌟 ЕБҚ оқушысының телефоны"), h("p", { class: "muted small" }, "ЕБҚ оқушысы осы QR арқылы кіреді: телефонында квизбен қатар «Суретті сөзбен сәйкестендір» тапсырмасы ашылады, балы рейтингке өзі түседі.")))));
     document.body.append(dr);
     const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, LC = { A: "#12a86f", B: "#0089B5", C: "#E0A400" }, LN = { A: "озат", B: "екпінді", C: "қанағат" };
     const out = () => { $("#axRosOut").innerHTML = roster.length ? GK.map(g => { const m = roster.filter(r => r.g === g), info = DATA.statusInfo[g];
@@ -1078,7 +1081,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       roster = balance(list); W("kkRoster", roster); out(); send(); confetti(40); };
     $("#axRosClr").onclick = () => { roster = []; W("kkRoster", []); out(); send(); };
     const gb = h("button", {}, h("i", {}, "👥"), h("b", {}, "Топтарды теңдестіру"), h("small", {}, "озат · екпінді · қанағат"));
-    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); const u = baseUrl("h") + "#home"; $("#axSecQr").innerHTML = fancyQr(u); $("#axSecUrl").textContent = u; };
+    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); const u = baseUrl("h") + "#home"; $("#axSecQr").innerHTML = fancyQr(u); $("#axSecUrl").textContent = u; const ue = baseUrl("s").replace("m=s", "m=s&ebk=1") + "#levels"; $("#axEbkQr").innerHTML = fancyQr(ue); };
     window.AXROS = () => gb.onclick();
     $(".gear-grid").append(gb);
   }
