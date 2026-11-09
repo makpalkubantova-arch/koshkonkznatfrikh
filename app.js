@@ -922,4 +922,155 @@ if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 go(location.hash.slice(1) || (STUDENT ? (MODE === "g" ? "wall" : "hub") : "invite"), false);
 addEventListener("load", () => { scrollTo(0, 0); setTimeout(() => scrollTo(0, 0), 120); });
 if (!STUDENT) setTimeout(joinTick, 1200);
+
+/* ===== ЭкоАймақ қосымшалары ===== */
+/* ЭкоАймақ жүйесінен қосымшалар:
+   1) таймер сигналдары (1 минут, соңғы 10 секунд, уақыт бітті), +1 мин, 🔔
+   2) оқушы телефонында тақтамен синхрон таймер (Firebase: timer)
+   3) тақтада «👩‍🏫 МҰҒАЛІМ / 👥 ОҚУШЫЛАР» жолағы (DATA.kmj)
+   4) топтарды озат / екпінді / қанағат деңгейімен теңдестіру (Firebase: roster) */
+(() => {
+  const css = `
+  .ax-strip{position:fixed;left:360px;right:170px;bottom:22px;z-index:29;display:grid;grid-template-columns:1fr 1fr;gap:10px;pointer-events:none}
+  .ax-strip>div{display:flex;gap:10px;align-items:center;border-radius:14px;padding:6px 12px;font:600 13px/1.3 var(--body);box-shadow:0 8px 24px rgba(0,40,60,.18);pointer-events:auto}
+  .ax-strip>div span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ax-strip b{flex:none;font:800 11px var(--display);letter-spacing:.06em;padding:5px 10px;border-radius:999px}
+  .ax-strip .t{background:#0B3B4E;color:#E8F6FA}.ax-strip .t b{background:#12a86f;color:#fff}
+  .ax-strip .s{background:#FFD24A;color:#2A1D00}.ax-strip .s b{background:#2A1D00;color:#FFD24A}
+  body.inviting .ax-strip{display:none}
+  .ax-cd{position:fixed;inset:0;z-index:80;pointer-events:none;display:flex;align-items:center;justify-content:center}
+  .ax-cd .n{font:900 34vh/1 var(--display);color:#0B3B4E;opacity:.9;text-shadow:0 10px 40px rgba(0,40,60,.3);animation:axpop 1s ease-out}
+  .ax-cd .n.last{color:#e2552f}
+  .ax-cd .m1{position:absolute;top:14vh;left:50%;transform:translateX(-50%);background:#FFD24A;color:#2A1D00;font:900 34px var(--display);padding:16px 40px;border-radius:999px;box-shadow:0 20px 50px rgba(224,164,0,.45);animation:axin .5s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes axpop{0%{transform:scale(1.5);opacity:0}25%{opacity:.95}100%{transform:scale(.9);opacity:.15}}
+  @keyframes axin{0%{transform:translateX(-50%) scale(.3);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+  .timer .t-ctl .ax-b{font-size:11px;font-weight:800}
+  .timer.min1{box-shadow:0 0 0 5px #FFD24A,var(--shadow)}
+  .ax-ph{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:60;display:none;align-items:center;gap:10px;background:#0B3B4E;color:#fff;border-radius:999px;padding:8px 16px;font:800 14px var(--display);box-shadow:0 8px 24px rgba(0,40,60,.25);max-width:94vw}
+  .ax-ph b{font-size:20px;font-variant-numeric:tabular-nums}.ax-ph.warn{background:#B57E00}.ax-ph.over{background:#e2552f}
+  .ax-ros textarea{width:100%;min-height:180px;border-radius:12px;border:1.5px solid var(--line);padding:10px;font:500 15px var(--body)}
+  .ax-ros .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  .ax-ros .gc{border-radius:14px;padding:10px 12px;background:#fff;border-top:6px solid}
+  .ax-ros .gc .r{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #eef3f5;font-size:14px;height:auto}
+  .ax-ros .axlv{font:800 11px var(--display);padding:2px 8px;border-radius:999px;color:#fff}
+  `;
+  document.head.append(Object.assign(document.createElement("style"), { textContent: css }));
+  const S = (k, d) => store.get(k, d), W = (k, v) => store.set(k, v);
+
+  /* ---------- 1. ДЫБЫС ---------- */
+  let ac = null;
+  const ctx = () => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); return ac; } catch { return null; } };
+  const tone = (f, d, v = .25, t0 = 0) => { const c = ctx(); if (!c || S("kkMute", false)) return; const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + t0;
+    o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(c.destination); o.start(t); o.stop(t + d + .05); };
+  const sigMin = () => { tone(880, .5, .22); tone(1175, .7, .22, .22); };
+  const sigTick = last => tone(last ? 1320 : 988, .12, last ? .3 : .18);
+  const sigEnd = () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, .6, .28, i * .16)); tone(1047, 1.4, .22, .7); };
+  const ov = h("div", { class: "ax-cd" }); document.body.append(ov);
+  let ovT = null; const showOv = (html, ms) => { ov.innerHTML = html; clearTimeout(ovT); ovT = setTimeout(() => ov.innerHTML = "", ms); };
+
+  /* ---------- 2. ТАЙМЕР ---------- */
+  if (!STUDENT) {
+    const ctl = $("#timer .t-ctl");
+    const plus = h("button", { class: "ax-b", title: "+1 минут" }, "+1"), snd = h("button", { title: "Дыбыс сигналы" }, S("kkMute", false) ? "🔕" : "🔔");
+    ctl.append(plus, snd);
+    plus.onclick = () => { tLeft += 60; tTotal += 60; drawTimer(); pushT(); };
+    snd.onclick = () => { W("kkMute", !S("kkMute", false)); snd.textContent = S("kkMute", false) ? "🔕" : "🔔"; if (!S("kkMute", false)) tone(988, .15, .2); };
+    let last = null;
+    const _draw = drawTimer;
+    drawTimer = function () { _draw();
+      $("#timer").classList.toggle("min1", tRun && tLeft <= 60 && tLeft > 10);
+      if (tRun && last !== null && tLeft !== last) {
+        if (tLeft === 60 && tTotal > 90) { sigMin(); showOv('<div class="m1">⏳ 1 минут қалды!</div>', 3500); }
+        if (tLeft <= 10 && tLeft >= 1) { sigTick(tLeft <= 3); showOv(`<div class="n${tLeft <= 3 ? " last" : ""}">${tLeft}</div>`, 950); }
+        if (tLeft === 0) sigEnd();
+      }
+      last = tRun ? tLeft : null; };
+    window.AXT = v => { tLeft = v; drawTimer(); };
+    const pushT = () => { if (!LIVE.on()) return; const s = ST[cur] || {};
+      LIVE.setTimer({ run: !!tRun, end: Date.now() + tLeft * 1000, left: tLeft, total: tTotal, title: s.label || "", stage: s.id || "", ts: Date.now() }).catch(() => {}); };
+    $("#tPlay").addEventListener("click", () => { ctx(); last = tLeft; pushT(); });
+    $("#tReset").addEventListener("click", () => setTimeout(pushT, 50));
+    const _tf = timerFor; timerFor = function (s) { _tf(s); last = null; ov.innerHTML = ""; setTimeout(pushT, 400); };
+  }
+
+  /* ---------- 3. ОҚУШЫ ТЕЛЕФОНЫНДАҒЫ ТАЙМЕР ---------- */
+  if (STUDENT && LIVE.on()) {
+    const pill = h("div", { class: "ax-ph" }); document.body.append(pill); let T = null, buzz = false;
+    const draw = () => { if (!T || (!T.run && !T.left)) { pill.style.display = "none"; return; }
+      const l = T.run ? Math.round((T.end - Date.now()) / 1000) : T.left, a = Math.abs(l);
+      pill.style.display = "flex"; pill.className = "ax-ph" + (T.run && l <= 0 ? " over" : l <= 60 ? " warn" : "");
+      pill.innerHTML = `⏱ ${T.title || "Тапсырма"} <b>${l < 0 ? "+" : ""}${String(Math.floor(a / 60)).padStart(2, "0")}:${String(a % 60).padStart(2, "0")}</b>`;
+      if (T.run && l <= 0 && !buzz) { buzz = true; try { navigator.vibrate && navigator.vibrate([300, 120, 300]); } catch {} } if (l > 0) buzz = false; };
+    const poll = () => LIVE.getTimer().then(t => { T = t; draw(); }).catch(() => {});
+    poll(); setInterval(poll, 5000); setInterval(draw, 1000);
+  }
+
+  /* ---------- 4. МҰҒАЛІМ / ОҚУШЫЛАР ЖОЛАҒЫ ---------- */
+  if (!STUDENT) {
+    const strip = h("div", { class: "ax-strip" }); document.body.append(strip);
+    const draw = () => { const s = ST[cur] || {}, k = DATA.kmj && DATA.kmj[s.id];
+      if (!k || !S("kkStrip", true) || !(s.phase > 0 && s.phase < 4)) { strip.style.display = "none"; return; }
+      strip.style.display = "grid";
+      strip.innerHTML = `<div class="t"><b>👩‍🏫 МҰҒАЛІМ</b><span>${k.teacher || ""}</span></div><div class="s"><b>👥 ОҚУШЫЛАР</b><span>${k.student || ""}</span></div>`; };
+    const _go = go; go = function (...a) { const r = _go.apply(this, a); draw(); return r; };
+    draw();
+    const gb = h("button", {}, h("i", {}, "🧭"), h("b", {}, "Мұғалім / Оқушы жолағы"), h("small", { id: "axStripSt" }, S("kkStrip", true) ? "Қосулы · басып өшіру" : "Өшірулі · басып қосу"));
+    gb.onclick = () => { W("kkStrip", !S("kkStrip", true)); $("#axStripSt").textContent = S("kkStrip", true) ? "Қосулы · басып өшіру" : "Өшірулі · басып қосу"; draw(); };
+    $(".gear-grid").append(gb);
+  }
+
+  /* ---------- 5. ТОПТАРДЫ ДЕҢГЕЙМЕН ТЕҢДЕСТІРУ ---------- */
+  const norm = n => (n || "").toLowerCase().trim().replace(/\s+/g, " ").replace(/[әғқңөұүһі]/g, c => ({ ә: "а", ғ: "г", қ: "к", ң: "н", ө: "о", ұ: "у", ү: "у", һ: "х", і: "и" }[c]));
+  const lvlOf = w => { w = norm(w).replace(/[.,;]/g, "");
+    if (/^(a|а|озат|жогары)$/.test(w)) return "A"; if (/^(b|в|б|екпинди|орта)$/.test(w)) return "B"; if (/^(c|с|канагат|канагаттанарлык|томен)$/.test(w)) return "C"; return null; };
+  const GK = Object.keys(DATA.statusInfo);
+  const balance = list => { const Wt = { A: 3, B: 2, C: 1 }, gs = GK.map(g => ({ g, n: 0, w: 0 }));
+    ["A", "B", "C"].flatMap(L => shuffle(list.filter(x => x.lvl === L))).forEach(x => {
+      const mn = Math.min(...gs.map(g => g.n)); let c = shuffle(gs.filter(g => g.n === mn));
+      const t = x.lvl === "C" ? Math.max(...c.map(g => g.w)) : Math.min(...c.map(g => g.w)); const g = c.find(g => g.w === t);
+      x.g = g.g; g.n++; g.w += Wt[x.lvl]; });
+    return list; };
+  let roster = S("kkRoster", []);
+  const findMe = name => roster.find(r => norm(r.name) === norm(name));
+  if (STUDENT && LIVE.on()) LIVE.getRoster().then(r => { if (Array.isArray(r)) { roster = r; W("kkRoster", r); } }).catch(() => {});
+
+  // карточка: тізім болса — алдымен аты, содан кейін өз тобының кейіпкері
+  const ppBtn = $("#ppNew"), _pp = ppBtn.onclick;
+  ppBtn.onclick = e => {
+    if (roster.length) { const m = me();
+      if (!m) { toast("Алдымен атыңды жаз ✍️"); whoOpen(); return; }
+      const r = findMe(m.name);
+      if (r && r.g) ppDeck = shuffle(DATA.characters.map((c, i) => c.st === r.g ? i : -1).filter(i => i >= 0));
+    }
+    return _pp.call(ppBtn, e);
+  };
+  $("#whoOk").addEventListener("click", () => { const m = me(); if (!m || !roster.length) return; const r = findMe(m.name);
+    if (r) toast(`Сәлем, ${m.name.split(" ")[0]}! Енді «Құжат алу» батырмасын бас 🛂`); else toast("Атың тізімнен табылмады — мұғалімге айт немесе толық жаз"); });
+
+  if (!STUDENT) {
+    const dr = h("div", { class: "drawer", id: "axRos", hidden: "" }, h("div", { class: "drawer-in glass ax-ros", style: "max-width:980px" },
+      h("div", { class: "row between" }, h("h3", {}, "👥 Топтарды деңгеймен теңдестіру"), h("button", { class: "icon-btn", onclick: () => dr.hidden = true }, "✕")),
+      h("p", { class: "muted small" }, "Әр жолға: аты және деңгейі (озат / екпінді / қанағат). Озаттар әр топқа бір-бірден, қанағаттар ең күшті топқа бөлінеді — топтар тең. Оқушы телефонда атын жазғанда өз тобының кейіпкер құжатын алады."),
+      h("textarea", { id: "axRosIn", placeholder: "Аянат озат\nКәмшат екпінді\nЖанарыс қанағат" }),
+      h("div", { class: "row gap mt" }, h("button", { class: "btn gold", id: "axRosGo" }, "🎲 Теңдестіріп бөлу"), h("button", { class: "btn glass", id: "axRosClr" }, "Тізімді тазалау"), h("span", { class: "muted small", id: "axRosSt" }, "")),
+      h("div", { class: "grid3", id: "axRosOut" })));
+    document.body.append(dr);
+    const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, LC = { A: "#12a86f", B: "#0089B5", C: "#E0A400" }, LN = { A: "озат", B: "екпінді", C: "қанағат" };
+    const out = () => { $("#axRosOut").innerHTML = roster.length ? GK.map(g => { const m = roster.filter(r => r.g === g), info = DATA.statusInfo[g];
+      return `<div class="gc" style="border-color:${COL[g] || "#0089B5"}"><b>${info.ico} ${info.group || info.name}</b> <small class="muted">${m.length} оқушы</small>${m.map(r => `<div class="r"><span>${r.name}</span><span class="axlv" style="background:${LC[r.lvl]}">${LN[r.lvl]}</span></div>`).join("")}</div>`; }).join("") : "";
+      $("#axRosIn").value = roster.map(r => `${r.name} ${LN[r.lvl]}`).join("\n"); };
+    const send = () => { if (!LIVE.on()) { $("#axRosSt").textContent = "📴 Firebase қосылмаған: тізім тек осы құрылғыда."; return; }
+      LIVE.setRoster(roster).then(() => $("#axRosSt").textContent = "✅ Тізім телефондарға жіберілді").catch(() => $("#axRosSt").textContent = "⚠️ Firebase-ке жіберілмеді"); };
+    $("#axRosGo").onclick = () => {
+      const list = $("#axRosIn").value.split("\n").map(l => l.trim()).filter(Boolean).map(l => { const t = l.split(/[\s,;\t]+/).filter(Boolean);
+        const i = t.findIndex((w, j) => j > 0 && lvlOf(w)); return { name: (i > 0 ? t.slice(0, i) : t).join(" "), lvl: i > 0 ? lvlOf(t[i]) : "B" }; }).filter(x => x.name);
+      if (!list.length) { toast("Тізімді жазыңыз ✍️"); return; }
+      roster = balance(list); W("kkRoster", roster); out(); send(); confetti(40); };
+    $("#axRosClr").onclick = () => { roster = []; W("kkRoster", []); out(); send(); };
+    const gb = h("button", {}, h("i", {}, "👥"), h("b", {}, "Топтарды теңдестіру"), h("small", {}, "озат · екпінді · қанағат"));
+    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); };
+    $(".gear-grid").append(gb);
+  }
+})();
+
 })();
