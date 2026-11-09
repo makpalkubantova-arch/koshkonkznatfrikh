@@ -24,7 +24,7 @@ const store = {
 const MQ = new URLSearchParams(location.search).get("m");
 if (MQ === "s" || MQ === "g" || MQ === "b") store.set("kkMode", MQ);
 const MODE = store.get("kkMode", "b"), STUDENT = MODE === "s" || MODE === "g";
-const SALLOW = MODE === "g" ? ["wall"] : ["hub", "card", "terms", "duel", "witness", "prompt", "levels", "quiz", "reflect", "wall"];
+const SALLOW = MODE === "g" ? ["wall"] : ["hub", "card", "terms", "time", "duel", "witness", "prompt", "levels", "quiz", "reflect", "wall"];
 if (STUDENT) document.body.classList.add("student");
 
 /* ---------- toast + confetti ---------- */
@@ -1071,6 +1071,68 @@ if (!STUDENT) setTimeout(joinTick, 1200);
     gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); };
     $(".gear-grid").append(gb);
   }
+})();
+
+
+/* ===== Өзін-өзі басқару: топтар жаңа сабақты Уақыт машинасы арқылы түсіндіреді ===== */
+(() => {
+  const ST8 = DATA.selfTeach; if (!ST8) return;
+  const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" };
+  document.head.append(Object.assign(document.createElement("style"), { textContent: `
+  .ax-self{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 10px}
+  .ax-self .ttl{font:900 15px var(--display);color:#0B3B4E;margin-right:6px}
+  .ax-self button{border:0;border-radius:999px;padding:9px 16px;font:800 14px var(--display);color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,40,60,.18)}
+  .ax-self button.prep{background:#0B3B4E}.ax-self button.sum{background:#fff;color:#0B3B4E}
+  .ax-self button.on{outline:4px solid #FFD24A}
+  #tmChrono .ch.axdim{opacity:.25;filter:grayscale(1)}
+  .ax-card{position:fixed;right:24px;top:96px;z-index:40;width:360px;border-radius:22px;background:#fff;box-shadow:0 20px 50px rgba(0,40,60,.3);overflow:hidden;font:500 14px/1.4 var(--body)}
+  .ax-card .hd{color:#fff;padding:12px 16px}.ax-card .hd b{display:block;font:900 20px var(--display)}.ax-card .hd small{font-weight:800;opacity:.9}
+  .ax-card ol{margin:10px 16px 6px 34px;padding:0}.ax-card li{margin:4px 0}
+  .ax-card .pl{margin:6px 16px;background:#F3F8FA;border-radius:12px;padding:8px 12px}
+  .ax-card .sp{margin:6px 16px 14px;background:#FFF3C4;border-radius:12px;padding:8px 12px;font-weight:600}
+  .ax-card .x{position:absolute;right:10px;top:8px;background:rgba(255,255,255,.25);border:0;color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer}
+  .ax-prep{position:fixed;inset:0;z-index:70;background:rgba(6,30,42,.6);display:flex;align-items:center;justify-content:center}
+  .ax-prep .in{width:min(1200px,94vw);background:#fff;border-radius:26px;padding:22px}
+  .ax-prep .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+  .ax-prep .c{border-radius:18px;border-top:8px solid;background:#F7FAFB;padding:12px 14px;font:500 14px/1.4 var(--body)}
+  .ax-prep .c b{font:900 17px var(--display)}
+  .ax-stu #st-time .tm,.ax-stu #st-time .tm-desc,.ax-stu #st-time .ax-self{display:none!important}
+  .ax-stu .ax-card{position:static;width:auto;margin:10px 0}
+  `}));
+  if (STUDENT) document.body.classList.add("ax-stu");
+  const card = (g, close) => { const G = ST8.groups[g], info = DATA.statusInfo[g];
+    return `<div class="hd" style="background:${COL[g]}"><small>${info.ico} ${info.group}</small><b>${G.era}: ${G.title}</b>${close ? '<button class="x" title="Жабу">✕</button>' : ""}</div>
+    <ol>${G.facts.map(f => `<li>${f}</li>`).join("")}</ol>
+    <div class="pl"><b>Жоспар:</b> ${ST8.plan.map((p, i) => `${i + 1}) ${p}`).join(" ")}<br><small class="muted">📖 ${G.hint}</small></div>
+    <div class="sp">🎤 ${ST8.speech}</div>`; };
+  const head = $("#st-time .stage-head");
+  if (STUDENT) { // телефонда — өз тобының карточкасы
+    const box = h("div", { class: "ax-card" }); head.after(box);
+    const draw = () => { const m = me(); box.innerHTML = m && m.group && ST8.groups[m.group] ? card(m.group) : `<div class="pl">👤 Алдымен атыңды жазып, «Шекара бекетінен» тобыңды ал.</div>`; };
+    draw(); setInterval(draw, 4000); return;
+  }
+  const bar = h("div", { class: "ax-self" }, h("span", { class: "ttl" }, "🧭 Өзін-өзі басқару:"));
+  const fl = h("div", { class: "ax-card", style: "display:none" }); document.body.append(fl);
+  const runT = sec => { if (tRun) $("#tPlay").click(); tLeft = tTotal = sec; drawTimer(); $("#tPlay").click(); };
+  const dim = g => { const ys = g ? ST8.groups[g].years : null;
+    $$("#tmChrono .ch").forEach(c => { const y = TMD[+c.dataset.i]?.y; c.classList.toggle("axdim", !!ys && !ys.includes(y)); }); };
+  const pb = h("button", { class: "prep" }, `⏳ Дайындық ${ST8.prep / 60} мин`);
+  pb.onclick = () => { const ov = h("div", { class: "ax-prep" }, h("div", { class: "in" },
+      h("div", { class: "row between" }, h("h3", {}, "🧭 Әр топ өз кезеңін дайындайды — содан кейін сыныпқа өздері түсіндіреді"), h("button", { class: "btn gold", onclick: () => ov.remove() }, "Жабу ✕")),
+      h("div", { class: "g3", html: Object.keys(ST8.groups).map(g => `<div class="c" style="border-color:${COL[g]}">${card(g)}</div>`).join("") })));
+    document.body.append(ov); runT(ST8.prep); };
+  bar.append(pb);
+  Object.keys(ST8.groups).forEach(g => { const info = DATA.statusInfo[g], G = ST8.groups[g];
+    const b = h("button", { style: `background:${COL[g]}` }, `${info.ico} ${G.era} түсіндіреді`);
+    b.onclick = () => { $$(".ax-self button").forEach(x => x.classList.remove("on")); b.classList.add("on");
+      const i = TMD.findIndex(d => d.y === G.years[0]); if (i >= 0) tmSet(i); dim(g);
+      fl.innerHTML = card(g, true); fl.style.display = "block"; fl.querySelector(".x").onclick = () => fl.style.display = "none";
+      runT(ST8.talk); toast(`🎤 ${info.group}: ${ST8.talk} секунд`); };
+    bar.append(b); });
+  const sb = h("button", { class: "sum" }, "👩‍🏫 Қорытынды");
+  sb.onclick = () => { $$(".ax-self button").forEach(x => x.classList.remove("on")); dim(null); fl.style.display = "none"; tmSet(TMD.length - 1); runT(30); };
+  bar.append(sb); head.append(bar);
+  const _go2 = go; go = function (...a) { const r = _go2.apply(this, a); if (ST[cur].id !== "time") { fl.style.display = "none"; dim(null); } return r; };
 })();
 
 })();
