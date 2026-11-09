@@ -24,7 +24,8 @@ const store = {
 const MQ = new URLSearchParams(location.search).get("m");
 if (MQ === "s" || MQ === "g" || MQ === "b") store.set("kkMode", MQ);
 const MODE = store.get("kkMode", "b"), STUDENT = MODE === "s" || MODE === "g";
-const SALLOW = MODE === "g" ? ["wall"] : ["hub", "card", "terms", "time", "duel", "witness", "prompt", "levels", "quiz", "reflect", "wall"];
+/* телефонда тек квиз: қалған тапсырмалар тақтада және жұмыс парағында, балдарды топ хатшысы енгізеді */
+const SALLOW = MODE === "g" ? ["wall"] : ["hub", "quiz", "wall"];
 if (STUDENT) document.body.classList.add("student");
 
 /* ---------- toast + confetti ---------- */
@@ -952,6 +953,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   .ax-ros .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
   .ax-ros .gc{border-radius:14px;padding:10px 12px;background:#fff;border-top:6px solid}
   .ax-ros .gc .r{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #eef3f5;font-size:14px;height:auto}
+  #axSecQr,#axSecQr *{max-width:150px!important;max-height:170px!important}#axSecQr svg,#axSecQr img,#axSecQr canvas{width:150px!important;height:150px!important}
   .ax-ros .axlv{font:800 11px var(--display);padding:2px 8px;border-radius:999px;color:#fff}
   `;
   document.head.append(Object.assign(document.createElement("style"), { textContent: css }));
@@ -1029,7 +1031,12 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       const mn = Math.min(...gs.map(g => g.n)); let c = shuffle(gs.filter(g => g.n === mn));
       const t = x.lvl === "C" ? Math.max(...c.map(g => g.w)) : Math.min(...c.map(g => g.w)); const g = c.find(g => g.w === t);
       x.g = g.g; g.n++; g.w += Wt[x.lvl]; });
+    // рөлдер: 🎤 спикер (жаңа сабақ) — озат, 📒 хатшы — екпінді, 🖼️ постер қорғаушы — тағы бір оқушы
+    GK.forEach(g => { const m = list.filter(x => x.g === g); m.forEach(x => x.role = "");
+      const pick = (pred, role) => { const c = m.find(x => !x.role && pred(x)) || m.find(x => !x.role); if (c) c.role = role; };
+      pick(x => x.lvl === "A", "sp"); pick(x => x.lvl === "B", "hs"); pick(x => x.lvl !== "A", "po"); });
     return list; };
+  const ROLE = { sp: "🎤 спикер", hs: "📒 хатшы", po: "🖼️ постер" };
   let roster = S("kkRoster", []);
   const findMe = name => roster.find(r => norm(r.name) === norm(name));
   if (STUDENT && LIVE.on()) LIVE.getRoster().then(r => { if (Array.isArray(r)) { roster = r; W("kkRoster", r); } }).catch(() => {});
@@ -1053,12 +1060,15 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       h("p", { class: "muted small" }, "Әр жолға: аты және деңгейі (озат / екпінді / қанағат). Озаттар әр топқа бір-бірден, қанағаттар ең күшті топқа бөлінеді — топтар тең. Оқушы телефонда атын жазғанда өз тобының кейіпкер құжатын алады."),
       h("textarea", { id: "axRosIn", placeholder: "Аянат озат\nКәмшат екпінді\nЖанарыс қанағат" }),
       h("div", { class: "row gap mt" }, h("button", { class: "btn gold", id: "axRosGo" }, "🎲 Теңдестіріп бөлу"), h("button", { class: "btn glass", id: "axRosClr" }, "Тізімді тазалау"), h("span", { class: "muted small", id: "axRosSt" }, "")),
-      h("div", { class: "grid3", id: "axRosOut" })));
+      h("div", { class: "grid3", id: "axRosOut" }),
+      h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axSecQr", style: "width:150px" }), h("div", {}, h("b", {}, "📒 Хатшы телефоны (әр топқа біреу)"), h("p", { class: "muted small" }, "Хатшы осы QR-ды сканерлеп, тобын таңдайды да, жұмыс парағындағы балдарды топ мүшелеріне қояды. Балдар тақтадағы 🏆 Рейтингке бірден түседі. Оқушылардың өз телефоны тек квизге керек."), h("code", { id: "axSecUrl", style: "font-size:11px;word-break:break-all" })))));
     document.body.append(dr);
     const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, LC = { A: "#12a86f", B: "#0089B5", C: "#E0A400" }, LN = { A: "озат", B: "екпінді", C: "қанағат" };
     const out = () => { $("#axRosOut").innerHTML = roster.length ? GK.map(g => { const m = roster.filter(r => r.g === g), info = DATA.statusInfo[g];
-      return `<div class="gc" style="border-color:${COL[g] || "#0089B5"}"><b>${info.ico} ${info.group || info.name}</b> <small class="muted">${m.length} оқушы</small>${m.map(r => `<div class="r"><span>${r.name}</span><span class="axlv" style="background:${LC[r.lvl]}">${LN[r.lvl]}</span></div>`).join("")}</div>`; }).join("") : "";
+      return `<div class="gc" style="border-color:${COL[g] || "#0089B5"}"><b>${info.ico} ${info.group || info.name}</b> <small class="muted">${m.length} оқушы</small>${m.map((r, k) => `<div class="r" data-n="${r.name}" style="cursor:pointer" title="Басып рөлді ауыстыр"><span>${r.name} ${r.role ? `<small style="color:#0B3B4E;font-weight:800">${ROLE[r.role]}</small>` : ""}</span><span class="axlv" style="background:${LC[r.lvl]}">${LN[r.lvl]}</span></div>`).join("")}</div>`; }).join("") : "";
       $("#axRosIn").value = roster.map(r => `${r.name} ${LN[r.lvl]}`).join("\n"); };
+    $("#axRosOut").addEventListener("click", e => { const row = e.target.closest(".r"); if (!row) return; const r = roster.find(x => x.name === row.dataset.n); if (!r) return;
+      const order = ["", "sp", "hs", "po"]; r.role = order[(order.indexOf(r.role || "") + 1) % 4]; W("kkRoster", roster); out(); send(); });
     const send = () => { if (!LIVE.on()) { $("#axRosSt").textContent = "📴 Firebase қосылмаған: тізім тек осы құрылғыда."; return; }
       LIVE.setRoster(roster).then(() => $("#axRosSt").textContent = "✅ Тізім телефондарға жіберілді").catch(() => $("#axRosSt").textContent = "⚠️ Firebase-ке жіберілмеді"); };
     $("#axRosGo").onclick = () => {
@@ -1068,7 +1078,8 @@ if (!STUDENT) setTimeout(joinTick, 1200);
       roster = balance(list); W("kkRoster", roster); out(); send(); confetti(40); };
     $("#axRosClr").onclick = () => { roster = []; W("kkRoster", []); out(); send(); };
     const gb = h("button", {}, h("i", {}, "👥"), h("b", {}, "Топтарды теңдестіру"), h("small", {}, "озат · екпінді · қанағат"));
-    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); };
+    gb.onclick = () => { $("#gear").hidden = true; dr.hidden = false; out(); const u = baseUrl("h") + "#home"; $("#axSecQr").innerHTML = fancyQr(u); $("#axSecUrl").textContent = u; };
+    window.AXROS = () => gb.onclick();
     $(".gear-grid").append(gb);
   }
 })();
@@ -1133,6 +1144,67 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   sb.onclick = () => { $$(".ax-self button").forEach(x => x.classList.remove("on")); dim(null); fl.style.display = "none"; tmSet(TMD.length - 1); runT(30); };
   bar.append(sb); head.append(bar);
   const _go2 = go; go = function (...a) { const r = _go2.apply(this, a); if (ST[cur].id !== "time") { fl.style.display = "none"; dim(null); } return r; };
+})();
+
+
+/* ===== Хатшы режимі (?m=h): бір топқа бір телефон, жұмыс парағының балдары → тақтадағы рейтинг ===== */
+(() => {
+  const nrm = n => (n || "").toLowerCase().trim().replace(/\s+/g, " ").replace(/[әғқңөұүһі]/g, c => ({ ә: "а", ғ: "г", қ: "к", ң: "н", ө: "о", ұ: "у", ү: "у", һ: "х", і: "и" }[c]));
+  const sid = n => "r_" + nrm(n).replace(/[^a-zа-я0-9]+/gi, "_").replace(/[^\w]/g, c => c.charCodeAt(0).toString(36)).slice(0, 60);
+  const KEYS = Object.keys(SCORE_KEYS);
+  // рейтинг: хатшы енгізген балдар мен оқушының квизін бір адамға біріктіру
+  const _read = LIVE.read.bind(LIVE);
+  LIVE.read = async () => { const d = await _read(); const st = d.students || {}, by = {};
+    Object.entries(st).forEach(([id, v]) => { if (!v || !v.name) return; const k = nrm(v.name), o = by[k] || (by[k] = { id, name: v.name, group: v.group, scores: {}, ts: v.ts || 0, essay: v.essay });
+      if (v.src === "hatshy") o.name = v.name; if (!o.group && v.group) o.group = v.group; if (v.src === "hatshy" && v.group) o.group = v.group;
+      Object.entries(v.scores || {}).forEach(([kk, x]) => { o.scores[kk] = Math.max(o.scores[kk] || 0, +x || 0); }); o.ts = Math.max(o.ts, v.ts || 0); if (v.essay) o.essay = v.essay; });
+    Object.values(by).forEach(o => o.total = KEYS.reduce((t, k) => t + (o.scores[k] || 0), 0));
+    d.students = Object.fromEntries(Object.values(by).map(o => [o.id, o])); return d; };
+
+  // спикердің аты өзін-өзі басқару карточкасында
+  const sp = g => { const r = (store.get("kkRoster", []) || []).find(x => x.g === g && x.role === "sp"); return r ? r.name : null; };
+  const obs = new MutationObserver(() => { $$(".ax-card .hd").forEach(hd => { if (hd.querySelector(".axsp")) return; const g = Object.keys(DATA.statusInfo).find(k => hd.textContent.includes(DATA.statusInfo[k].group)); const n = g && sp(g);
+    if (n) hd.append(h("small", { class: "axsp", style: "display:block;margin-top:4px" }, "🎤 Спикер: " + n)); }); });
+  obs.observe(document.body, { childList: true, subtree: true });
+
+  // Шекара бекетінде: «Топтар мен рөлдер» батырмасы
+  if (!STUDENT && window.AXROS) { const hd = $("#st-card .stage-head"); if (hd) hd.append(h("button", { class: "btn gold", style: "margin-top:8px", onclick: () => window.AXROS() }, "👥 Топтар мен рөлдер · 📒 хатшы QR"));  }
+
+  if (MQ !== "h") return;
+  document.head.append(Object.assign(document.createElement("style"), { textContent: `
+  .hs{position:fixed;inset:0;z-index:200;background:#F3F8FA;overflow:auto;font:500 15px/1.35 var(--body);color:#0B3B4E;padding:14px}
+  .hs h2{font:900 22px var(--display);margin:0 0 4px}.hs .st{font-size:12px;color:#557}
+  .hs .gs{display:flex;gap:8px;margin:10px 0}.hs .gs button{flex:1;border:0;border-radius:14px;padding:10px 6px;font:800 13px var(--display);color:#fff;opacity:.45}.hs .gs button.on{opacity:1;outline:3px solid #FFD24A}
+  .hs .tabs{display:flex;gap:6px;overflow:auto;padding-bottom:4px}.hs .tabs button{flex:none;border:0;border-radius:999px;padding:8px 12px;background:#fff;font:800 13px var(--display);color:#0B3B4E}.hs .tabs button.on{background:#0B3B4E;color:#fff}
+  .hs .m{background:#fff;border-radius:16px;padding:10px 12px;margin-top:10px;box-shadow:0 4px 12px rgba(0,40,60,.08)}
+  .hs .m .top{display:flex;justify-content:space-between;align-items:center;font-weight:800}
+  .hs .ch{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.hs .ch button{width:42px;height:42px;border-radius:12px;border:2px solid #CFE0E6;background:#fff;font:900 17px var(--display);color:#0B3B4E}.hs .ch button.on{background:#12a86f;border-color:#12a86f;color:#fff}
+  .hs .add{display:flex;gap:6px;margin-top:12px}.hs .add input{flex:1;border-radius:12px;border:1.5px solid #CFE0E6;padding:10px}
+  .hs .ok{margin-top:10px;font-weight:800}` }));
+  const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, ROLE = { sp: "🎤", hs: "📒", po: "🖼️" };
+  const box = h("div", { class: "hs" }); document.body.append(box);
+  let roster = store.get("kkRoster", []), g = store.get("kkSecG", null), tab = KEYS.find(k => k !== "quiz"), sc = store.get("kkSecSc", {}), msg = "";
+  const extra = () => store.get("kkSecExtra", []);
+  const members = () => { const r = roster.filter(x => x.g === g).map(x => ({ name: x.name, role: x.role })); extra().filter(x => x.g === g).forEach(x => { if (!r.find(y => nrm(y.name) === nrm(x.name))) r.push({ name: x.name }); }); return r; };
+  const save = name => { const s = sc[nrm(name)] || {}; const rec = { name, group: g, scores: s, total: KEYS.reduce((t, k) => t + (s[k] || 0), 0), src: "hatshy", ts: Date.now() };
+    if (!LIVE.on()) { msg = "📴 Firebase қосылмаған — балдар тек осы телефонда."; draw(); return; }
+    LIVE.putStudent(sid(name), rec).then(() => { msg = "✅ " + name + " — тақтаға жіберілді"; draw(); }).catch(() => { msg = "⚠️ Жіберілмеді, интернетті тексер"; draw(); }); };
+  function draw() {
+    const info = g && DATA.statusInfo[g];
+    box.innerHTML = `<h2>📒 Хатшы</h2><div class="st">${LIVE.on() ? "🛰️ Тақтамен байланыс бар" : "📴 Firebase жоқ"} · жұмыс парағына қарап балл қой</div>`;
+    const gs = h("div", { class: "gs" }); Object.keys(DATA.statusInfo).forEach(k => gs.append(h("button", { class: g === k ? "on" : "", style: `background:${COL[k] || "#0089B5"}`, onclick: () => { g = k; store.set("kkSecG", k); draw(); } }, DATA.statusInfo[k].ico + " " + DATA.statusInfo[k].group.split(" · ")[1]))); box.append(gs);
+    if (!g) { box.append(h("p", {}, "Тобыңды таңда 👆")); return; }
+    const tb = h("div", { class: "tabs" }); KEYS.filter(k => k !== "quiz").forEach(k => tb.append(h("button", { class: tab === k ? "on" : "", onclick: () => { tab = k; draw(); } }, `${SCORE_KEYS[k][0]} · ${SCORE_KEYS[k][1]}`))); box.append(tb);
+    const mem = members(); if (!mem.length) box.append(h("p", { class: "m" }, "Тізім әлі жоқ: мұғалім ⚙️ → «Топтарды теңдестіру» бетін толтырсын, немесе төменнен атын қос."));
+    mem.forEach(p => { const s = sc[nrm(p.name)] || {}, mx = SCORE_KEYS[tab][1], tot = KEYS.reduce((t, k) => t + (s[k] || 0), 0);
+      const ch = h("div", { class: "ch" }); for (let v = 0; v <= mx; v++) ch.append(h("button", { class: s[tab] === v ? "on" : "", onclick: () => { sc[nrm(p.name)] = { ...s, [tab]: v }; store.set("kkSecSc", sc); save(p.name); draw(); } }, String(v)));
+      box.append(h("div", { class: "m" }, h("div", { class: "top" }, h("span", {}, (ROLE[p.role] || "") + " " + p.name), h("span", {}, `${tot} ұпай`)), ch)); });
+    const inp = h("input", { placeholder: "Оқушы қосу (аты)" });
+    box.append(h("div", { class: "add" }, inp, h("button", { class: "btn gold", onclick: () => { const n = inp.value.trim(); if (n.length < 2) return; const e = extra(); e.push({ name: n, g }); store.set("kkSecExtra", e); draw(); } }, "+")));
+    if (msg) box.append(h("div", { class: "ok" }, msg));
+  }
+  draw();
+  if (LIVE.on()) LIVE.getRoster().then(r => { if (Array.isArray(r)) { roster = r; store.set("kkRoster", r); draw(); } }).catch(() => {});
 })();
 
 })();

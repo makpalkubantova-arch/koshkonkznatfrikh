@@ -37,6 +37,7 @@ window.LIVE = (() => {
     setTimer(rec) { return req("timer", "PUT", rec); },
     getTimer() { return req("timer"); },
     setRoster(r) { return req("roster", "PUT", r); },
+    putStudent(id, rec) { return req(`students/${id}`, "PUT", rec); },
     getRoster() { return req("roster"); },
     async read() { return (await req("")) || {}; },
     async clear() { return req("", "DELETE"); },
