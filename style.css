@@ -1089,3 +1089,10 @@ body.student .join-chip{display:none}
 @keyframes kkin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 #st-video .video-wrap video{max-height:56vh}
 #st-video.goal-on .video-wrap video{max-height:36vh}
+/* телефон: топ батырмалары сыйсын, мұғалімнің чиптері жасырылады */
+@media (max-width:600px){
+  .stage-head.hd2{padding:14px 16px}
+  .stage-head.hd2 .meta,.stage-head.hd2 .big-badge{display:none}
+  .stage-head.hd2 h2{font-size:24px}
+}
+#whoGroups{display:grid!important;grid-template-columns:1fr;gap:8px}#whoGroups button{width:100%;white-space:normal}
