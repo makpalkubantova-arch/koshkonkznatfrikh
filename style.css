@@ -1009,3 +1009,83 @@ body.student .join-chip{display:none}
 .lr-list i{font-style:normal;min-width:26px;text-align:center;font-weight:900}
 .lr-list b{flex:1;font:800 15px var(--body);color:#0B2545;display:inline}
 .lr-list em{font-style:normal;font-weight:900;color:#0B2545}
+
+/* ===================== ЖАҢА АҒЫН ===================== */
+.spknow[hidden],.goalc[hidden]{display:none!important}
+[id^="lr-"],.live-res,#st-time .tm-scene,#st-time #tmChrono,#st-time details.desc,#st-time .ax-self,#st-prompt>article.card:last-of-type,.ax-strip{display:none!important}
+/* көк тақырып: ақ фон, көк мәтін */
+.stage-head.hd2{background:#fff!important;color:#0B2545;padding:18px 150px 16px 28px;margin:0 0 12px;border-radius:24px;box-shadow:0 12px 30px -18px rgba(0,60,100,.45);border:1.5px solid #D6E6EE}
+.stage-head.hd2::before,.stage-head.hd2::after{display:none}
+.stage-head.hd2 h2{color:#0B5FA5;font-size:clamp(26px,3vw,40px);margin:0 0 8px;padding:0}
+.stage-head.hd2 h2::after{display:none}
+.stage-head.hd2 h2 .ph2{color:#0B2545}
+.stage-head.hd2 .big-badge{transform:scale(.62);transform-origin:right center;right:10px}
+.stage-head.hd2 .meta{display:flex;flex-wrap:wrap;gap:6px}
+.stage-head.hd2 .meta span{background:#EEF6FA;border-radius:999px;padding:4px 11px;font:600 13px var(--body);color:#28485A}
+.stage-head.hd2 .meta b{color:#0B2545}
+.stage-head.hd2 .say{margin:10px 0 0;font:600 clamp(15px,1.25vw,18px)/1.35 var(--body);color:#1F3B4D}
+.hwline{margin-top:8px;background:#FFF6D6;border-radius:12px;padding:8px 12px;font:600 14px var(--body);color:#5B4300}
+/* Сен не істейсің? */
+.stu{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:2.5px solid #0B5FA5;border-radius:20px;padding:10px 16px;margin:0 0 14px}
+.stu .q{font:900 18px var(--display);color:#0B2545;margin-right:4px}
+.stu .step{display:flex;align-items:center;gap:8px;background:#EEF6FA;border-radius:14px;padding:7px 12px;font:800 16px var(--display);color:#0B2545}
+.stu .step i{font-style:normal;width:26px;height:26px;border-radius:50%;background:#0B5FA5;color:#fff;display:grid;place-items:center;font-size:14px}
+.stu .ar{color:#0B5FA5;font-weight:900}
+/* видео → мақсат */
+.goalc{display:grid;grid-template-columns:1.1fr 1.4fr 1.2fr;gap:14px;padding:14px 18px;border-radius:20px;margin-top:12px;animation:kkin .4s ease both}
+.goalc small{display:block;font:800 12px var(--display);letter-spacing:.06em;color:#0B5FA5}
+.goalc b{font:800 17px var(--display);color:#0B2545}
+.goalc ul{margin:4px 0 0 18px;padding:0;font:500 14px/1.35 var(--body)}
+.goalc .pts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.goalc .pts span{background:#EEF6FA;border-radius:10px;padding:4px 8px;font:600 13px var(--body)}.goalc .pts .tot{background:#0B5FA5;color:#fff}.goalc .pts .tot b{color:#fff}
+/* 6 спикер */
+.spk-row{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:0 0 10px}
+.spkb{display:flex;align-items:center;gap:8px;border:0;border-radius:16px;padding:8px 10px;background:#fff;border-left:6px solid var(--c,#0B2545);box-shadow:0 6px 16px -10px rgba(0,40,60,.4);cursor:pointer;text-align:left;font:800 14px/1.15 var(--display);color:#0B2545}
+.spkb i{font-style:normal;font-size:26px}.spkb small{display:block;font:700 11px var(--body);color:#557}
+.spkb.on{background:var(--c,#0B2545);color:#fff;outline:4px solid #FFD24A}.spkb.on small{color:#fff}
+.spkb.sum{--c:#0B2545}
+.spknow{display:flex;gap:18px;align-items:center;background:#fff;border:4px solid var(--c);border-radius:24px;padding:14px 22px;margin:0 0 12px;animation:kkin .35s ease both}
+.spknow .av{font-size:70px;line-height:1;background:color-mix(in srgb,var(--c) 14%,#fff);border-radius:22px;padding:10px 14px}
+.spknow small{font:800 14px var(--display);color:var(--c)}
+.spknow b{display:block;font:900 clamp(22px,2.2vw,32px)/1.1 var(--display);color:#0B2545;margin:2px 0 6px}
+.spknow ul{margin:0;padding:0;list-style:none;display:flex;gap:10px;flex-wrap:wrap}
+.spknow li{background:#F3F8FA;border-radius:12px;padding:6px 12px;font:700 17px var(--body);color:#0B2545}
+/* Көш жолы */
+.ln-road{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:0 0 12px;position:relative}
+.lns{border:0;border-radius:14px;background:#fff;padding:6px 4px;cursor:pointer;box-shadow:0 4px 12px -8px rgba(0,40,60,.4);display:flex;flex-direction:column;align-items:center}
+.lns b{font:900 18px var(--display);color:#0B2545}.lns i{font-style:normal;font:700 13px var(--body);color:#557}
+.lns.on{background:#0B5FA5}.lns.on b,.lns.on i{color:#fff}.lns.ok{border-bottom:5px solid #12a86f}.lns.no{border-bottom:5px solid #e23a24}
+.ln-main{display:grid;grid-template-columns:1fr 300px;gap:14px}
+.ln-q{padding:18px 22px}
+.ln-top{display:flex;align-items:center;gap:18px}
+.ln-top .yr{font:900 64px/1 var(--display);color:#0B5FA5}
+.ln-top .who{flex:1}.ln-top .who small{display:block;font:700 13px var(--body);color:#557}.ln-top .who b{display:block;font:900 30px/1.1 var(--display)}.ln-top .who span{font:700 14px var(--body);color:#557}
+.ln-qq{font:800 clamp(22px,2.1vw,30px)/1.25 var(--display);color:#0B2545;margin:14px 0}
+.ln-o{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ln-o button{display:flex;align-items:center;gap:12px;border:2px solid #CFE0E6;background:#fff;border-radius:16px;padding:14px 16px;font:800 20px var(--display);color:#0B2545;cursor:pointer;text-align:left}
+.ln-o button span{width:34px;height:34px;border-radius:10px;background:#0B5FA5;color:#fff;display:grid;place-items:center;flex:none}
+.ln-o button:disabled{cursor:default}.ln-o button.ok{background:#12a86f;border-color:#12a86f;color:#fff}.ln-o button.no{background:#e23a24;border-color:#e23a24;color:#fff}.ln-o button.dim{opacity:.4}
+.ln-res{margin-top:12px;border-radius:16px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.ln-res.ok{background:#E6F8EF}.ln-res.no{background:#FDECEA}.ln-res b{font:900 20px var(--display)}.ln-res span{flex:1 1 100%;font:600 15px var(--body)}.ln-res small{color:#557}.ln-res .btn{margin-left:auto}
+.ln-side h3{margin:0 0 8px}
+.lng{display:flex;align-items:baseline;gap:6px;border-left:6px solid var(--c);background:#F7FAFB;border-radius:12px;padding:8px 12px;margin-bottom:6px}
+.lng span{flex:1;font:800 15px var(--display)}.lng b{font:900 26px var(--display);color:var(--c)}
+.ln-log{margin:8px 0;font:600 13px/1.6 var(--body);color:#28485A}
+/* постер таймерлері */
+.ptim{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.ptim .ttl{font:900 16px var(--display)}
+.ptim button{border:0;border-radius:999px;padding:9px 16px;font:800 14px var(--display);color:#fff;cursor:pointer}
+.ptim button.on{outline:4px solid #FFD24A}
+/* үздіктер */
+#podium{display:none!important}
+.meds{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.med{display:flex;gap:10px;align-items:center;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:2px solid #F5B700;border-radius:16px;padding:8px 12px}
+.med i{font-style:normal;font-size:32px;line-height:1}
+.med small{display:block;font:800 12px var(--display);color:#92400E;text-transform:uppercase;letter-spacing:.04em}
+.med b{display:block;font:900 19px/1.1 var(--display);color:#0B2545}.med span{font-size:13px;color:#475569}
+.spk-row,.spknow,#st-time .stu{grid-column:1/-1;width:100%;flex:1 1 100%;box-sizing:border-box}
+#st-prompt article:has(#grpRubric){display:none!important}
+#st-wall .fb-ta{min-height:58px;height:58px}
+
+@keyframes kkin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+#st-video .video-wrap video{max-height:56vh}
+#st-video.goal-on .video-wrap video{max-height:36vh}

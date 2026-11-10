@@ -38,7 +38,7 @@
     <button class="icon-btn" id="matBtn" title="Материалдар: ҚМЖ, презентация, парақтар, наклейкалар, постер инфографикасы" onclick="window.open('materialdar.html','_blank')">📁</button>
     <button class="pill-btn qr-btn" id="qrBtn" title="Осы кезеңнің QR-коды">📱 QR</button>
     <button class="pill-btn" id="whoBtn" title="Мен кіммін">👤 <span id="whoLbl">Кіру</span></button>
-    <button class="pill-btn" id="myScoreBtn" title="Менің ұпайым">⭐ <span id="myScore">0</span>/36</button>
+    <button class="pill-btn" id="myScoreBtn" title="Менің ұпайым">⭐ <span id="myScore">0</span>/14</button>
     <button class="icon-btn" id="boardBtn" title="Топтардың балл тақтасы">🏆</button>
     <button class="icon-btn" id="fsBtn" title="Толық экран">⛶</button>
   </div>
@@ -176,7 +176,7 @@
 
 <!-- 3 VIDEO -->
 <section class="stage" id="st-video" data-title="Видео" data-min="2">
-  <div class="stage-head"><span class="kicker">Бүкіл сынып · Қызығушылықты ояту</span><h2>Көш жолы: 35 жыл 2 минутта</h2></div>
+  <div class="stage-head"><span class="kicker">Бүкіл сынып · Қызығушылықты ояту</span><h2>Видео: көш жолы 35 жыл 2 минутта</h2></div>
   <div class="video-wrap glass">
     <video id="vid" controls preload="metadata" poster="media/poster.jpg" playsinline>
       <source src="media/kosh-kon.mp4" type="video/mp4">
@@ -185,12 +185,14 @@
   <div class="watch-q">
     <span>Көре отырып ойлан:</span>
     <b>1. Адамдар неге кетті?</b><b>2. Мемлекет қандай шешім қабылдады?</b><b>3. Нәтижесі қандай?</b>
+    <button class="btn gold" id="goalBtn">🎯 Тақырып пен мақсат</button>
   </div>
+  <div class="goalc glass" id="goalCard" hidden></div>
 </section>
 
 <!-- 4 TERMS -->
 <section class="stage" id="st-terms" data-title="Ұғымдар" data-min="3">
-  <div class="stage-head"><span class="kicker">Жеке жұмыс · Тақтаға шығып орында · 5 балл · К1</span><h2>Ұғымды тап</h2>
+  <div class="stage-head"><span class="kicker">Жеке жұмыс · Тақтаға шығып орында · 5 балл · К1</span><h2>Үй тапсырмасы: ұғымды тап</h2>
   <p class="lead">Ұғымды сүйреп апар (немесе басып таңда да, анықтаманы бас).</p></div>
   <div class="match" id="termsMatch"></div>
   <div class="row gap center">
@@ -216,7 +218,7 @@
 
 <!-- 6 TIMELINE + PROMPT -->
 <section class="stage" id="st-prompt" data-title="Промпт" data-min="12">
-  <div class="stage-head"><span class="kicker">Топтық жұмыс · Промпт-инжиниринг · 5 балл · К3, К4</span><h2>Промпт шеберханасы</h2>
+  <div class="stage-head"><span class="kicker">Топтық жұмыс · Промпт-инжиниринг · 5 балл · К3, К4</span><h2>Постер: промпт → постер → қорғау</h2>
   <p class="lead">Тобыңның тапсырмасын таңда → промпт құрастыр → Gemini-ден жауап ал → жауапты оқулықпен тексер → 1 минут қорға.</p></div>
   <div class="tabs" id="grpTabs"></div>
   <div class="grid two" id="pgA">
@@ -259,7 +261,7 @@
 
 <!-- 8 QUIZ -->
 <section class="stage" id="st-quiz" data-title="Квиз" data-min="6">
-  <div class="stage-head"><span class="kicker">Бағалаудағы ЖИ · Телефонмен · 2 раунд</span><h2>Өзіңді тексер</h2>
+  <div class="stage-head"><span class="kicker">Бағалаудағы ЖИ · Телефонмен · 2 раунд</span><h2>Бекіту квизі: өзіңді тексер</h2>
   <p class="lead">Деңгейіңді жүйе өзі есептейді және кері байланыс береді.</p></div>
   <div class="grid quiz-grid">
     <article class="glass card quiz-card" id="quizBox"></article>
@@ -304,7 +306,7 @@
 
 <!-- TIME MACHINE -->
 <section class="stage" id="st-time">
-  <div class="stage-head"><span class="kicker">Бүкіл сынып · Талдау · К2</span><h2>Уақыт машинасы: 1991 → 2026</h2>
+  <div class="stage-head"><span class="kicker">Бүкіл сынып · Талдау · К2</span><h2>6 спикер: көш жолының тірі куәгерлері</h2>
   <p class="lead">Жүгірткіні жылжыт немесе ▶ бас. Карта, сандар және оқиғалар өзгереді. Әр бекетте ойлан: <b>не өзгерді және неге?</b></p></div>
   <div class="tm glass">
     <div class="tm-stage">
@@ -328,6 +330,16 @@
   <details class="desc glass"><summary>📋 Критерий мен дескрипторлар (қалыптастырушы бағалау)</summary><div id="tmDesc"></div></details>
 </section>
 
+<!-- КӨШ ЖОЛЫ: кездейсоқ оқушы тақтада -->
+<section class="stage" id="st-lenta">
+  <div class="stage-head"><span class="kicker">Жеке · тақтада</span><h2>Көш жолы: 1991 → 2026</h2></div>
+  <div class="ln-road" id="lnRoad"></div>
+  <div class="ln-main">
+    <div class="glass card ln-q" id="lnQ"></div>
+    <div class="glass card ln-side"><h3>👥 Топтар</h3><div id="lnG"></div><div id="lnLog" class="ln-log"></div><button class="btn glass" id="lnReset">↺ Қайта бастау</button></div>
+  </div>
+</section>
+
 <!-- DATA DUEL -->
 <section class="stage" id="st-duel">
   <div class="stage-head"><span class="kicker">Жұптық жұмыс · Сыни ойлау · Оқулық vs 2026 · К4</span><h2>Дерек дуэлі: оқулық пен бүгінгі күн</h2>
@@ -346,7 +358,7 @@
 
 <!-- RATING -->
 <section class="stage" id="st-rating">
-  <div class="stage-head"><span class="kicker">Бағалаудағы ЖИ · Автоматты рейтинг</span><h2>Тірі рейтинг</h2>
+  <div class="stage-head"><span class="kicker">Бағалаудағы ЖИ · Автоматты рейтинг</span><h2>Баға · рейтинг · үздіктер</h2>
   <p class="lead" id="rtStatus">Оқушылардың ұпайлары автоматты түрде жиналады.</p></div>
   <div class="rt-wrap">
     <div class="glass card rt-podium"><h3>🥇 Көш басшылары</h3><div class="podium" id="podium"></div></div>
@@ -360,7 +372,7 @@
 
 <!-- FEEDBACK WALL -->
 <section class="stage" id="st-wall">
-  <div class="stage-head"><span class="kicker">Қонақтар · мұғалімдер · оқушылар</span><h2>Кері байланыс қабырғасы</h2>
+  <div class="stage-head"><span class="kicker">Қонақтар · мұғалімдер · оқушылар</span><h2>Кері байланыс: ұтымды · қызықты · ұсыныс</h2>
   <p class="lead">QR-ды сканерлеп, пікіріңізді қалдырыңыз — ол бірден тақтада пайда болады.</p></div>
   <div class="wall-top">
     <div class="glass card fb-form" id="fbForm">
@@ -368,8 +380,9 @@
       <div class="fb-roles" id="fbRoles"></div>
       <input id="fbName" class="cfg-in" placeholder="Аты-жөніңіз (міндетті емес)" maxlength="40">
       <div class="fb-stars" id="fbStars"></div>
-      <textarea id="fbLike" class="answer fb-ta" placeholder="⭐ Маған ұнағаны / Мен бүгін ... білдім" maxlength="300"></textarea>
-      <textarea id="fbIdea" class="answer fb-ta" placeholder="💡 Ұсыныс / тілек" maxlength="300"></textarea>
+      <textarea id="fbUse" class="answer fb-ta" placeholder="✅ Ұтымды болды: …" maxlength="300"></textarea>
+      <textarea id="fbLike" class="answer fb-ta" placeholder="✨ Қызықты болды: …" maxlength="300"></textarea>
+      <textarea id="fbIdea" class="answer fb-ta" placeholder="💡 Ұсыныс: …" maxlength="300"></textarea>
       <button class="btn gold big" id="fbSend">Жіберу 🚀</button>
     </div>
     <div class="wall-side board-only">
