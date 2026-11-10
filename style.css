@@ -892,7 +892,7 @@ body.side-open .side-scrim{display:block}
 @media (max-width:640px){body.has-side .pager{left:50%}}
 
 /* ================= v6: тақта / оқушы режимдері ================= */
-body.student .phasebar,body.student .clock,body.student #gearBtn,body.student #qrBtn,body.student #boardBtn,body.student #fsBtn,body.student .side-toggle,
+body.student .phasebar,body.student .clock,body.student #gearBtn,body.student #matBtn,body.student #qrBtn,body.student #boardBtn,body.student #fsBtn,body.student .side-toggle,
 body.student .side,body.student .side-scrim,body.student .pager,body.student #timer,body.student .tpanel,body.student .board-only,body.student details.desc,body.student .big-badge,body.student .flag-band,body.student .bg-eagle,body.student .live-res{display:none!important}
 body.student .topbar{margin-left:0;justify-content:space-between}
 body.student.has-side #stages{padding:14px 12px 40px;max-width:720px}

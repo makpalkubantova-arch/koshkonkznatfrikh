@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Материалдар · Көші-қон саясаты · 11 «А»</title>
+<link rel="stylesheet" href="vendor/golos.css">
+<script src="data.js"></script><script src="vendor/qrcode.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:linear-gradient(#0B2545,#0B2545) top/100% 380px no-repeat,#eef6fc;min-height:100%}
+body{font-family:'Golos Text',sans-serif;color:#13233a;max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+a{color:#0077A8}
+.hero{display:grid;grid-template-columns:1fr 190px;gap:28px;align-items:center;color:#fff;padding:12px 0 34px}
+.hero .k{color:#D99A00;font-weight:800;letter-spacing:.12em;font-size:13px}
+.hero h1{font-size:40px;line-height:1.08;margin:8px 0 10px;font-weight:800}
+.hero p{color:#cfe6f5;font-size:16px;line-height:1.5}
+.hero .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-flex;gap:8px;align-items:center;padding:11px 18px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px}
+.btn.p{background:#00AFCA;color:#fff}.btn.g{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.qrbox{background:#fff;border-radius:18px;padding:12px;text-align:center;color:#0B2545;font-weight:700;font-size:13px}
+.qrbox svg{width:100%;display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.card{background:#fff;border-radius:18px;box-shadow:0 8px 24px rgba(11,37,69,.10);overflow:hidden;display:flex;flex-direction:column}
+.card .pv{height:190px;background:#dfeaf5 top center/cover no-repeat;border-bottom:1px solid #e3ebf3}
+.card .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card .n{font-size:12px;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:3px 10px;align-self:flex-start}
+.card h3{font-size:19px;color:#0B2545}
+.card p{font-size:14px;line-height:1.45;color:#46566b;flex:1}
+.card .dl{display:flex;gap:8px;flex-wrap:wrap}
+.card .dl a{font-size:13.5px;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:10px;background:#eef6fc;color:#0B2545}
+.card .dl a.m{background:var(--c);color:#fff}
+h2{font-size:24px;color:#0B2545;margin:40px 0 14px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(11,37,69,.08);font-size:14px}
+th{background:#0B2545;color:#fff;text-align:left;padding:10px 12px;font-weight:700}
+td{padding:9px 12px;border-top:1px solid #e6edf4;vertical-align:top;line-height:1.4}
+tr.ph td{background:var(--c);color:#fff;font-weight:800;font-size:13px;letter-spacing:.06em}
+td a{font-weight:700;text-decoration:none}
+.tip{margin-top:14px;font-size:13.5px;color:#46566b;line-height:1.5}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero h1{font-size:30px}.qrbox{max-width:200px}th:nth-child(5),td:nth-child(5){display:none}}
+</style></head><body>
+<section class="hero">
+ <div>
+  <div class="k">📁 АШЫҚ САБАҚ МАТЕРИАЛДАРЫ · ҚАЗАҚСТАН ТАРИХЫ · 11 «А»</div>
+  <h1>Қазақстан Республикасының көші-қон саясаты</h1>
+  <p>«Тарихтың тірі куәгерлері: Оқушы + ЖИ» · §17–18<br>Серкулова Айжан Хайроллаевна · Д. Қонаев атындағы №9 IT мектеп-лицейі, Жетісай ауданы · 13.11.2026, №205 кабинет</p>
+  <div class="acts"><a class="btn p" href="index.html">▶ Тақтаны ашу</a><a class="btn g" href="index.html#kmj">📄 ҚМЖ беті</a><a class="btn g" href="index.html?m=h">📒 Хатшы беті</a><a class="btn g" href="index.html#rating">🏆 Рейтинг</a></div>
+ </div>
+ <div class="qrbox"><div id="qr"></div>Сабақ сайты</div>
+</section>
+<div class="cards" id="cards"></div>
+<h2>🗺️ Сабақ картасы</h2>
+<table id="map"></table>
+<p class="tip">💡 Наклейкаларды A4 жабысқақ қағазға түрлі түсті басыңыз. Постер инфографикасын әр топқа бір данадан беріңіз (A4 немесе A3-ке үлкейтіп). Әр құжаттағы «сайт: N-слайд» белгісі тақтадағы кезеңге сәйкес келеді.</p>
+<script>
+const SITE = location.href.replace(/materialdar\.html.*$/, "");
+const q = qrcode(0, "H"); q.addData(SITE); q.make(); const n = q.getModuleCount(), m = 2, S = n + 2 * m; let p = "";
+for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) p += `<rect x="${c + m}" y="${r + m}" width="1.02" height="1.02" rx=".3"/>`;
+document.getElementById("qr").innerHTML = `<svg viewBox="0 0 ${S} ${S}"><g fill="#0B2545">${p}</g></svg>`;
+const F = "materialdar/";
+const M = [
+ ["1", "#0077A8", "ҚМЖ — қысқа мерзімді жоспар", "Альбомдық кесте: әр кезеңде әдіс, мұғалім мен оқушы әрекеті, дескрипторлар, сайт скриншоты және «сайт: N-слайд». Бағалау кестесі, 36 ұпай → 10 балл, сайт пен материалдардың QR-ы.", "1-QMZh-Koshi-qon-sayasaty", [["docx", "⬇️ Word"], ["pdf", "📄 PDF"]]],
+ ["2", "#00AFCA", "Презентация · 18 слайд", "Мақсат, топтар мен рөлдер, бағалау, ұғымдар, үш кезең, Дерек дуэлі, ЖИ-куәгерлер, Р-Т-К-Ф-Ш, деңгейлер, квиз, рефлексия. Әр слайдта сайттың кезеңіне сілтеме, жазбаларда мұғалімнің сөзі мен жауап кілті.", "2-Prezentaciya-Koshi-qon-sayasaty", [["pptx", "⬇️ PowerPoint"], ["pdf", "📄 PDF"]]],
+ ["3", "#5B5BD6", "Жұмыс парақтары №1–№9", "Ұғымды тап, тыңдаушы кестесі, Дерек дуэлі, ЖИ-куәгерлер, әр топқа промпт парағы, галерея бағалауы, A/B/C деңгейлер, квиздің қағаз нұсқасы, хатшы парағы және жауап кілті.", "3-Zhumys-paraqtary", [["docx", "⬇️ Word"], ["pdf", "📄 PDF"]]],
+ ["4", "#D99A00", "Наклейкалар · 6 парақ", "Рөл белгілері (топ × рөл), үстел тақтайшалары, капсулалар, «2 жұлдыз, 1 тілек», рефлексия бекеттері, медальдар.", "4-Naklejkalar", [["pdf", "📄 PDF"]], "print/naklejka.html"],
+ ["5", "#E23A24", "Постерге дайындық инфографикасы", "Әр топқа A4: постердің сызбасы, 8 минуттық жоспар, сызба үлгісі (кластер / 5 қадам / Венн), тексерілген деректер, рөлдер, рубрика және 1 минуттық қорғау сөзі. Постерді оқушылар өздері салады.", "5-Poster-infografikalar", [["pdf", "📄 PDF"]], "print/poster.html"]
+];
+document.getElementById("cards").innerHTML = M.map(x => `<div class="card" style="--c:${x[1]}"><div class="pv" style="background-image:url(${F}prev/${x[4]}.png)"></div><div class="bd"><span class="n">${x[0]}-материал</span><h3>${x[2]}</h3><p>${x[3]}</p><div class="dl">${x[5].map((d, i) => `<a class="${i ? "" : "m"}" href="${F}${x[4]}.${d[0]}" ${d[0] === "pdf" ? 'target="_blank"' : "download"}>${d[1]}</a>`).join("")}${x[6] ? `<a href="${x[6]}" target="_blank">🖨 Браузерден басу</a>` : ""}</div></div></div>`).join("");
+const SHEET = { terms: "№1", time: "№2 · спикерлер", duel: "№3", witness: "№4", prompt: "№5, №6 · постер инфографикасы", levels: "№7", quiz: "№8 (қағаз нұсқасы)", card: "наклейка: рөлдер, капсулалар", reflect: "наклейка: бекеттер", rating: "наклейка: медальдар" };
+let h = `<tr><th>Кезең</th><th>Мин</th><th>Тақтада</th><th>Парақ / наклейка</th><th>Бағалау</th></tr>`, ph = 0;
+DATA.stages.forEach((s, i) => { if (!s.phase || s.phase > 3) return;
+  if (s.phase !== ph) { ph = s.phase; h += `<tr class="ph" style="--c:${DATA.phaseColors[ph]}"><td colspan="5">${DATA.phases[ph].toUpperCase()}</td></tr>`; }
+  const k = DATA.kmj[s.id] || {};
+  h += `<tr><td><b>${s.ico} ${s.label}</b><br><small>${k.method || ""}</small></td><td>${s.t[0]}–${s.t[1]}</td><td><a href="index.html#${s.id}">${i + 1}-слайд ↗</a></td><td>${SHEET[s.id] || "—"}</td><td>${k.assess || ""}</td></tr>`; });
+document.getElementById("map").innerHTML = h;
+</script>
+</body></html>

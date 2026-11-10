@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8">
+<title>Постерге дайындық инфографикасы · Көші-қон саясаты</title>
+<link rel="stylesheet" href="../vendor/golos.css">
+<script src="../data.js"></script><script src="../vendor/qrcode.js"></script><script src="icons.js"></script>
+<style>
+@page{size:A4 landscape;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Golos Text',sans-serif;color:#13233a;background:#d9e3ee;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:297mm;height:210mm;background:#fff;margin:0 auto 8mm;padding:8mm 9mm 7mm;position:relative;overflow:hidden;page-break-after:always;display:flex;flex-direction:column;gap:3.2mm}
+@media print{body{background:#fff}.page{margin:0}}
+.hd{border-radius:5mm;padding:3mm 5mm;color:#fff;display:flex;gap:4mm;align-items:center;background:linear-gradient(120deg,var(--g),var(--g2))}
+.hd .ic{width:17mm;height:17mm;background:rgba(255,255,255,.18);border-radius:4mm;display:grid;place-items:center;flex:none}
+.hd .ic svg{width:11mm;height:11mm}
+.hd .k{font-size:8.5pt;font-weight:700;letter-spacing:.12em;opacity:.9}
+.hd h1{font-size:19pt;font-weight:800;line-height:1.05;margin:.6mm 0}
+.hd .q{font-size:11pt;font-weight:600;opacity:.95;max-width:165mm}
+.hd .rt{margin-left:auto;display:flex;gap:3mm;align-items:center}
+.badge{background:#fff;color:var(--g);border-radius:4mm;padding:2mm 3.5mm;text-align:center;font-weight:800;line-height:1}
+.badge b{display:block;font-size:20pt}.badge small{font-size:7.5pt;font-weight:700}
+.qr{background:#fff;border-radius:3mm;padding:1.2mm;width:22mm;height:22mm}.qr svg{width:100%;height:100%;display:block}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:2mm}
+.st{border-radius:3.5mm;padding:2mm 2.5mm;background:var(--soft);border:.4mm solid var(--g);position:relative;display:flex;gap:2mm;align-items:flex-start}
+.st .n{flex:none;width:7mm;height:7mm;border-radius:50%;background:var(--g);color:#fff;font-weight:800;display:grid;place-items:center;font-size:10pt}
+.st .tm{font-size:8pt;font-weight:800;color:var(--g)}
+.st b{display:block;font-size:9pt;line-height:1.15}
+.st small{font-size:7.6pt;color:#4b5a70;line-height:1.2;display:block;margin-top:.5mm}
+.st:not(:last-child)::after{content:"";position:absolute;right:-2.6mm;top:50%;margin-top:-1.6mm;border:1.6mm solid transparent;border-left-color:var(--g);z-index:2}
+.main{flex:1;display:grid;grid-template-columns:74mm 1fr 78mm;grid-template-rows:minmax(0,1fr);gap:3.5mm;min-height:0}
+.card{border:.35mm solid #d3deea;border-radius:4mm;padding:2.6mm;display:flex;flex-direction:column;gap:1.5mm;min-height:0;overflow:hidden}
+.ct{font-size:10pt;font-weight:800;color:var(--g);display:flex;gap:1.5mm;align-items:center;text-transform:uppercase;letter-spacing:.04em}
+.ct svg{width:5.5mm;height:5.5mm}
+/* poster mockup */
+.vat{flex:1;min-height:0;border:.6mm dashed var(--g);border-radius:3mm;padding:2mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto auto;gap:1.6mm;background:repeating-linear-gradient(45deg,#fff,#fff 3mm,#fafcfe 3mm,#fafcfe 6mm)}
+.z{border-radius:2mm;padding:1.6mm;font-size:7.8pt;line-height:1.2;color:#22344d;background:#fff;border:.3mm solid #c9d6e4;position:relative}
+.z i{font-style:normal;display:inline-grid;place-items:center;width:4.6mm;height:4.6mm;border-radius:50%;background:var(--g);color:#fff;font-weight:800;font-size:7.5pt;margin-right:1mm;vertical-align:middle}
+.z b{font-size:8.3pt}
+.z1{grid-column:1/3;text-align:center;background:var(--soft)}
+.z2{grid-column:1/3;display:grid;place-items:center;text-align:center;border-width:.5mm;border-color:var(--g)}
+.tip{font-size:7.6pt;color:#4b5a70;line-height:1.25}
+/* diagram */
+.dg{flex:1;position:relative;min-height:0}
+.dg svg{width:100%;height:100%}
+.fill{fill:#fff;stroke:var(--g);stroke-width:1.2}
+.hint{font-size:9px;fill:#97a6b8;font-style:italic}
+.lbl{font-size:11px;font-weight:800;fill:#13233a}
+/* facts */
+.fact{display:flex;gap:2mm;align-items:flex-start;font-size:7.8pt;line-height:1.18}
+.fact .num{flex:none;min-width:13mm;background:var(--g);color:#fff;border-radius:2mm;padding:.8mm 1.2mm;font-weight:800;text-align:center;font-size:8.6pt}
+.fact small{color:#6b7a90;display:block;font-size:7.2pt}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:1.4mm}
+.role{display:flex;gap:1.4mm;align-items:center;font-size:7.6pt;line-height:1.15;background:var(--soft);border-radius:2mm;padding:1.2mm}
+.role svg{width:6mm;height:6mm;flex:none}
+.rub{font-size:7.4pt;line-height:1.2;display:flex;gap:1.4mm;align-items:flex-start}
+.rub span{flex:none;width:3.6mm;height:3.6mm;border:.4mm solid var(--g);border-radius:1mm;margin-top:.2mm}
+.speech{background:#13233a;color:#fff;border-radius:3mm;padding:2.2mm 2.6mm;font-size:8pt;line-height:1.35}
+.speech b{color:var(--lime)}
+.ft{display:flex;justify-content:space-between;font-size:7.2pt;color:#7a889b}
+</style></head><body>
+<script>
+const SITE = "https://makpalkubantova-arch.github.io/koshkonkznatfrikh/";
+function qrSvg(t, col){const q=qrcode(0,"H");q.addData(t);q.make();const n=q.getModuleCount(),m=2,S=n+m*2;let p="";for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))p+=`<rect x="${c+m}" y="${r+m}" width="1.02" height="1.02" rx=".3"/>`;return `<svg viewBox="0 0 ${S} ${S}"><rect width="${S}" height="${S}" fill="#fff"/><g fill="${col}">${p}</g></svg>`}
+const I = window.ICONS;
+const G = {
+ em:{g:"#e23a24",g2:"#b8261a",soft:"#fdecea",ico:"plane",
+  facts:[["16,8 млн","1991 — тәуелсіздік: халық 16,8 млн, қазақтар 40%","Оқулық, 118, 122-б."],["811,3 мың","1994 — сыртқы көші-қонның шыңы: елден кеткендер","Оқулық, 118-б."],["1 550 мың","Кеткендердің көбі Ресейге барды (Украинаға 52,6 мың)","Оқулық, 118–119-б."],["14,9 млн","2003 — халық саны осыған дейін азайды","Оқулық, 118-б."]],
+  zone2:"Себептер кластері: 3 тармақ × 2 себеп", zone4:"ЖИ айтқан, бірақ оқулықта жоқ / қате нәрсе", tip:"Себепті кейіпкерлердің көш құжатынан (Ганс, Ольга, Виктор) және оқулықтың 118–119-беттерінен ал."},
+ re:{g:"#12a86f",g2:"#0b7d52",soft:"#e5f6ee",ico:"home",
+  facts:[["1992","«Көшіп келу туралы» Заң; Дүниежүзі қазақтарының I құрылтайы","Оқулық, 117, 127-б."],["1997","«Халықтың көші-қоны туралы» Заң: репатриант мәртебесі","Оқулық, 117-б."],["2008","«Нұрлы көш» бағдарламасы","Оқулық, 120-б."],["1 168,2 мың","1991 жылдан бері оралған қандастар","Еңбек министрлігі, 2026"],["8 өңір","Ақмола, Абай, Қостанай, Павлодар, Атырау, БҚО, ШҚО, СҚО","Ресми дерек, 2026"]],
+  zone2:"Бейімделу жоспары: 5 қадам (құжат → үй → жұмыс → тіл → мектеп)", zone4:"«ЖИ нені ескермеді?» — 1 маңызды нәрсе", tip:"Әр қадамға мемлекеттің нақты шарасын жаз: квота, қоныстану өңірі, субсидия, тіл курсы."},
+ in:{g:"#1e8cf0",g2:"#1468b8",soft:"#e8f2fd",ico:"route",
+  facts:[["2008","«Нұрлы көш»: қандастар мен ел ішіндегі көшті реттеу","Оқулық, 120-б."],["2014","«Серпін»: оңтүстік жастары батыс пен солтүстікте оқиды","Оқулық, 120-б."],["8 өңір","Еңбек күші тапшы өңірлерге қоныстандыру","Ресми дерек, 2026"],["2025","Көші-қон саясатының 2030 жылға дейінгі тұжырымдамасы","ҚР Үкіметі"],["20,59 млн","2026 — Қазақстан халқы","ҰСБ, 2026"]],
+  zone2:"Венн диаграммасы: «Нұрлы көш» · ортақ · «Серпін»", zone4:"ЖИ салыстыруындағы қате немесе олқылық", tip:"Әр бөлікке 2–3 белгі: жылы, кімге арналған, мақсаты, қай өңірге."}
+};
+function diagram(id, c){
+ const W=360,H=330;
+ if(id==="em"){
+  const br=[["Экономикалық","мыс.: зауыт тоқтады",60],["Әлеуметтік","мыс.: туыстармен қауышу",180],["Психологиялық","мыс.: болашаққа сенімсіздік",300]];
+  let s=`<svg viewBox="0 0 ${W} ${H}"><rect class="fill" x="95" y="8" width="170" height="50" rx="25" style="fill:${c};stroke:none"/><text x="180" y="30" text-anchor="middle" fill="#fff" font-weight="800" font-size="12">1991–2003:</text><text x="180" y="46" text-anchor="middle" fill="#fff" font-weight="800" font-size="12">неге көшіп кетті?</text>`;
+  br.forEach(([t,h,x],i)=>{s+=`<path d="M180 58 C180 80 ${x} 70 ${x} 92" fill="none" stroke="${c}" stroke-width="2.5"/><rect x="${x-55}" y="92" width="110" height="30" rx="8" fill="${c}" opacity=".15" stroke="${c}"/><text class="lbl" x="${x}" y="111" text-anchor="middle">${t}</text>`;
+   for(let k=0;k<2;k++){const y=136+k*62;const hh=k===0?h.split(": "):["2-себеп …"];s+=`<rect class="fill" x="${x-56}" y="${y}" width="112" height="50" rx="6"/><text class="hint" x="${x}" y="${y+(hh.length>1?22:29)}" text-anchor="middle">${hh[0]}${hh.length>1?":":""}</text>${hh[1]?`<text class="hint" x="${x}" y="${y+35}" text-anchor="middle">${hh[1]}</text>`:""}`;}});
+  s+=`<rect x="70" y="268" width="220" height="50" rx="10" fill="#fff" stroke="${c}" stroke-width="2.5"/><text class="lbl" x="180" y="287" text-anchor="middle">1 нақты сан (жылымен):</text><text class="hint" x="180" y="306" text-anchor="middle">мыс.: 1994 — … мың адам кетті</text></svg>`;
+  return s;}
+ if(id==="re"){
+  const st=[["1","Құжат","қайда тіркеледі?"],["2","Тұрғын үй","қай өңір? субсидия?"],["3","Жұмыс","қандай көмек?"],["4","Тіл","курс, 2026 тест"],["5","Мектеп","балаларға"]];
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  st.forEach(([n,t,h],i)=>{const y=8+i*52,x=i%2?150:20;s+=`${i?`<path d="M${(i-1)%2?215:85} ${y-8} L${x+65} ${y}" stroke="${c}" stroke-width="2.5" fill="none" marker-end="url(#a)"/>`:""}<rect class="fill" x="${x}" y="${y}" width="190" height="42" rx="10"/><circle cx="${x+20}" cy="${y+21}" r="13" fill="${c}"/><text x="${x+20}" y="${y+26}" fill="#fff" font-weight="800" font-size="13" text-anchor="middle">${n}</text><text class="lbl" x="${x+40}" y="${y+18}">${t}</text><text class="hint" x="${x+40}" y="${y+33}">${h}</text>`});
+  s+=`<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="${c}"/></marker></defs>`;
+  s+=`<rect x="20" y="272" width="320" height="50" rx="10" fill="${c}" opacity=".12" stroke="${c}" stroke-width="2"/><text class="lbl" x="180" y="292" text-anchor="middle">ЖИ нені ескермеді?</text><text class="hint" x="180" y="310" text-anchor="middle">1 маңызды нәрсе + оқулық беті</text></svg>`;
+  return s;}
+ let s=`<svg viewBox="0 0 ${W} ${H}"><circle cx="135" cy="150" r="115" fill="${c}" opacity=".13" stroke="${c}" stroke-width="2.5"/><circle cx="225" cy="150" r="115" fill="#f78c14" opacity=".12" stroke="#f78c14" stroke-width="2.5"/>
+ <text class="lbl" x="85" y="62" text-anchor="middle">«Нұрлы көш»</text><text class="hint" x="85" y="77" text-anchor="middle">2008 · тек осыған тән</text>
+ <text class="lbl" x="275" y="62" text-anchor="middle">«Серпін»</text><text class="hint" x="275" y="77" text-anchor="middle">2014 · тек осыған тән</text>
+ <text class="lbl" x="180" y="100" text-anchor="middle">Ортақ</text>`;
+ [[45,85],[45,85],[45,85]].forEach((_,i)=>{const y=110+i*42;s+=`<line x1="40" x2="128" y1="${y+20}" y2="${y+20}" stroke="#9fb0c3" stroke-dasharray="3 3"/><line x1="232" x2="320" y1="${y+20}" y2="${y+20}" stroke="#9fb0c3" stroke-dasharray="3 3"/><line x1="148" x2="212" y1="${y+20}" y2="${y+20}" stroke="#9fb0c3" stroke-dasharray="3 3"/>`});
+ s+=`<text class="hint" x="84" y="126" text-anchor="middle">кімге арналған?</text><text class="hint" x="276" y="126" text-anchor="middle">кімге арналған?</text><text class="hint" x="180" y="126" text-anchor="middle">мақсаты?</text>
+ <rect x="60" y="285" width="240" height="38" rx="9" fill="#fff" stroke="${c}" stroke-width="2"/><text class="lbl" x="180" y="302" text-anchor="middle">Тексердік: оқулық, 120-бет</text><text class="hint" x="180" y="316" text-anchor="middle">ЖИ қателескен жер: …</text></svg>`;
+ return s;
+}
+const steps=[["0:00–1:00","Тапсырманы оқы","Рөлдерді нақтыла, сұрақты дауыстап оқы","bulb"],["1:00–3:00","Промпт жаз","Р-Т-К-Ф-Ш (№5 парақ). Мұғалім тақтада ЖИ-ге жібереді","ai"],["3:00–4:30","Оқулықпен тексер","ЖИ жауабын бетімен салыстыр, қатені белгіле","book"],["4:30–7:00","Постер сал","Сызба + 3 сан + ЖИ нені ескермеді","brush"],["7:00–8:00","Қорғау · 1 мин","Постер қорғаушы сөйлейді, басқалар тыңдайды","mic"]];
+let html="";
+DATA.groups.forEach(gr=>{
+ const g=G[gr.id];
+ html+=`<section class="page" style="--g:${g.g};--g2:${g.g2};--soft:${g.soft};--lime:#d6f36a">
+ <div class="hd"><div class="ic">${I[g.ico]("#fff")}</div><div><div class="k">ПОСТЕРГЕ ДАЙЫНДЫҚ · ИНФОГРАФИКА-НҰСҚАУЛЫҚ</div><h1>${gr.name}</h1><div class="q">${gr.title}</div></div>
+ <div class="rt"><div class="badge"><b>8</b><small>минут</small></div><div class="qr">${qrSvg(SITE+"index.html#prompt",g.g2)}</div></div></div>
+ <div class="steps">${steps.map((s,i)=>`<div class="st"><div class="n">${i+1}</div><div><div class="tm">${s[0]}</div><b>${s[1]}</b><small>${s[2]}</small></div></div>`).join("")}</div>
+ <div class="main">
+  <div class="card"><div class="ct">${I.poster(g.g)}Постер сызбасы</div>
+   <div class="vat">
+    <div class="z z1"><i>1</i><b>Тақырып + топ аты</b><br>${gr.title.includes("«")?gr.title:"«"+gr.title+"»"}</div>
+    <div class="z z2"><div><i>2</i><b>Негізгі сызба</b><br>${g.zone2}<br><span class="tip">постердің ортасы, ең үлкен бөлігі</span></div></div>
+    <div class="z"><i>3</i><b>3 сан</b><br>жылымен + бетімен</div>
+    <div class="z"><i>4</i><b>ЖИ тексерісі</b><br>${g.zone4}</div>
+    <div class="z" style="grid-column:1/3"><i>5</i><b>Біздің промпт</b> (Р-Т-К-Ф-Ш) + дереккөз: оқулық беті, stat.gov.kz</div>
+   </div>
+   <div class="tip">✎ Қарындашпен алдымен 5 аймақты сыз, сосын толтыр. Үлкен әріп, аз сөз, түрлі түсті маркер.</div>
+  </div>
+  <div class="card"><div class="ct">${I.pen(g.g)}Сызба үлгісі — постерге көшір</div>
+   <div class="dg">${diagram(gr.id,g.g)}</div>
+   <div class="tip"><b style="color:${g.g}">Кеңес:</b> ${g.tip}</div>
+  </div>
+  <div class="card"><div class="ct">${I.check(g.g)}Тексерілген деректер</div>
+   ${g.facts.slice(0,3).map(f=>`<div class="fact"><div class="num">${f[0]}</div><div>${f[1]}<small>${f[2]}</small></div></div>`).join("")}
+   <div class="ct" style="margin-top:.6mm">${I.star(g.g)}Кім не істейді</div>
+   <div class="roles"><div class="role">${I.pen(g.g)}<span><b>Хатшы</b> промпт жазады, балл қояды</span></div><div class="role">${I.book(g.g)}<span><b>Спикер</b> оқулықпен тексереді</span></div><div class="role">${I.brush(g.g)}<span><b>Қалғаны</b> постерді салады</span></div><div class="role">${I.mic(g.g)}<span><b>Постер қорғаушы</b> 1 мин</span></div></div>
+   <div class="ct" style="margin-top:.6mm">${I.medal(g.g)}Рубрика · 5 балл</div>
+   ${DATA.grpRubric.map(r=>`<div class="rub"><span></span>${r[0]}</div>`).join("")}
+  </div>
+ </div>
+ <div class="speech"><b>Қорғау сөзі (1 мин):</b> «Біз — ${gr.name.split("·")[1].trim()} тобымыз. Сұрағымыз: … . ЖИ айтты: … . Біз оқулықпен (… бет) тексердік: … . ЖИ ескермеген нәрсе: … . Қорытынды: … .»</div>
+ <div class="ft"><span>${"Қазақстан тарихы · 11 «А» · Көші-қон саясаты · Серкулова А.Х."}</span><span>Сайт: 10-слайд «Промпт» · Жұмыс парағы №5, №6 · К3, К4</span></div>
+ </section>`;
+});
+document.body.insertAdjacentHTML("beforeend",html);
+</script>
+</body></html>
