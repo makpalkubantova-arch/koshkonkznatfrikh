@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8">
+<title>Сабақ сценарийі · Көші-қон саясаты</title>
+<link rel="stylesheet" href="../vendor/golos.css">
+<script src="../data.js"></script>
+<style>
+@page{size:A4 portrait;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Golos Text',sans-serif;color:#13233a;background:#d9e3ee;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;min-height:297mm;background:#fff;margin:0 auto 8mm;padding:10mm 11mm}
+@media print{body{background:#fff}.page{margin:0}}
+h1{font-size:18pt;color:#0B2545}.sub{font-size:9.5pt;color:#5b6b80;margin:1mm 0 4mm}
+.before{background:#FFF6D6;border-radius:3mm;padding:3mm 4mm;font-size:9.5pt;line-height:1.45;margin-bottom:4mm}
+.before b{color:#5B4300}
+.row{display:grid;grid-template-columns:22mm 1fr;gap:3mm;border-top:.3mm solid #D6E6EE;padding:2.6mm 0;break-inside:avoid}
+.t{font-weight:800;color:#0B5FA5;font-size:12pt;line-height:1.1}.t small{display:block;font-size:8pt;color:#5b6b80;font-weight:600}
+.ph{background:#0B2545;color:#fff;font-weight:800;font-size:9.5pt;border-radius:2mm;padding:1.2mm 3mm;margin-top:2mm;letter-spacing:.05em}
+.nm{font-weight:800;font-size:11.5pt}.nm span{font-weight:600;font-size:8.5pt;color:#5b6b80}
+.say{background:#EEF6FA;border-left:1.2mm solid #0B5FA5;border-radius:1.5mm;padding:1.6mm 3mm;margin:1.4mm 0;font-size:10pt;font-style:italic}
+.do{font-size:9.3pt;line-height:1.4}.do b{color:#0B2545}
+.stu{font-size:9pt;color:#0B5FA5;margin-top:1mm}
+</style></head><body>
+<section class="page" id="pg"></section>
+<script>
+const P = DATA.pro, S = DATA.stages.filter(s => P.meta[s.id]);
+const CLICK = {
+  card: "«Құжат алу» → мәртебені бірге анықта → «👥 Топтар мен рөлдер · хатшы QR» (хатшылар сканерлейді).",
+  terms: "Оқушыларды кезекпен шақыр: ұғымды анықтамаға сүйрейді → «Тексеру». Хатшылар №1 парақты кілтпен тексереді.",
+  video: "▶ видео. Біткенде тақырып пен мақсат өзі ашылады (немесе «🎯 Тақырып пен мақсат»).",
+  time: "Спикер батырмасын бас (1…6) → ортада үлкен шығады, таймер 1 мин. Соңында «👩‍🏫 Қорытынды» (30 с).",
+  lenta: "«🎲 Оқушы таңдау» → шыққан оқушы тақтада жауапты басады → «Келесі жыл →». 10 сұрақ.",
+  witness: "Әр жұпқа бір куәгер (Ганс / Серікбол / Ерлан). №3 парақ. Хатшы кілтпен тексереді.",
+  prompt: "«🛠️ Дайындық · 3 мин» → сосын әр топтың «қорғайды · 2 мин» батырмасы.",
+  quiz: "QR тақтада. Телефон жоқ оқушыға — №5 қағаз нұсқасы.",
+  rating: "Рейтинг өзі жаңарады. Үздіктерге наклейка (медальдар) беріледі.",
+  wall: "QR-ды қонақтарға көрсет. Пікірлер тақтада шығады. Үй тапсырмасын оқы."
+};
+let h = `<h1>Сабақ сценарийі · мұғалімге</h1><div class="sub">Қазақстан Республикасының көші-қон саясаты (§17–18) · 11 «А» · 45 минут · тақтада сайт ашық тұрады, «Келесі →» батырмасымен жүресіз</div>
+<div class="before"><b>Сабаққа дейін:</b> ⚙️ → «Топтарды теңдестіру» — тізімді қойып, топтар мен рөлдерді шығар (әр топта 2 🎤 спикер, 📒 хатшы, 🖼️ қорғаушы) · 6 спикерге карточка (материал №6) · хатшыларға телефон · №1–№5 парақтар, ватман, маркер · наклейкалар · Firebase қосулы екенін тексер (жоғарғы жолақта «қосылды»).</div>`;
+let ph = 0;
+S.forEach(s => { const m = P.meta[s.id], k = DATA.kmj[s.id] || {};
+  if (s.phase !== ph) { ph = s.phase; h += `<div class="ph">${DATA.phases[ph].toUpperCase()}</div>`; }
+  h += `<div class="row"><div class="t">${s.t[0]}–${s.t[1]}′<small>${s.t[1] - s.t[0]} мин</small></div><div>
+    <div class="nm">${s.ico} ${s.label} <span>· ${m.method} · ${m.type}${m.crit && m.crit !== "—" ? " · " + m.crit : ""}</span></div>
+    <div class="say">🗣️ «${m.say}»</div>
+    <div class="do"><b>Тақтада:</b> ${CLICK[s.id] || ""}</div>
+    <div class="stu">🧑‍🎓 ${(P.stu[s.id] || []).join(" → ")}</div></div></div>`; });
+document.getElementById("pg").innerHTML = h;
+</script>
+</body></html>

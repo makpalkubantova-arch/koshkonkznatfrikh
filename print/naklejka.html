@@ -54,7 +54,7 @@ body{font-family:'Golos Text',sans-serif;color:#13233a;background:#d9e3ee;-webki
 const I = window.ICONS;
 const GR = {em:["#e23a24","#b8261a","plane"],re:["#12a86f","#0b7d52","home"],in:["#1e8cf0","#1468b8","route"]};
 const FOOT = `<div class="ft"><span>Қазақстан тарихы · 11 «А» · Көші-қон саясаты · Серкулова А.Х.</span><span>Пунктир бойымен қиыңыз · A4 жабысқақ қағаз, түрлі түсті басу</span></div>`;
-const roles = [["mic","Спикер","Жаңа сабақты түсіндіреді (80 с)"],["pen","Хатшы","Балл қояды, промпт жазады"],["poster","Постер қорғаушы","Постерді 1 минутта қорғайды"],["brush","Суретші","Постердің сызбасын салады"]];
+const roles = [["mic","Спикер","Кейіпкер рөлінде 1 минут сөйлейді"],["pen","Хатшы","Кілтпен тексеріп, балл қояды"],["poster","Постер қорғаушы","Постерді 2 минутта қорғайды"],["brush","Суретші","Постердің сызбасын салады"]];
 let h = "";
 // 1 roles
 h += `<section class="page"><div class="pt"><h2>Рөл белгілері</h2><small>топ × рөл · Ø 58 мм</small></div><div class="grid" style="grid-template-columns:repeat(3,58mm);gap:6mm 9mm">`;
@@ -78,16 +78,10 @@ for (let k = 0; k < 6; k++) h += `<div class="sw cut"><div class="h"><span>Кі�
  <div class="r">${I.star("#D99A00")}Тағы ұнады:</div><div class="l"></div>
  <div class="r">${I.bulb("#00AFCA")}Тілек:</div><div class="l"></div><div class="l"></div></div>`;
 h += `</div>${FOOT}</section>`;
-// 5 reflection
-const RC = [["#5b5bd6","#8a8af0","route"],["#f78c14","#ffb35c","plane"],["#12a86f","#4fd39b","home"],["#D99A00","#ffd24a","medal"]];
-h += `<section class="page"><div class="pt"><h2>Рефлексия: «Көш жолы» бекеттері</h2><small>оқушы өз бекетіне стикер қояды · Ø 42 мм</small></div><div class="grid" style="grid-template-columns:repeat(4,42mm);gap:5mm 4.5mm">`;
-for (let k = 0; k < 5; k++) DATA.reflect.forEach((r, i) => { const [c, c2, ic] = RC[i];
-  h += `<div class="rf cut" style="--g:${c};--g2:${c2}">${I[ic]("#fff")}<b>${r.t}</b><small>${r.s}</small></div>`; });
-h += `</div>${FOOT}</section>`;
 // 6 medals
 const meds = [["#12a86f","#0b7d52","10","Жоғары деңгей","8–10 балл"],["#0089B5","#006b8f","7","Орта деңгей","4–7 балл"],["#E0A400","#b88600","3","Өсу жолында","1–3 балл"],
-  ["#e23a24","#b8261a","mic","Үздік спикер","Ең түсінікті түсіндіру"],["#5b5bd6","#3f3fb0","pen","Үздік хатшы","Мұқият және әділ"],["#f78c14","#c96a00","poster","Үздік постер","Галерея таңдауы"],
-  ["#0B2545","#00AFCA","scale","Академиялық адалдық","ЖИ қатесін дәлелдеді"],["#1e8cf0","#1468b8","ai","ЖИ-зерттеуші","Ең жақсы промпт"],["#D99A00","#b07800","medal","Көш басшысы","Рейтинг көшбасшысы"]];
+  ["#e23a24","#b8261a","mic","Үздік спикер","Ең түсінікті түсіндіру"],["#5b5bd6","#3f3fb0","star","Квиз жылдамы","Квизде ең жоғары ұпай"],["#f78c14","#c96a00","poster","Үздік постер","Топ · 2 минутта қорғады"],
+  ["#0B2545","#00AFCA","scale","Академиялық адалдық","ЖИ қатесін дәлелдеді"],["#1e8cf0","#1468b8","route","Көш жолы шебері","Тақтада ең көп дұрыс"],["#D99A00","#b07800","medal","Көш басшысы","Рейтингте 1-орын"]];
 h += `<section class="page"><div class="pt"><h2>Медальдар</h2><small>10 балдық деңгейлер · номинациялар</small></div><div class="grid" style="grid-template-columns:repeat(3,56mm);gap:7mm 6mm">`;
 meds.forEach(m => { const inner = I[m[2]] ? I[m[2]](m[0]) : `<div class="big">${m[2]}</div>`;
   h += `<div class="md cut" style="--g:${m[0]};--g2:${m[1]}"><div class="ri"></div><div class="cn"><div>${inner}<b>${m[3]}</b><small>${m[4]}</small></div></div></div>`; });

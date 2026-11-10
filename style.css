@@ -1096,3 +1096,15 @@ body.student .join-chip{display:none}
   .stage-head.hd2 h2{font-size:24px}
 }
 #whoGroups{display:grid!important;grid-template-columns:1fr;gap:8px}#whoGroups button{width:100%;white-space:normal}
+/* 6 спикер: сөйлеп тұрғанда спикер үлкен, Уақыт машинасы кіші */
+#st-time.spk-on .tm-side{display:none!important}
+body.fitted #st-time.spk-on.active{grid-template-columns:1fr}
+#st-time.spk-on .tm{max-height:30vh;grid-template-columns:1fr!important}
+#st-time.spk-on .tm-ctl{display:none!important}
+.spknow{padding:18px 26px}.spknow .av{font-size:96px}
+.spknow b{font-size:clamp(28px,2.8vw,42px)}
+.spknow li{font-size:clamp(18px,1.6vw,24px);padding:8px 14px}
+/* видео: мақсат картасы навигацияның астында қалмасын */
+#st-video{padding-bottom:84px}
+.demo-flag{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);z-index:300;background:#7c3aed;color:#fff;font:800 13px var(--display);padding:6px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);pointer-events:none}
+#rtTable{max-height:300px;overflow:auto}#rtTable .dtable{font-size:14px}#rtTable .dtable th{position:sticky;top:0;z-index:1}

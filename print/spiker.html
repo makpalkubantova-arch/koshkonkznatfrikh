@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8">
+<title>Спикер карточкалары · Көші-қон саясаты</title>
+<link rel="stylesheet" href="../vendor/golos.css">
+<script src="../data.js"></script>
+<style>
+@page{size:A4 landscape;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Golos Text',sans-serif;color:#13233a;background:#d9e3ee;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:297mm;height:210mm;background:#fff;margin:0 auto 8mm;display:grid;grid-template-columns:1fr 1fr;position:relative;page-break-after:always;overflow:hidden}
+@media print{body{background:#fff}.page{margin:0}}
+.page::after{content:"✂ ортасынан бүгіңіз";position:absolute;left:50%;top:2mm;transform:translateX(-50%);font-size:7pt;color:#9aa8b8}
+.fold{position:absolute;left:50%;top:6mm;bottom:6mm;border-left:.3mm dashed #b8c4d2}
+/* алдыңғы бет: сыныпқа көрінеді */
+.fr{background:var(--c);color:#fff;padding:12mm 12mm 10mm;display:flex;flex-direction:column;gap:5mm}
+.fr .top{display:flex;align-items:center;gap:5mm}
+.fr .n{width:22mm;height:22mm;border-radius:50%;background:#fff;color:var(--c);display:grid;place-items:center;font-size:34pt;font-weight:800;flex:none}
+.fr .gr{font-size:11pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.fr .yr{font-size:30pt;font-weight:800;color:#FFE38A;line-height:1}
+.fr .ava{font-size:64pt;line-height:1;text-align:center;background:rgba(255,255,255,.16);border-radius:8mm;padding:5mm 0}
+.fr h1{font-size:23pt;line-height:1.1;font-weight:800}
+.fr ul{list-style:none;display:flex;flex-direction:column;gap:2.6mm;margin-top:auto}
+.fr li{background:#fff;color:#13233a;border-radius:4mm;padding:2.6mm 4mm;font-size:14pt;font-weight:700;line-height:1.2}
+/* артқы бет: спикердің сөзі */
+.bk{padding:12mm 12mm 10mm;display:flex;flex-direction:column;gap:4mm}
+.bk .hd{display:flex;align-items:center;gap:4mm;border-bottom:.8mm solid var(--c);padding-bottom:3mm}
+.bk .hd b{font-size:15pt;color:var(--c)}.bk .hd small{display:block;font-size:9.5pt;color:#5b6b80}
+.bk .tag{align-self:flex-start;background:#FFF3C4;border-radius:6mm;padding:1.4mm 4mm;font-size:10.5pt;font-weight:800;color:#5B4300}
+.bk .sp{font-size:15.5pt;line-height:1.45;font-weight:500}
+.bk .sp::first-letter{font-weight:800}
+.bk .tips{margin-top:auto;background:#F3F8FA;border-radius:4mm;padding:3mm 4mm;font-size:10.5pt;line-height:1.4}
+.bk .tips b{color:var(--c)}
+.bk .ft{font-size:7.5pt;color:#8a98aa}
+</style></head><body>
+<script>
+const COL = { em: "#d6402a", re: "#12a86f", in: "#1e7fd6" };
+const GN = g => DATA.statusInfo[g].group;
+let h = "";
+DATA.pro.speakers.forEach((sp, i) => {
+  const [name, ...rest] = sp.role.split(" — ");
+  h += `<section class="page" style="--c:${COL[sp.g]}"><div class="fold"></div>
+  <div class="fr"><div class="top"><div class="n">${i + 1}</div><div><div class="gr">${GN(sp.g)}</div><div class="yr">${sp.year}</div></div></div>
+    <div class="ava">${sp.ava}</div><h1>${name}${rest.length ? `<br><span style="font-size:15pt;font-weight:600;opacity:.92">${rest.join(" — ")}</span>` : ""}</h1>
+    <ul>${sp.facts.map(f => `<li>${f}</li>`).join("")}</ul></div>
+  <div class="bk"><div class="hd"><div style="font-size:30pt">${sp.ava}</div><div><b>${i + 1}-спикер · ${name}</b><small>${GN(sp.g)} · сөйлеу уақыты: 1 минут</small></div></div>
+    <div class="tag">🎭 Сенің рөлің: «Мен — ${name}…» деп бастап, кейіпкер атынан сөйле</div>
+    <p class="sp">${sp.speech}</p>
+    <div class="tips"><b>Қалай сөйлеймін?</b> Қағаздан оқыма — 3 деректі есте сақта (алдыңғы бетте). Сыныпқа қарап, баяу сөйле. Жыл мен санды анық айт: олар «Көш жолы» сұрақтарында келеді. Тақтада таймер 1 минут.</div>
+    <div class="ft">Қазақстан тарихы · 11 «А» · Көші-қон саясаты · §17–18 · Серкулова А.Х.</div></div></section>`;
+});
+document.body.innerHTML = h;
+</script>
+</body></html>

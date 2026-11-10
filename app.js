@@ -1251,12 +1251,12 @@ if (!STUDENT) setTimeout(joinTick, 1200);
         const r = (store.get("kkRoster", []) || []).filter(x => x.g === p.g && x.role === "sp")[i % 2];
         now.style.setProperty("--c", COLG[p.g]);
         now.innerHTML = `<div class="av">${p.ava}</div><div class="tx"><small>🎭 ${r ? r.name + " — " : ""}рөлде · ${p.year} ж.</small><b>${p.role}</b><ul>${p.facts.map(f => `<li>${f}</li>`).join("")}</ul></div>`;
-        const k = TMD.findIndex(d => d.y === p.year); if (k >= 0) tmSet(k, true); runT(60); };
+        const k = TMD.findIndex(d => d.y === p.year); if (k >= 0) tmSet(k, true); sec.classList.add("spk-on"); runT(60); };
       row.append(b); });
     const sum = h("button", { class: "spkb sum" }, h("i", {}, "👩‍🏫"), h("span", {}, h("small", {}, "30 секунд"), "Қорытынды"));
     sum.onclick = () => { $$(".spkb").forEach(x => x.classList.remove("on")); sum.classList.add("on"); now.hidden = false; now.style.setProperty("--c", "#0B2545");
       now.innerHTML = `<div class="av">🛤️</div><div class="tx"><small>Мұғалім қорытады</small><b>Эмиграция → репатриация → ішкі көші-қон</b><ul><li>1991–2003: 16,8 → 14,9 млн, ең көбі Ресейге кетті</li><li>1992–2021: 1 084,7 мың қандас оралды, қазақтар 40% → 70,4%</li><li>2014–2026: «Серпін», тұжырымдама-2030, халық 20,59 млн</li></ul></div>`;
-      tmSet(TMD.length - 1, true); runT(30); };
+      tmSet(TMD.length - 1, true); sec.classList.add("spk-on"); runT(30); };
     row.append(sum); stu.after(row); row.after(now);
   }
 
@@ -1332,6 +1332,30 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   /* 7. Кері байланыс: үй тапсырмасы */
   const hw = (DATA.kmjHead || []).find(r => /Үй тапсырмасы/.test(r[0]));
   if (hw && !STUDENT) $("#st-wall .stage-head")?.append(h("div", { class: "hwline" }, "🏠 Үйге: " + hw[1]));
+
+  /* 7б. СЫНАҚ РЕЖИМІ: интернетсіз 18 «жалған» оқушымен бүкіл сабақты алдын ала тексеру (Firebase-ке ештеңе жазылмайды) */
+  const DEMO_N = ["Аянат", "Ажар", "Досжан", "Кәмшат", "Әлихан", "Нұрай", "Ерасыл", "Дильназ", "Бекарыс", "Томирис", "Арман", "Жансая", "Нұрсұлтан", "Аружан", "Ерғали", "Інжу", "Мирас", "Сабина"];
+  const demoRoster = () => DEMO_N.map((n, i) => ({ name: n, g: ["em", "re", "in"][i % 3], role: i < 6 ? "sp" : i < 9 ? "hs" : i < 12 ? "po" : "" }));
+  const demoOn = () => store.get("kkDemo", false);
+  if (!STUDENT && demoOn()) {
+    const rnd = k => { let x = 0; for (const c of k) x = (x * 31 + c.charCodeAt(0)) % 997; return x; };
+    const fake = () => { const ln = store.get("kkLnState", { ans: {} }), st = {};
+      demoRoster().forEach(r => { const sc = { terms: rnd(r.name) % 4, witness: rnd(r.name + "w") % 3, group: 1 + rnd(r.g) % 3, quiz: rnd(r.name + "q") % 5 };
+        sc.lenta = Math.min(2, Object.values(ln.ans || {}).filter(a => a.ok && a.name === r.name).length);
+        st["d_" + rnd(r.name)] = { name: r.name, group: r.g, scores: sc, total: Object.values(sc).reduce((a, b) => a + b, 0), ts: rnd(r.name) }; });
+      return { students: st, notes: { a: { role: "guest", name: "Қонақ", stars: 5, use: "Спикерлер рөлде сөйледі", like: "Көш жолы — тақтада кездейсоқ оқушы", idea: "Уақытты қатаң сақтау", ts: Date.now() } } }; };
+    Object.keys(LIVE).forEach(k => { if (typeof LIVE[k] === "function" && !["on", "read"].includes(k)) try { LIVE[k] = async () => null; } catch {} });
+    LIVE.on = () => true; LIVE.read = async () => fake(); LIVE.count = async () => DEMO_N.length;
+    document.body.append(h("div", { class: "demo-flag" }, "🧪 СЫНАҚ РЕЖИМІ · 18 жалған оқушы · ⚙️ → өшіру"));
+    setTimeout(() => { const id = ST[cur].id; if (id === "rating") rtLoad(); if (id === "wall") wallLoad(); }, 50);
+  }
+  if (!STUDENT) {
+    const gb = h("button", {}, h("i", {}, "🧪"), h("b", {}, "Сынақ режимі (18 оқушы)"), h("small", {}, demoOn() ? "Қосулы · басып өшіру" : "Сабаққа дейін тексеру · Firebase-ке жазбайды"));
+    gb.onclick = () => { if (demoOn()) { store.set("kkDemo", false); store.set("kkRoster", store.get("kkRosterBak", [])); store.set("kkLnState", null); }
+      else { store.set("kkRosterBak", store.get("kkRoster", [])); store.set("kkRoster", demoRoster()); store.set("kkLnState", null); store.set("kkDemo", true); }
+      location.reload(); };
+    $(".gear-grid").append(gb);
+  }
 
   /* 8. ауыстыру: go() → Көш жолы */
   const _g = go; go = function (...a) { const r = _g.apply(this, a); if (ST[cur].id === "lenta") lnDraw(); return r; };
