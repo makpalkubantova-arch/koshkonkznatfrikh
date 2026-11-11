@@ -1027,7 +1027,9 @@ if (!STUDENT) setTimeout(joinTick, 1200);
     if (/^(a|а|озат|жогары)$/.test(w)) return "A"; if (/^(b|в|б|екпинди|орта)$/.test(w)) return "B"; if (/^(c|с|канагат|канагаттанарлык|томен)$/.test(w)) return "C"; return null; };
   const GK = Object.keys(DATA.statusInfo);
   const balance = list => { const Wt = { A: 3, B: 2, C: 1 }, gs = GK.map(g => ({ g, n: 0, w: 0 }));
-    ["A", "B", "C"].flatMap(L => shuffle(list.filter(x => x.lvl === L))).forEach(x => {
+    // мұғалім берген тұрақты топ (1/2/3) — өзгермейді
+    list.filter(x => x.fix && GK.includes(x.fix)).forEach(x => { x.g = x.fix; const g = gs.find(q => q.g === x.g); g.n++; g.w += Wt[x.lvl]; });
+    ["A", "B", "C"].flatMap(L => shuffle(list.filter(x => x.lvl === L && !(x.fix && GK.includes(x.fix))))).forEach(x => {
       const mn = Math.min(...gs.map(g => g.n)); let c = shuffle(gs.filter(g => g.n === mn));
       const t = x.lvl === "C" ? Math.max(...c.map(g => g.w)) : Math.min(...c.map(g => g.w)); const g = c.find(g => g.w === t);
       x.g = g.g; g.n++; g.w += Wt[x.lvl]; });
@@ -1038,6 +1040,10 @@ if (!STUDENT) setTimeout(joinTick, 1200);
     return list; };
   const ROLE = { sp: "🎤 спикер", hs: "📒 хатшы", po: "🖼️ постер" };
   let roster = S("kkRoster", []);
+  // сыныптың тұрақты тізімі (data.js → defaultRoster): тізім бос болса, осы топтармен ашылады
+  const RV = "11a-2026-11-11"; if ((!roster.length || S("kkRosterVer", "") !== RV) && Array.isArray(DATA.defaultRoster) && DATA.defaultRoster.length) { W("kkRosterVer", RV);
+    roster = balance(DATA.defaultRoster.map(([name, n, lvl]) => ({ name, lvl: lvl || "B", fix: GK[n - 1] }))); W("kkRoster", roster);
+    if (!STUDENT && LIVE.on()) setTimeout(() => LIVE.setRoster(roster).catch(() => {}), 1500); }
   const findMe = name => roster.find(r => norm(r.name) === norm(name));
   if (STUDENT && LIVE.on()) LIVE.getRoster().then(r => { if (Array.isArray(r)) { roster = r; W("kkRoster", r); } }).catch(() => {});
 
@@ -1058,7 +1064,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
     const dr = h("div", { class: "drawer", id: "axRos", hidden: "" }, h("div", { class: "drawer-in glass ax-ros", style: "max-width:980px" },
       h("div", { class: "row between" }, h("h3", {}, "👥 Топтарды деңгеймен теңдестіру"), h("button", { class: "icon-btn", onclick: () => dr.hidden = true }, "✕")),
       h("p", { class: "muted small" }, "Әр жолға: аты және деңгейі (озат / екпінді / қанағат). Озаттар әр топқа бір-бірден, қанағаттар ең күшті топқа бөлінеді — топтар тең. Оқушы телефонда атын жазғанда өз тобының кейіпкер құжатын алады."),
-      h("textarea", { id: "axRosIn", placeholder: "Аянат озат\nКәмшат екпінді\nЖанарыс қанағат" }),
+      h("textarea", { id: "axRosIn", placeholder: "Дидар озат 1\nСымбат екпінді 2\nСырым 3   (соңғы сан — тұрақты топ)" }),
       h("div", { class: "row gap mt" }, h("button", { class: "btn gold", id: "axRosGo" }, "🎲 Теңдестіріп бөлу"), h("button", { class: "btn glass", id: "axRosClr" }, "Тізімді тазалау"), h("span", { class: "muted small", id: "axRosSt" }, "")),
       h("div", { class: "grid3", id: "axRosOut" }),
       h("div", { class: "row gap mt", style: "align-items:center" }, h("div", { id: "axSecQr", style: "width:150px" }), h("div", {}, h("b", {}, "📒 Хатшы телефоны (әр топқа біреу)"), h("p", { class: "muted small" }, "Хатшы осы QR-ды сканерлеп, тобын таңдайды да, жұмыс парағындағы балдарды топ мүшелеріне қояды. Балдар тақтадағы 🏆 Рейтингке бірден түседі. Оқушылардың өз телефоны тек квизге керек."), h("code", { id: "axSecUrl", style: "font-size:11px;word-break:break-all" })))));
@@ -1066,14 +1072,15 @@ if (!STUDENT) setTimeout(joinTick, 1200);
     const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, LC = { A: "#12a86f", B: "#0089B5", C: "#E0A400" }, LN = { A: "озат", B: "екпінді", C: "қанағат" };
     const out = () => { $("#axRosOut").innerHTML = roster.length ? GK.map(g => { const m = roster.filter(r => r.g === g), info = DATA.statusInfo[g];
       return `<div class="gc" style="border-color:${COL[g] || "#0089B5"}"><b>${info.ico} ${info.group || info.name}</b> <small class="muted">${m.length} оқушы</small>${m.map((r, k) => `<div class="r" data-n="${r.name}" style="cursor:pointer" title="Басып рөлді ауыстыр"><span>${r.name} ${r.role ? `<small style="color:#0B3B4E;font-weight:800">${ROLE[r.role]}</small>` : ""}</span><span class="axlv" style="background:${LC[r.lvl]}">${LN[r.lvl]}</span></div>`).join("")}</div>`; }).join("") : "";
-      $("#axRosIn").value = roster.map(r => `${r.name} ${LN[r.lvl]}`).join("\n"); };
+      $("#axRosIn").value = roster.map(r => `${r.name} ${LN[r.lvl]}${r.fix ? " " + (GK.indexOf(r.fix) + 1) : ""}`).join("\n"); };
     $("#axRosOut").addEventListener("click", e => { const row = e.target.closest(".r"); if (!row) return; const r = roster.find(x => x.name === row.dataset.n); if (!r) return;
       const order = ["", "sp", "hs", "po"]; r.role = order[(order.indexOf(r.role || "") + 1) % 4]; W("kkRoster", roster); out(); send(); });
     const send = () => { if (!LIVE.on()) { $("#axRosSt").textContent = "📴 Firebase қосылмаған: тізім тек осы құрылғыда."; return; }
       LIVE.setRoster(roster).then(() => $("#axRosSt").textContent = "✅ Тізім телефондарға жіберілді").catch(() => $("#axRosSt").textContent = "⚠️ Firebase-ке жіберілмеді"); };
     $("#axRosGo").onclick = () => {
       const list = $("#axRosIn").value.split("\n").map(l => l.trim()).filter(Boolean).map(l => { const t = l.split(/[\s,;\t]+/).filter(Boolean);
-        const i = t.findIndex((w, j) => j > 0 && lvlOf(w)); return { name: (i > 0 ? t.slice(0, i) : t).join(" "), lvl: i > 0 ? lvlOf(t[i]) : "B" }; }).filter(x => x.name);
+        let fix = null; const gi = t.findIndex((w, j) => j > 0 && /^[1-9](-?топ)?$/i.test(w)); if (gi > 0) { fix = GK[parseInt(t[gi]) - 1] || null; t.splice(gi, 1); }
+        const i = t.findIndex((w, j) => j > 0 && lvlOf(w)); return { name: (i > 0 ? t.slice(0, i) : t).join(" "), lvl: i > 0 ? lvlOf(t[i]) : "B", fix }; }).filter(x => x.name);
       if (!list.length) { toast("Тізімді жазыңыз ✍️"); return; }
       roster = balance(list); W("kkRoster", roster); out(); send(); confetti(40); };
     $("#axRosClr").onclick = () => { roster = []; W("kkRoster", []); out(); send(); };
