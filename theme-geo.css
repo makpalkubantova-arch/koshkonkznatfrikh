@@ -1,0 +1,47 @@
+/* ===================================================================
+   КӨШ-ҚОН · «Жарқын тақта» тақырыбы (Геоэкология ашық сабағының үлгісімен)
+   Түстер: көк байрақ (#00AFCA), күн алтыны (#FEC50C), түнгі көк (#0B2E59),
+   қызғылт сары (#F78C14). Анық карточкалар, батыл тақырып, түсті панельдер.
+   =================================================================== */
+:root{--kz:#00AFCA;--kz2:#0091C8;--gold:#FEC50C;--gold2:#F7A600;--navy:#0B2E59;--navy2:#123F78;--or:#F78C14;--paper:#FFFFFF}
+/* фон — ашық аспан, күн мен ою сақталады */
+.bg{background:linear-gradient(170deg,#E9F9FF 0%,#C9EEFB 38%,#9EDDF4 70%,#7FD0EE 100%)!important}
+.blob{opacity:.55!important}
+/* жоғарғы жолақ — анық ақ, астында байрақ-алтын сызық */
+.topbar{background:rgba(255,255,255,.96)!important;backdrop-filter:none!important;border-bottom:0!important;box-shadow:0 10px 30px -18px rgba(11,46,89,.55)!important;position:sticky}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:5px;background:linear-gradient(90deg,var(--kz),var(--kz) 60%,var(--gold) 60%,var(--gold));pointer-events:none}
+.brand-text b,.brand b{color:var(--navy)!important}
+/* кезең тақырыбы — геожарыстағыдай ақ карточка, сол жақта қалың байрақ жолағы */
+.stage-head{background:var(--paper)!important;color:var(--navy)!important;border-radius:26px!important;padding:22px 200px 22px 34px!important;box-shadow:0 22px 46px -28px rgba(11,46,89,.55),inset 0 0 0 2px rgba(0,175,202,.18)!important;border:0!important}
+.stage-head::before{content:""!important;position:absolute;left:0;top:0;bottom:0;width:12px;background:linear-gradient(180deg,var(--gold),var(--kz))!important;opacity:1!important;mix-blend-mode:normal!important;inset:0 auto 0 0!important}
+.stage-head::after{display:none!important}
+.stage-head h2{color:var(--navy)!important;text-shadow:none!important;font-weight:900}
+.stage-head h2::after{display:none!important}
+.stage-head .lead{color:#34507A!important}.stage-head .lead b{color:var(--or)!important}
+.stage-head .kicker,.kicker{background:var(--navy)!important;color:var(--gold)!important;border:0!important;box-shadow:0 6px 14px -8px var(--navy)}
+.meta-chips span,.meta-chips>*{background:#EEF8FC!important;color:var(--navy)!important;border:0!important}
+/* «Сен не істейсің?» — геожарыстағыдай түсті тұтас панель */
+.stu{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%)!important;color:#fff!important;border:0!important;border-radius:20px!important;box-shadow:0 18px 36px -22px rgba(11,46,89,.9)!important}
+.stu *{color:inherit}
+.stu b,.stu strong{color:var(--gold)!important}
+.stu i,.stu .n,.stu .num{background:var(--gold)!important;color:var(--navy)!important}
+.stu>div>div,.stu .st-s>div,.stu li{background:rgba(255,255,255,.12)!important;border-color:transparent!important}
+/* карточкалар — мөлдір шыны емес, анық ақ */
+.glass{background:rgba(255,255,255,.97)!important;backdrop-filter:none!important;border:0!important;box-shadow:0 20px 44px -28px rgba(11,46,89,.6),inset 0 0 0 1px rgba(11,46,89,.06)!important}
+.card.glass,.glass.card{border-top:6px solid var(--kz)!important}
+.card h3{color:var(--navy)}
+/* батырмалар */
+.btn{box-shadow:0 12px 24px -14px rgba(11,46,89,.6)}
+.btn.primary,.btn.go,.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2))!important;color:var(--navy)!important}
+.btn.glass{background:#fff!important;color:var(--navy)!important;box-shadow:inset 0 0 0 2px rgba(0,175,202,.35)!important}
+/* спикер, топ, т.б. қойындылар — батыл түсті чиптер */
+.tab{background:#fff!important;border:0!important;box-shadow:0 10px 22px -16px rgba(11,46,89,.7),inset 0 0 0 2px rgba(0,175,202,.25)!important}
+.tab.on,.tab.active,.tab[aria-selected=true]{background:linear-gradient(135deg,var(--kz),var(--kz2))!important;color:#fff!important}
+.phase-chip{box-shadow:0 6px 14px -8px rgba(0,0,0,.5)}
+/* таймер — анық */
+.timer,.clock{background:var(--navy)!important;color:#fff!important}
+.clock *{color:#fff}
+.stu .q{color:var(--gold)!important}
+.stu .step{background:rgba(255,255,255,.14)!important;color:#fff!important}
+.stu .step i{background:var(--gold)!important;color:var(--navy)!important}
+.stu .ar{color:var(--gold)!important}
