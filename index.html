@@ -174,6 +174,26 @@
   </div>
 </section>
 
+<!-- 2b HOMEWORK -->
+<section class="stage" id="st-hw" data-title="Үй тапсырмасы" data-min="3">
+  <div class="stage-head"><span class="kicker">Үй тапсырмасын тексеру · Кездейсоқ оқушы · Ауызша</span><h2>Үй тапсырмасы: 5 сұрақ</h2>
+  <p class="lead">«🎲 Оқушы таңдау» → аты шыққан оқушы жауап береді → «Жауапты көрсету» → ✅ / ❌</p></div>
+  <div class="hwq-road" id="hwRoad"></div>
+  <div class="hwq glass" id="hwBox"></div>
+  <div class="hwq-g" id="hwG"></div>
+</section>
+<style>
+.hwq-road{display:flex;gap:10px;justify-content:center;margin:6px 0 12px}
+.hwq-road button{width:64px;height:64px;border-radius:18px;border:2px solid #d7e3ee;background:#fff;font:900 26px var(--display,inherit);color:#0B2545;cursor:pointer}
+.hwq-road button.on{background:#0B2545;color:#F7C548;border-color:#0B2545}.hwq-road button.ok{background:#12a86f;color:#fff;border-color:#12a86f}.hwq-road button.no{background:#e23a24;color:#fff;border-color:#e23a24}
+.hwq{padding:22px 28px;border-radius:24px;display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start}
+.hwq .q{font:800 34px/1.25 var(--display,inherit);color:#0B2545}.hwq .n{font:900 16px var(--display,inherit);letter-spacing:2px;color:#00AFCA}
+.hwq .ans{margin-top:16px;padding:16px 20px;border-radius:18px;background:#E8F7EF;border-left:8px solid #12a86f;font:700 24px/1.35 inherit;color:#0B3A28}
+.hwq .who{text-align:center;background:#F4F8FC;border-radius:20px;padding:16px}.hwq .who small{display:block;font-weight:800;color:#5a6b80}.hwq .who b{display:block;font:900 32px var(--display,inherit);margin:6px 0}
+.hwq .who .btn{width:100%;margin-top:10px}.hwq .mk{display:flex;gap:10px;margin-top:10px}.hwq .mk .btn{flex:1}
+.hwq-g{display:flex;gap:12px;justify-content:center;margin-top:14px}.hwq-g div{padding:8px 18px;border-radius:14px;color:#fff;font:800 20px var(--display,inherit)}
+</style>
+
 <!-- 3 VIDEO -->
 <section class="stage" id="st-video" data-title="Видео" data-min="2">
   <div class="stage-head"><span class="kicker">Бүкіл сынып · Қызығушылықты ояту</span><h2>Видео: көш жолы 35 жыл 2 минутта</h2></div>
@@ -192,7 +212,7 @@
 
 <!-- 4 TERMS -->
 <section class="stage" id="st-terms" data-title="Ұғымдар" data-min="3">
-  <div class="stage-head"><span class="kicker">Жеке жұмыс · Тақтаға шығып орында · 5 балл · К1</span><h2>Үй тапсырмасы: ұғымды тап</h2>
+  <div class="stage-head"><span class="kicker">Жеке жұмыс · Тақтаға шығып орында · 5 балл · К1</span><h2>Ұғымдарды бекіт: ұғымды тап</h2>
   <p class="lead">Ұғымды сүйреп апар (немесе басып таңда да, анықтаманы бас).</p></div>
   <div class="match" id="termsMatch"></div>
   <div class="row gap center">

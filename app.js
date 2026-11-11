@@ -49,7 +49,7 @@ function tick() {
 (() => { const b = $(".bubbles"); for (let i = 0; i < 18; i++) { const s = 10 + Math.random() * 34; b.append(h("span", { style: `left:${Math.random() * 100}%;width:${s}px;height:${s}px;animation-duration:${14 + Math.random() * 18}s;animation-delay:${-Math.random() * 30}s` })); } })();
 
 /* ---------- my score ---------- */
-const SCORE_KEYS = { terms: ["Үй тапсырмасы", 3], lenta: ["Көш жолы", 2], witness: ["ЖИ-куәгер", 2], group: ["Постер (топ)", 3], quiz: ["Квиз", 4] };
+const SCORE_KEYS = { terms: ["Ұғымдар", 3], lenta: ["Көш жолы", 2], witness: ["ЖИ-куәгер", 2], group: ["Постер (топ)", 3], quiz: ["Квиз", 4] };
 const MAXP = Object.values(SCORE_KEYS).reduce((t, v) => t + v[1], 0);
 const gradeOf = t => { const p = Math.round(t / MAXP * 100); return { p, mark: Math.max(1, Math.round(p / 10)), ...DATA.grades.find(g => p >= g.min) }; };
 function setScore(k, v) { const s = store.get("kkScore", {}); if (s[k] === v) return; s[k] = v; store.set("kkScore", s); renderMyScore(); livePush(); }
@@ -1309,6 +1309,37 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   }
   $("#lnReset") && ($("#lnReset").onclick = () => { ln = { i: 0, who: null, ans: {}, ord: {}, used: [] }; lnDraw(); });
   lnDraw();
+
+  /* Үй тапсырмасы: 5 сұрақ, кездейсоқ оқушы ауызша жауап береді, мұғалім ✅/❌ */
+  let HW = store.get("kkHwState", null) || { i: 0, who: null, show: false, res: {}, used: [] };
+  const hwSave = () => store.set("kkHwState", HW);
+  function hwDraw() {
+    const box = $("#hwBox"); if (!box) return; const Q = DATA.hwQ || [], i = HW.i, q = Q[i], r = HW.res[i];
+    $("#hwRoad").innerHTML = Q.map((_, k) => { const x = HW.res[k]; return `<button data-HW="${k}" class="${k === i ? "on" : ""} ${x ? (x.ok ? "ok" : "no") : ""}">${x ? (x.ok ? "✓" : "✗") : k + 1}</button>`; }).join("");
+    $$("#hwRoad [data-hw]").forEach(b => b.onclick = () => { HW.i = +b.dataset.hw; HW.who = null; HW.show = !!HW.res[HW.i]; hwSave(); hwDraw(); });
+    const who = r ? { name: r.name, g: r.g } : HW.who;
+    box.innerHTML = `<div><div class="n">${i + 1}-СҰРАҚ · ${Q.length}-ТЕН</div><div class="q">${q.q}</div>${HW.show || r ? `<div class="ans">💡 ${q.a}</div>` : ""}</div>
+      <div class="who">${who ? `<small>Жауап береді</small><b style="color:${COLG[who.g] || "#0B2545"}">${who.name || gName(who.g)}</b><span>${gName(who.g)}</span>` : `<small>Кім жауап береді?</small><b>❓</b>`}
+        ${r ? "" : `<button class="btn gold big" id="hwPick">🎲 Оқушы таңдау</button>`}
+        ${HW.show || r ? "" : `<button class="btn glass" id="hwShow">👁 Жауапты көрсету</button>`}
+        ${r ? `<div style="margin-top:10px;font:800 22px inherit">${r.ok ? "✅ Дұрыс! Тобына ⭐" : "❌ Толықтыру керек"}</div>` : `<div class="mk"><button class="btn primary" id="hwOk">✅ Дұрыс</button><button class="btn glass" id="hwNo">❌ Қате</button></div>`}
+        ${i < Q.length - 1 ? `<button class="btn glass" id="hwNext">Келесі сұрақ →</button>` : `<button class="btn primary" id="hwDone">🎬 Видеоға өту →</button>`}</div>`;
+    const gs = Object.keys(DATA.statusInfo).map(g => ({ g, n: Object.values(HW.res).filter(a => a.ok && a.g === g).length }));
+    $("#hwG").innerHTML = gs.map(x => `<div style="background:${COLG[x.g]}">${gName(x.g)} · ${"⭐".repeat(x.n) || "—"}</div>`).join("");
+    hwSave();
+    $("#hwPick") && ($("#hwPick").onclick = () => {
+      const R = roster(), pool = R.filter(x => !HW.used.includes(x.name)), from = pool.length ? pool : R, w = $("#hwBox .who"); let t = 0;
+      if (!from.length) { HW.who = { name: "", g: Object.keys(DATA.statusInfo)[i % 3] }; hwDraw(); return; }
+      const spin = setInterval(() => { const x = from[Math.floor(Math.random() * from.length)]; w.querySelector("b").textContent = x.name; w.querySelector("b").style.color = COLG[x.g];
+        if (++t > 14) { clearInterval(spin); HW.who = { name: x.name, g: x.g }; HW.used.push(x.name); confetti(30); hwDraw(); } }, 90);
+    });
+    $("#hwShow") && ($("#hwShow").onclick = () => { HW.show = true; hwDraw(); });
+    const mark = ok => { const w = HW.who || { name: "", g: Object.keys(DATA.statusInfo)[i % 3] }; HW.res[i] = { name: w.name, g: w.g, ok }; HW.who = null; HW.show = true; if (ok) confetti(60); hwDraw(); };
+    $("#hwOk") && ($("#hwOk").onclick = () => mark(true)); $("#hwNo") && ($("#hwNo").onclick = () => mark(false));
+    $("#hwNext") && ($("#hwNext").onclick = () => { HW.i = Math.min(Q.length - 1, i + 1); HW.who = null; HW.show = !!HW.res[HW.i]; hwDraw(); });
+    $("#hwDone") && ($("#hwDone").onclick = () => go("video"));
+  }
+  hwDraw();
 
   /* 5. Постер: 3 мин дайындық + әр топ 2 мин қорғау */
   if (!STUDENT) {
