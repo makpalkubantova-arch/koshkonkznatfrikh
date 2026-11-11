@@ -1244,7 +1244,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
 
   /* 2. Видео → тақырып пен мақсат ашылады */
   const goal = () => { const c = $("#goalCard"); if (!c) return; c.hidden = false;
-    c.closest("section").classList.add("goal-on"); c.innerHTML = `<div><small>ТАҚЫРЫП</small><b>Қазақстан Республикасының көші-қон саясаты (§17–18)</b></div>
+    c.closest("section").classList.add("goal-on"); c.innerHTML = `<div><small>ТАҚЫРЫП</small><b>Қазақстан Республикасының көші-қон саясаты</b></div>
       <div><small>МАҚСАТ</small><ul><li><b>Барлығы:</b> көші-қон ұғымдарын ажыратады.</li><li><b>Көпшілігі:</b> кезеңдердің себеп-салдарын түсіндіреді.</li><li><b>Кейбірі:</b> ЖИ мәтінін оқулықпен және ресми дерекпен тексереді.</li></ul></div>
       <div><small>ҰПАЙ → 10 БАЛЛ</small><div class="pts">${Object.values(SCORE_KEYS).map(v => `<span>${v[0]} <b>${v[1]}</b></span>`).join("")}<span class="tot">Барлығы <b>${MAXP}</b></span></div></div>`; confetti(30); };
   $("#goalBtn") && ($("#goalBtn").onclick = goal); $("#vid")?.addEventListener("ended", goal);
