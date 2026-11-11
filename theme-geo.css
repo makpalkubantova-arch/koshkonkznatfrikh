@@ -45,3 +45,25 @@
 .stu .step{background:rgba(255,255,255,.14)!important;color:#fff!important}
 .stu .step i{background:var(--gold)!important;color:var(--navy)!important}
 .stu .ar{color:var(--gold)!important}
+/* ---------- алтын қыран-құстар: ашық фонда ұшып жүреді ---------- */
+.bg-eagle{opacity:.42!important}
+.bg-eagle path{fill:url(#gGold),#E0A400}
+.bird{position:absolute;width:190px;height:auto!important;aspect-ratio:400/140;max-height:none;opacity:0;fill:#F2B500;animation:flyX linear infinite}
+.bird use{fill:#F2B500}
+.bird.bd1{top:12vh;width:170px;animation-duration:38s;animation-delay:-4s}
+.bird.bd2{top:30vh;width:110px;animation-duration:46s;animation-delay:-20s}
+.bird.bd3{top:58vh;width:140px;animation-duration:42s;animation-delay:-12s}
+.bird.bd4{top:78vh;width:120px;animation-duration:50s;animation-delay:-32s}
+.bird.bd5{top:88vh;width:90px;animation-duration:36s;animation-delay:-26s}
+.bird.bd6{top:45vh;width:80px;animation-duration:54s;animation-delay:-8s}
+.bird.bd7{top:20vh;width:95px;animation-duration:48s;animation-delay:-40s}
+@keyframes flyX{0%{left:-14vw;transform:translateY(0) scaleY(1);opacity:0}6%{opacity:.95}25%{transform:translateY(-18px) scaleY(.85)}50%{transform:translateY(6px) scaleY(1)}75%{transform:translateY(-12px) scaleY(.9)}94%{opacity:.95}100%{left:108vw;transform:translateY(0) scaleY(1);opacity:0}}
+@media (max-width:640px){.bird{display:none}}
+@media print{.bird{display:none}}
+@media (prefers-reduced-motion:reduce){.bird{animation:none;display:none}}
+
+.bird.bd1{width:220px}.bird.bd3{width:180px}.bird.bd4{width:160px}.bird.bd2{width:140px}
+.bird use{fill:#FFC400}
+/* шақырту бетіндегі көк аспанда — құстар карточканың артында ұшады */
+.inv-birds{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.inv-birds .bird use{fill:#FFD84D}
