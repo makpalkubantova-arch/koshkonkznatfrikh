@@ -1199,13 +1199,20 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   function draw() {
     const info = g && DATA.statusInfo[g];
     box.innerHTML = `<h2>📒 Хатшы</h2><div class="st">${LIVE.on() ? "🛰️ Тақтамен байланыс бар" : "📴 Firebase жоқ"} · жұмыс парағына қарап балл қой</div>`;
-    const gs = h("div", { class: "gs" }); Object.keys(DATA.statusInfo).forEach(k => gs.append(h("button", { class: g === k ? "on" : "", style: `background:${COL[k] || "#0089B5"}`, onclick: () => { g = k; store.set("kkSecG", k); draw(); } }, DATA.statusInfo[k].ico + " " + DATA.statusInfo[k].group.split(" · ")[1]))); box.append(gs);
-    if (!g) { box.append(h("p", {}, "Тобыңды таңда 👆")); return; }
+    // топ бір рет таңдалады да, бекітіледі: хатшы тек өз тобын көреді
+    if (!g) { const gs = h("div", { class: "gs" }); Object.keys(DATA.statusInfo).forEach(k => gs.append(h("button", { style: `background:${COL[k] || "#0089B5"};opacity:1`, onclick: () => { if (!confirm(DATA.statusInfo[k].group + " — сенің тобың ба? Кейін ауыстырылмайды.")) return; g = k; store.set("kkSecG", k); draw(); } }, DATA.statusInfo[k].ico + " " + DATA.statusInfo[k].group.split(" · ")[1]))); box.append(gs);
+      box.append(h("p", {}, "Тек өз тобыңды таңда 👆")); return; }
+    box.append(h("div", { class: "gs" }, h("button", { class: "on", style: `background:${COL[g] || "#0089B5"};opacity:1;cursor:default` }, "📒 " + info.ico + " " + info.group)));
+    box.append(h("div", { class: "m", style: "background:#E8F6FB;font-size:13px" }, "⚡ Квиз пен «Көш жолы» балдары тақта мен телефоннан өзі түседі. Сен тек жұмыс парағындағы тапсырмаларға балл қоясың."));
     const tb = h("div", { class: "tabs" }); KEYS.filter(k => !["quiz", "lenta"].includes(k)).forEach(k => tb.append(h("button", { class: tab === k ? "on" : "", onclick: () => { tab = k; draw(); } }, `${SCORE_KEYS[k][0]} · ${SCORE_KEYS[k][1]}`))); box.append(tb);
-    const KY = DATA.pro && DATA.pro.keys[tab]; if (KY) box.append(h("div", { class: "m", style: "background:#FFF6D6" }, h("b", {}, "🔑 Жауап кілті: "), KY));
+    // кілт: хатшы алдымен тапсырманы өзі орындайды, сосын ғана ашылады
+    const KY = DATA.pro && DATA.pro.keys[tab], opened = store.get("kkSecKey", {});
+    if (KY) box.append(opened[tab] ? h("div", { class: "m", style: "background:#FFF6D6" }, h("b", {}, "🔑 Жауап кілті: "), KY)
+      : h("div", { class: "m", style: "background:#FFF6D6;text-align:center" }, h("div", { style: "font-weight:800;margin-bottom:8px" }, "🔒 Жауап кілті жабық"), h("div", { style: "font-size:13px;margin-bottom:10px" }, "Алдымен тапсырманы өзің жұмыс парағында орында."),
+        h("button", { class: "btn gold", onclick: () => { if (!confirm("Тапсырманы өзің орындап болдың ба?")) return; opened[tab] = 1; store.set("kkSecKey", opened); draw(); } }, "✅ Мен өзім орындадым — кілтті аш")));
     const mem = members(); if (!mem.length) box.append(h("p", { class: "m" }, "Тізім әлі жоқ: мұғалім ⚙️ → «Топтарды теңдестіру» бетін толтырсын, немесе төменнен атын қос."));
     mem.forEach(p => { const s = sc[nrm(p.name)] || {}, mx = SCORE_KEYS[tab][1], tot = KEYS.reduce((t, k) => t + (s[k] || 0), 0);
-      const ch = h("div", { class: "ch" }); for (let v = 0; v <= mx; v++) ch.append(h("button", { class: s[tab] === v ? "on" : "", onclick: () => { sc[nrm(p.name)] = { ...s, [tab]: v }; store.set("kkSecSc", sc); save(p.name); draw(); } }, String(v)));
+      const ch = h("div", { class: "ch" }); const lk = KY && !opened[tab]; if (lk) ch.style.opacity = ".35"; for (let v = 0; v <= mx; v++) ch.append(h("button", { class: s[tab] === v ? "on" : "", onclick: () => { if (lk) { alert("Алдымен тапсырманы орындап, кілтті аш 🔑"); return; } sc[nrm(p.name)] = { ...s, [tab]: v }; store.set("kkSecSc", sc); save(p.name); draw(); } }, String(v)));
       box.append(h("div", { class: "m" }, h("div", { class: "top" }, h("span", {}, (ROLE[p.role] || "") + " " + p.name), h("span", {}, `${tot} ұпай`)), ch)); });
     const inp = h("input", { placeholder: "Оқушы қосу (аты)" });
     box.append(h("div", { class: "add" }, inp, h("button", { class: "btn gold", onclick: () => { const n = inp.value.trim(); if (n.length < 2) return; const e = extra(); e.push({ name: n, g }); store.set("kkSecExtra", e); draw(); } }, "+")));
