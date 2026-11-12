@@ -1041,7 +1041,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   const ROLE = { sp: "🎤 спикер", hs: "📒 хатшы", po: "🖼️ постер" };
   let roster = S("kkRoster", []);
   // сыныптың тұрақты тізімі (data.js → defaultRoster): тізім бос болса, осы топтармен ашылады
-  const RV = "11a-2026-11-11"; if ((!roster.length || S("kkRosterVer", "") !== RV) && Array.isArray(DATA.defaultRoster) && DATA.defaultRoster.length) { W("kkRosterVer", RV);
+  const RV = "11a-2026-11-12"; if ((!roster.length || S("kkRosterVer", "") !== RV) && Array.isArray(DATA.defaultRoster) && DATA.defaultRoster.length) { W("kkRosterVer", RV);
     roster = balance(DATA.defaultRoster.map(([name, n, lvl]) => ({ name, lvl: lvl || "B", fix: GK[n - 1] }))); W("kkRoster", roster);
     if (!STUDENT && LIVE.on()) setTimeout(() => LIVE.setRoster(roster).catch(() => {}), 1500); }
   const findMe = name => roster.find(r => norm(r.name) === norm(name));
@@ -1190,7 +1190,7 @@ if (!STUDENT) setTimeout(joinTick, 1200);
   .hs .ok{margin-top:10px;font-weight:800}` }));
   const COL = { em: "#e2552f", re: "#12a86f", in: "#0089B5" }, ROLE = { sp: "🎤", hs: "📒", po: "🖼️" };
   const box = h("div", { class: "hs" }); document.body.append(box);
-  let roster = store.get("kkRoster", []), g = store.get("kkSecG", null), tab = KEYS.find(k => !["quiz", "lenta"].includes(k)), sc = store.get("kkSecSc", {}), msg = "";
+  let roster = store.get("kkRoster", []), g = (() => { const q = new URLSearchParams(location.search).get("g"); if (q && DATA.statusInfo[q]) store.set("kkSecG", q); return store.get("kkSecG", null); })(), tab = KEYS.find(k => !["quiz", "lenta"].includes(k)), sc = store.get("kkSecSc", {}), msg = "";
   const extra = () => store.get("kkSecExtra", []);
   const members = () => { const r = roster.filter(x => x.g === g).map(x => ({ name: x.name, role: x.role })); extra().filter(x => x.g === g).forEach(x => { if (!r.find(y => nrm(y.name) === nrm(x.name))) r.push({ name: x.name }); }); return r; };
   const save = name => { const s = sc[nrm(name)] || {}; const rec = { name, group: g, scores: s, total: KEYS.reduce((t, k) => t + (s[k] || 0), 0), src: "hatshy", ts: Date.now() };
@@ -1319,20 +1319,14 @@ if (!STUDENT) setTimeout(joinTick, 1200);
     $$("#hwRoad [data-hw]").forEach(b => b.onclick = () => { HW.i = +b.dataset.hw; HW.who = null; HW.show = !!HW.res[HW.i]; hwSave(); hwDraw(); });
     const who = r ? { name: r.name, g: r.g } : HW.who;
     box.innerHTML = `<div><div class="n">${i + 1}-СҰРАҚ · ${Q.length}-ТЕН</div><div class="q">${q.q}</div>${HW.show || r ? `<div class="ans">💡 ${q.a}</div>` : ""}</div>
-      <div class="who">${who ? `<small>Жауап береді</small><b style="color:${COLG[who.g] || "#0B2545"}">${who.name || gName(who.g)}</b><span>${gName(who.g)}</span>` : `<small>Кім жауап береді?</small><b>❓</b>`}
-        ${r ? "" : `<button class="btn gold big" id="hwPick">🎲 Оқушы таңдау</button>`}
+      <div class="who">${r ? `<small>Жауап берген топ</small><b style="color:${COLG[r.g] || "#0B2545"}">${gName(r.g)}</b>` : `<small>Қай топ жауап берді?</small><div class="hwgp">${Object.keys(DATA.statusInfo).map(k => `<button data-g="${k}" class="${HW.who && HW.who.g === k ? "on" : ""}" style="background:${COLG[k]}">${gName(k)}</button>`).join("")}</div>`}
         ${HW.show || r ? "" : `<button class="btn glass" id="hwShow">👁 Жауапты көрсету</button>`}
         ${r ? `<div style="margin-top:10px;font:800 22px inherit">${r.ok ? "✅ Дұрыс! Тобына ⭐" : "❌ Толықтыру керек"}</div>` : `<div class="mk"><button class="btn primary" id="hwOk">✅ Дұрыс</button><button class="btn glass" id="hwNo">❌ Қате</button></div>`}
         ${i < Q.length - 1 ? `<button class="btn glass" id="hwNext">Келесі сұрақ →</button>` : `<button class="btn primary" id="hwDone">🎬 Видеоға өту →</button>`}</div>`;
     const gs = Object.keys(DATA.statusInfo).map(g => ({ g, n: Object.values(HW.res).filter(a => a.ok && a.g === g).length }));
     $("#hwG").innerHTML = gs.map(x => `<div style="background:${COLG[x.g]}">${gName(x.g)} · ${"⭐".repeat(x.n) || "—"}</div>`).join("");
     hwSave();
-    $("#hwPick") && ($("#hwPick").onclick = () => {
-      const R = roster(), pool = R.filter(x => !HW.used.includes(x.name)), from = pool.length ? pool : R, w = $("#hwBox .who"); let t = 0;
-      if (!from.length) { HW.who = { name: "", g: Object.keys(DATA.statusInfo)[i % 3] }; hwDraw(); return; }
-      const spin = setInterval(() => { const x = from[Math.floor(Math.random() * from.length)]; w.querySelector("b").textContent = x.name; w.querySelector("b").style.color = COLG[x.g];
-        if (++t > 14) { clearInterval(spin); HW.who = { name: x.name, g: x.g }; HW.used.push(x.name); confetti(30); hwDraw(); } }, 90);
-    });
+    $$("#hwBox .hwgp button").forEach(b => b.onclick = () => { HW.who = { name: "", g: b.dataset.g }; hwDraw(); });
     $("#hwShow") && ($("#hwShow").onclick = () => { HW.show = true; hwDraw(); });
     const mark = ok => { const w = HW.who || { name: "", g: Object.keys(DATA.statusInfo)[i % 3] }; HW.res[i] = { name: w.name, g: w.g, ok }; HW.who = null; HW.show = true; if (ok) confetti(60); hwDraw(); };
     $("#hwOk") && ($("#hwOk").onclick = () => mark(true)); $("#hwNo") && ($("#hwNo").onclick = () => mark(false));

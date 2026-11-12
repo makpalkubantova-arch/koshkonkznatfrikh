@@ -103,7 +103,7 @@ DATA.groups.forEach(gr=>{
  const g=G[gr.id];
  html+=`<section class="page" style="--g:${g.g};--g2:${g.g2};--soft:${g.soft};--lime:#d6f36a">
  <div class="hd"><div class="ic">${I[g.ico]("#fff")}</div><div><div class="k">ПОСТЕРГЕ ДАЙЫНДЫҚ · ИНФОГРАФИКА-НҰСҚАУЛЫҚ</div><h1>${gr.name}</h1><div class="q">${gr.title}</div></div>
- <div class="rt"><div class="badge"><b>3+2</b><small>минут</small></div><div class="qr">${qrSvg(SITE+"index.html#prompt",g.g2)}</div></div></div>
+ <div class="rt"><div class="badge"><b>3+2</b><small>минут</small></div><div class="qr">${qrSvg(SITE+"index.html?m=h&g="+gr.id+"#home",g.g2)}</div></div></div>
  <div class="steps">${steps.map((s,i)=>`<div class="st"><div class="n">${i+1}</div><div><div class="tm">${s[0]}</div><b>${s[1]}</b><small>${s[2]}</small></div></div>`).join("")}</div>
  <div class="main">
   <div class="card"><div class="ct">${I.poster(g.g)}Постер сызбасы</div>
