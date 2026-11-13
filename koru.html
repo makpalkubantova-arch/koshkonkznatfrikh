@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Қонақтарға · Көші-қон саясаты — ашық сабақ</title>
+<meta name="description" content="Қазақстан Республикасының көші-қон саясаты: ашық сабақты қонақ ретінде бақылау">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#122f46;--mut:#567184;--gold:#c9983d;--blue:#147fa4;--line:rgba(24,76,103,.14)}
+*{box-sizing:border-box}html{min-height:100%;background:#eaf2f7}body{margin:0;color:var(--ink);font-family:Inter,Arial,sans-serif;background:radial-gradient(ellipse at 5% -10%,#cfeafb,transparent 55%),radial-gradient(ellipse at 90% 20%,#f8ecd1,transparent 45%),linear-gradient(180deg,#eff7fa,#e8f1f6);min-height:100vh}
+header{padding:17px max(20px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.logo{font-family:Montserrat,sans-serif;font-size:20px;font-weight:900;letter-spacing:-.6px}.logo span{color:var(--blue)}
+.tag{border:1px solid #d4bb7a;background:#fff9ec;padding:8px 13px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;color:#8e671c}
+main{max-width:1100px;margin:0 auto;padding:42px 20px 70px}
+.kicker{font-size:12px;letter-spacing:.18em;color:#9a722c;font-weight:900;text-transform:uppercase}
+h1{font:800 clamp(32px,5.2vw,60px)/1.08 Montserrat,sans-serif;max-width:900px;letter-spacing:-1.6px;margin:16px 0}
+.sub{font-size:17px;color:var(--mut);max-width:800px;line-height:1.7}
+.cards{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.8fr);gap:18px;margin-top:32px}
+.card{background:rgba(255,255,255,.91);border:1px solid rgba(255,255,255,.85);box-shadow:0 18px 55px rgba(28,74,98,.10);border-radius:26px;padding:27px}
+.live{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;background:#edf7f4;color:#16614b;border-radius:999px;font-size:13px;font-weight:800}
+.dot{width:8px;height:8px;border-radius:100%;background:#24ae81;box-shadow:0 0 0 5px #ccefe2}
+h2{font:800 clamp(23px,3vw,35px)/1.2 Montserrat,sans-serif;letter-spacing:-.5px;margin:16px 0 12px}
+#progress{color:#9b762e;font-weight:800;font-size:14px}
+#stageText{font-size:16px;line-height:1.65;color:#405e72}
+.met{display:grid;gap:14px;margin-top:20px}
+.met div{padding:17px 18px;border-radius:16px;background:#f1f7fa}
+.met b{display:block;font-size:12px;color:#6a8799;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.met span{line-height:1.6;display:block;font-size:15px}
+h3{font:800 20px Montserrat,sans-serif;margin:2px 0 18px}
+.side{display:grid;gap:12px}
+.side-item{background:#f2f7fa;padding:16px;border-radius:16px}
+.side-item b{display:block;font-size:12px;color:#648193;margin-bottom:5px}
+.side-item span{font-weight:700}
+.btn{display:block;text-align:center;text-decoration:none;color:#fff;background:linear-gradient(120deg,#126c8e,#208bb4);padding:15px 16px;border-radius:15px;font-weight:800;box-shadow:0 10px 22px #1279a02b}
+.btn.other{background:#fff;color:#26607a;border:1px solid #ccdee9;box-shadow:none}
+small.note{display:block;margin-top:18px;color:#6a8493;font-size:12px;line-height:1.6}
+footer{max-width:1100px;margin:auto;padding:0 20px 30px;color:#78909c;font-size:12px}
+@media(max-width:750px){header{padding:14px 18px}.cards{grid-template-columns:1fr}.card{padding:21px}main{padding:30px 18px 50px}.logo{font-size:16px}.tag{font-size:11px}}
+</style></head>
+<body><header><div class="logo">КӨШ ЖОЛЫ <span>· Қонақтар залы</span></div><div class="tag">👁️ ТЕК КӨРУ РЕЖИМІ</div></header>
+<main><div class="kicker">Қазақстан тарихы · 11 «А» сынып · Ашық сабақ</div><h1>Қазақстан Республикасының <span style="color:#1585aa">көші-қон саясаты</span></h1>
+<p class="sub">Құрметті қонақтар! Бұл бет арқылы сабақтың барысын бақылай аласыз. Мұғалімнің экраны, таймері және оқушылардың ұпайлары сіздің әрекетіңізге байланысты өзгермейді.</p>
+<div class="cards"><section class="card"><div class="live"><span class="dot"></span><span id="status">Сабақпен байланыс тексерілуде…</span></div>
+<h2 id="stageTitle">Сабақ барысы</h2><p id="progress">Мұғалімнің кезеңі</p><p id="stageText">Ағымдағы кезең анықталуда.</p>
+<div class="met"><div><b>👩‍🏫 Мұғалім не істейді?</b><span id="teacherAct">Сабақ туралы мәлімет көрсетіледі.</span></div>
+<div><b>👥 Оқушылар не істейді?</b><span id="studentAct">Оқушы әрекеті мұнда сипатталады.</span></div>
+<div><b>📋 Бағалау</b><span id="assessAct">Кезеңнің бағалау тәсілі</span></div></div>
+</section><aside class="card side"><h3>Қонақтарға ақпарат</h3>
+<div class="side-item"><b>Пән мұғалімі</b><span>Серкулова Айжан Хайроллаевна</span></div>
+<div class="side-item"><b>Сынып</b><span>11 «А» · Қазақстан тарихы</span></div>
+<div class="side-item"><b>Сабақ уақыты</b><span>13 қараша 2026 · 13:00–13:45</span></div>
+<a class="btn" id="feedback" href="index.html?m=g#wall">💬 Кері байланыс қалдыру</a>
+<a class="btn other" href="materialdar.html">📚 Сабақ материалдары</a>
+<small class="note">Бұл арнайы бет тек мәлімет оқиды. Ол рейтингке, оқушылар тізіміне немесе мұғалімнің басқаруына өзгеріс жібермейді. Бұл бейнетрансляция емес: мұғалімнің қазіргі кезеңі мен әрекеттері мәтін түрінде көрсетіледі.</small></aside></div></main>
+<footer>© Көш жолы · Қонақтарға арналған бақылау беті</footer>
+<script src="data.js"></script><script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const qs=new URLSearchParams(location.search);
+const teacher=qs.get("t")||"";
+if(teacher) $("feedback").href="index.html?m=g&t="+encodeURIComponent(teacher)+"#wall";
+const room=DATA.live.room+(teacher?"-t-"+teacher.toLowerCase().replace(/[^a-z0-9_-]/g,"").slice(0,24):"");
+const root=DATA.live.url.replace(/\/+$/,"");
+const stages=[
+["invite","Қош келдіңіз!"],["home","Сабақтың басталуы"],["card","Шекара бекеті"],["hw","Үй тапсырмасы"],["terms","Ұғымдар"],["video","Бейнесабақ"],["time","Уақыт машинасы"],["lenta","Көш жолы"],["witness","ЖИ куәгерлер"],["prompt","Постер қорғау"],["levels","Деңгейлік тапсырмалар"],["quiz","Қорытынды тест"],["rating","Рейтинг"],["wall","Кері байланыс"]
+];
+let lastKey="";
+function render(id){
+ const item=stages.find(x=>x[0]===id);
+ const k=DATA.kmj&&DATA.kmj[id];
+ $("stageTitle").textContent=item?item[1]:"Сабақ жалғасуда";
+ $("progress").textContent=item?"Кезең "+(stages.indexOf(item)+1)+" / "+stages.length:"Мұғалімнің ағымдағы кезеңі";
+ $("stageText").textContent=k?.method||"Мұғалім осы кезеңмен жұмыс істеп жатыр.";
+ $("teacherAct").textContent=k?.teacher||"Мұғалімнің әрекетін бақылау.";
+ $("studentAct").textContent=k?.student||"Оқушылар тапсырманы орындайды.";
+ $("assessAct").textContent=k?.assess||"Осы кезеңде бағалау жүргізілмеуі мүмкін.";
+}
+async function poll(){
+ if(!/^https:\/\/[\w.-]+\.(firebaseio\.com|firebasedatabase\.app)$/.test(root)){ $("status").textContent="Сабақ дерекқоры қосылмаған"; return }
+ try{
+ const ac=new AbortController(),timeout=setTimeout(()=>ac.abort(),7500);
+ const r=await fetch(root+"/"+encodeURIComponent(room)+"/state.json",{cache:"no-store",signal:ac.signal});clearTimeout(timeout);
+ if(!r.ok)throw new Error("HTTP "+r.status);
+ const st=await r.json();
+ $("status").textContent=st?.stage?"Сабақ кезеңі автоматты жаңарады":"Сабақтың басталуын күтудеміз";
+ if(st?.stage&&st.stage!==lastKey){lastKey=st.stage;render(st.stage)}
+ if(!st?.stage)render("invite");
+ }catch(e){$("status").textContent="Байланыс жоқ · кейін қайта тексеріледі"}
+}
+render("invite");poll();setInterval(poll,5000);
+})();
+</script></body></html>
